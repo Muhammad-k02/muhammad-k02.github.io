@@ -14,6 +14,7 @@ function App() {
         style={{
           position: 'absolute',
           top: 0,
+          pointerEvents: 'none', // Disable pointer events on the canvas
         }}
       >
         <ShaderGradient
@@ -24,5 +25,4 @@ function App() {
     </div>
   );
 }
-
-export default App;
+export default (App)

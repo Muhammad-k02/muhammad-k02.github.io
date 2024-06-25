@@ -1,7 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
-  "homepage": "https://github.com/Muhammad-k02/mkhan.github.io.git",
+  "homepage": "https://muhammad-k02.github.io/mkhan.github.io/",
   "private": true,
   "dependencies": {
     "@react-spring/three": "^9.7.3",

@@ -1,0 +1,13 @@
+body {
+  background: transparent;
+}
+.welcome-text {
+  font-family: sans-serif;
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  text-align: center;
+  color: #b7aeae;
+}

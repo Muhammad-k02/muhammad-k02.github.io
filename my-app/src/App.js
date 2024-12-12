@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import './App.css';
 import 'primereact/resources/themes/saga-blue/theme.css';

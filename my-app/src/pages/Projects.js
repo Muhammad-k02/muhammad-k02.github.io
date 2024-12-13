@@ -48,116 +48,142 @@ const Projects = () => {
         />
       </ShaderGradientCanvas>
 
-      <Container 
-        maxWidth="lg" 
+      <Box 
         sx={{ 
-          pt: 12, 
-          pb: 6,
+          minHeight: '100vh',
+          width: '100%',
           position: 'relative',
-          zIndex: 1 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'visible',
+          pointerEvents: 'none',
+          '& > *': {
+            pointerEvents: 'auto',
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%)',
+            pointerEvents: 'none'
+          }
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <Container 
+          maxWidth="lg" 
+          sx={{ 
+            pt: 12, 
+            pb: 6,
+            position: 'relative',
+            zIndex: 1 
+          }}
         >
-          <Typography 
-            variant="h2" 
-            component="h1" 
-            gutterBottom 
-            sx={{ 
-              mb: 4,
-              background: 'linear-gradient(45deg, #32ff7e, #000000)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent'
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            Projects
-          </Typography>
+            <Typography 
+              variant="h2" 
+              component="h1" 
+              gutterBottom 
+              sx={{ 
+                mb: 4,
+                background: 'linear-gradient(45deg, #32ff7e, #000000)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent'
+              }}
+            >
+              Projects
+            </Typography>
 
-          <Grid container spacing={4}>
-            {projects.map((project, index) => (
-              <Grid item xs={12} md={6} key={index}>
-                <motion.div
-                  initial={{ 
-                    opacity: 0, 
-                    y: 20,
-                    scale: 0.9
-                  }}
-                  whileInView={{ 
-                    opacity: 1, 
-                    y: 0,
-                    scale: 1,
-                    transition: {
-                      type: "spring",
-                      stiffness: 100,
-                      damping: 10
-                    }
-                  }}
-                  viewport={{ once: false }}
-                >
-                  <Card 
-                    sx={{ 
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      background: 'rgba(50, 255, 126, 0.1)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      border: '1px solid rgba(50, 255, 126, 0.2)',
-                      boxShadow: '0 4px 6px rgba(50, 255, 126, 0.1)'
+            <Grid container spacing={4}>
+              {projects.map((project, index) => (
+                <Grid item xs={12} md={6} key={index}>
+                  <motion.div
+                    initial={{ 
+                      opacity: 0, 
+                      y: 20,
+                      scale: 0.9
                     }}
+                    whileInView={{ 
+                      opacity: 1, 
+                      y: 0,
+                      scale: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 10
+                      }
+                    }}
+                    viewport={{ once: false }}
                   >
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#32ff7e' }}>
-                        {project.title}
-                      </Typography>
-                      <Typography variant="body1" paragraph>
-                        {project.description}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'rgba(50, 255, 126, 0.7)' }}>
-                        Technologies: {project.technologies.join(', ')}
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Button 
-                        size="small" 
-                        startIcon={<GitHubIcon />}
-                        href={project.github}
-                        target="_blank"
-                        sx={{ 
-                          color: '#32ff7e',
-                          '&:hover': {
-                            backgroundColor: 'rgba(50, 255, 126, 0.1)'
-                          }
-                        }}
-                      >
-                        Code
-                      </Button>
-                      <Button 
-                        size="small" 
-                        startIcon={<LaunchIcon />}
-                        href={project.demo}
-                        target="_blank"
-                        sx={{ 
-                          color: '#32ff7e',
-                          '&:hover': {
-                            backgroundColor: 'rgba(50, 255, 126, 0.1)'
-                          }
-                        }}
-                      >
-                        Demo
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </motion.div>
-      </Container>
+                    <Card 
+                      sx={{ 
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        background: 'rgba(50, 255, 126, 0.1)',
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                        border: '1px solid rgba(50, 255, 126, 0.2)',
+                        boxShadow: '0 4px 6px rgba(50, 255, 126, 0.1)'
+                      }}
+                    >
+                      <CardContent sx={{ flexGrow: 1 }}>
+                        <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#32ff7e' }}>
+                          {project.title}
+                        </Typography>
+                        <Typography variant="body1" paragraph>
+                          {project.description}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(50, 255, 126, 0.7)' }}>
+                          Technologies: {project.technologies.join(', ')}
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Button 
+                          size="small" 
+                          startIcon={<GitHubIcon />}
+                          href={project.github}
+                          target="_blank"
+                          sx={{ 
+                            color: '#32ff7e',
+                            '&:hover': {
+                              backgroundColor: 'rgba(50, 255, 126, 0.1)'
+                            }
+                          }}
+                        >
+                          Code
+                        </Button>
+                        <Button 
+                          size="small" 
+                          startIcon={<LaunchIcon />}
+                          href={project.demo}
+                          target="_blank"
+                          sx={{ 
+                            color: '#32ff7e',
+                            '&:hover': {
+                              backgroundColor: 'rgba(50, 255, 126, 0.1)'
+                            }
+                          }}
+                        >
+                          Demo
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </motion.div>
+        </Container>
+      </Box>
     </Box>
   );
 };

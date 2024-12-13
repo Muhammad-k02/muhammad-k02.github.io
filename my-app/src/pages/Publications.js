@@ -38,7 +38,7 @@ const Publications = () => {
           width: '100%',
           height: '100%',
           pointerEvents: 'none',
-          zIndex: -2
+          zIndex: -2,
         }}
       >
         <ShaderGradient
@@ -47,64 +47,85 @@ const Publications = () => {
         />
       </ShaderGradientCanvas>
 
-      <Container maxWidth="lg" sx={{ 
-        pt: 12, 
-        pb: 6,
-        position: 'relative',
-        zIndex: 1 
-      }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Typography variant="h2" component="h1" gutterBottom sx={{ 
-            color: 'white', 
-            mb: 4,
-            background: 'linear-gradient(45deg, #73bfc4, #ff810a)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent'
-          }}>
-            Publications
-          </Typography>
-          
-          <Grid container spacing={3}>
-            {publications.map((pub, index) => (
-              <Grid item xs={12} key={index}>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card sx={{ 
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    color: 'white',
-                    border: '1px solid rgba(255, 255, 255, 0.125)',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                  }}>
-                    <CardContent>
-                      <Typography variant="h6" component="h2" sx={{ color: 'white' }}>
-                        {pub.title}
-                      </Typography>
-                      <Typography color="textSecondary" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                        {pub.authors}
-                      </Typography>
-                      <Typography variant="body2" sx={{ 
-                        mt: 1,
-                        color: 'rgba(255, 255, 255, 0.9)'
-                      }}>
-                        {pub.journal} ({pub.year})
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </motion.div>
-      </Container>
+      <Box 
+        sx={{ 
+          minHeight: '100vh',
+          width: '100%',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'visible',
+          pointerEvents: 'none',
+          '& > *': {
+            pointerEvents: 'auto',
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%)',
+            pointerEvents: 'none'
+          }
+        }}
+      >
+        <Container maxWidth="lg" sx={{ pt: 12, pb: 6 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Typography variant="h2" component="h1" gutterBottom sx={{ 
+              color: 'white', 
+              mb: 4,
+              background: 'linear-gradient(45deg, #73bfc4, #ff810a)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent'
+            }}>
+              Publications
+            </Typography>
+            
+            <Grid container spacing={3}>
+              {publications.map((pub, index) => (
+                <Grid item xs={12} key={index}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card sx={{ 
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      color: 'white',
+                      border: '1px solid rgba(255, 255, 255, 0.125)',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }}>
+                      <CardContent>
+                        <Typography variant="h6" component="h2" sx={{ color: 'white' }}>
+                          {pub.title}
+                        </Typography>
+                        <Typography color="textSecondary" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                          {pub.authors}
+                        </Typography>
+                        <Typography variant="body2" sx={{ 
+                          mt: 1,
+                          color: 'rgba(255, 255, 255, 0.9)'
+                        }}>
+                          {pub.journal} ({pub.year})
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </motion.div>
+        </Container>
+      </Box>
     </Box>
   );
 };

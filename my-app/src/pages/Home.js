@@ -35,6 +35,7 @@ function Home() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showAboutMeModal, setShowAboutMeModal] = useState(false);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
+  const [filterOpacity, setFilterOpacity] = useState(0);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const welcomeTextRef = useRef(null);
@@ -73,7 +74,7 @@ function Home() {
     link.rel = 'stylesheet';
     document.head.appendChild(link);
 
-    // Disable default scrolling
+    // Disable default scrolling for custom scroll effect
     document.body.style.overflow = 'hidden';
     
     const handleWheel = (event) => {
@@ -119,13 +120,12 @@ function Home() {
       if (newWordCount >= introText.length && !welcomeTextAnimationComplete) {
         setShowWelcomeText(true);
         
-        // Optimized smooth animation
         let start = null;
         const animateFadeIn = (timestamp) => {
           if (!start) start = timestamp;
           
           const progress = Math.min((timestamp - start) / 400, 1);
-          const smoothProgress = progress * progress * (3 - 2 * progress); // Smoother interpolation
+          const smoothProgress = progress * progress * (3 - 2 * progress);
           
           setWelcomeTextOpacity(smoothProgress);
           
@@ -134,7 +134,6 @@ function Home() {
           } else {
             setWelcomeTextAnimationComplete(true);
             
-            // Show navbar with gradual fade-in
             let navbarOpacityStep = 0;
             const navbarFadeIn = setInterval(() => {
               navbarOpacityStep += 0.1;
@@ -149,9 +148,11 @@ function Home() {
         
         requestAnimationFrame(animateFadeIn);
       }
+
+      // Update filter opacity based on scroll direction
+      setFilterOpacity(isScrollingDown ? 0.5 : 0);
     };
 
-    // Add wheel event listener with reduced sensitivity
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
@@ -160,32 +161,10 @@ function Home() {
     };
   }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Check if welcome text element exists
-      if (welcomeTextRef.current) {
-        const rect = welcomeTextRef.current.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
-        
-        if (isVisible) {
-          // Calculate opacity based on scroll position relative to welcome text
-          const scrollProgress = 1 - (rect.bottom / window.innerHeight);
-          const newOpacity = Math.min(Math.max(scrollProgress * 0.7, 0), 0.7);
-          setOverlayOpacity(newOpacity);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   return (
     <>
       <WebGLBackground />
-      {/* Dark overlay for text readability */}
+      {/* Dark filter that appears on scroll down */}
       <Box 
         sx={{
           position: 'fixed',
@@ -193,17 +172,30 @@ function Home() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: 'black',
-          opacity: overlayOpacity,
+          backgroundColor: `rgba(0, 0, 0, ${filterOpacity})`,
           pointerEvents: 'none',
-          zIndex: 0,
+          zIndex: 1,
+          transition: 'background-color 0.3s ease'
+        }}
+      />
+      {/* Scroll-based overlay */}
+      <Box 
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: `rgba(0, 0, 0, ${overlayOpacity})`,
+          pointerEvents: 'none',
+          zIndex: 2,
           transition: 'opacity 0.3s ease'
         }}
       />
       <Box 
         sx={{
           position: 'relative',
-          zIndex: 1,
+          zIndex: 3,
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',

@@ -1,8 +1,8 @@
-import WebGLBackground from '../components/WebGLBackground';
 import React from 'react';
-import { Container, Typography, Button, Box } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import DropdownMenu from '../components/DropdownMenu';
+import WebGLBackground from '../components/WebGLBackground';
 
 const Resume = () => {
   // Replace with your actual resume PDF URL

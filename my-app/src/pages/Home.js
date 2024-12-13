@@ -1,448 +1,638 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Box, 
+  Typography, 
+  Container, 
+  IconButton, 
+  Menu, 
+  MenuItem, 
+  Button, 
+  Modal, 
+  Paper 
+} from '@mui/material';
+import { 
+  KeyboardArrowDown, 
+  Menu as MenuIcon, 
+  Close as CloseIcon 
+} from '@mui/icons-material';
+import Navbar from '../components/Navbar';
+import DropdownMenu from '../components/DropdownMenu';
+import WebGLBackground from '../components/WebGLBackground';
 import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
 import * as reactSpring from '@react-spring/three';
 import * as drei from '@react-three/drei';
 import * as fiber from '@react-three/fiber';
-import { Box, Typography, Container } from '@mui/material';
-import Ripple from '../components/Ripple';
-import ScrollIndicator from '../components/ScrollIndicator';
 
-const Home = () => {
-  const name = ["Muhammad", "Khan"];
-  const welcomeText = ["Welcome", "to", "My", "Portfolio!"];
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [gradientSize, setGradientSize] = useState(0);
-  const controls = useAnimation();
-  const requestRef = React.useRef();
-  const previousTimeRef = React.useRef();
-  const targetGradientSize = React.useRef(0);
+function Home() {
+  const [revealedWords, setRevealedWords] = useState([]);
+  const [showWelcomeText, setShowWelcomeText] = useState(false);
+  const [welcomeTextOpacity, setWelcomeTextOpacity] = useState(0);
+  const [backgroundOpacity, setBackgroundOpacity] = useState(0);
+  const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [navbarOpacity, setNavbarOpacity] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [showAboutMeModal, setShowAboutMeModal] = useState(false);
+  const [overlayOpacity, setOverlayOpacity] = useState(0);
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const welcomeTextRef = useRef(null);
 
-  useEffect(() => {
-    // Create a style element to globally disable animations
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .MuiAppBar-root * {
-        transition: none !important;
-        animation: none !important;
-      }
-      .MuiAppBar-root .MuiButton-root {
-        transition: none !important;
-        animation: none !important;
-        transform: none !important;
-        box-shadow: none !important;
-      }
-      .MuiAppBar-root .MuiButton-root:hover,
-      .MuiAppBar-root .MuiButton-root:active,
-      .MuiAppBar-root .MuiButton-root:focus {
-        transition: none !important;
-        animation: none !important;
-        transform: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Cleanup function to remove the style when component unmounts
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
-  const animate = time => {
-    if (previousTimeRef.current !== undefined) {
-      const deltaTime = time - previousTimeRef.current;
-      const step = deltaTime * 0.5; // Adjust speed here
-
-      if (Math.abs(gradientSize - targetGradientSize.current) > 0.1) {
-        setGradientSize(current => {
-          const next = targetGradientSize.current > current
-            ? Math.min(current + step, targetGradientSize.current)
-            : Math.max(current - step, targetGradientSize.current);
-          return next;
-        });
-      }
-    }
-    previousTimeRef.current = time;
-    requestRef.current = requestAnimationFrame(animate);
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  useEffect(() => {
-    requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current);
-  }, []); // Empty dependency array
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAboutMeClick = () => {
+    navigate('/about');
+  };
+
+  const handleAboutMeClose = () => {
+    setShowAboutMeModal(false);
+  };
+
+  const menuItems = [
+    { label: 'Home', link: '/' },
+    { label: 'Resume', link: '/resume' },
+    { label: 'Publications', link: '/publications' },
+    { label: 'Projects', link: '/projects' },
+    { label: 'Education', link: '/education' }
+  ];
+
+  const introText = "Hello! My Name is Muhammad Khan, I am a Computational Researcher!".split(' ');
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    targetGradientSize.current = isHovering ? 200 : 0;
-  }, [isHovering]);
+    // Add Google Fonts link
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
 
-  const handleMouseMove = useCallback((e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePosition({ x, y });
+    // Disable default scrolling
+    document.body.style.overflow = 'hidden';
     
-    controls.start({
-      x: (x - rect.width / 2) * 0.02,
-      y: (y - rect.height / 2) * 0.02,
-      transition: { type: "spring", stiffness: 150, damping: 15 }
-    });
-  }, [controls]);
+    const handleWheel = (event) => {
+      event.preventDefault();
+      
+      // Hide scroll indicator on first scroll
+      if (showScrollIndicator) {
+        setShowScrollIndicator(false);
+      }
+      
+      // Determine scroll direction
+      const isScrollingDown = event.deltaY > 0;
+      
+      // Calculate words to reveal
+      const currentWordCount = revealedWords.length;
+      let newWordCount;
 
-  const handleMouseEnter = useCallback(() => {
-    setIsHovering(true);
+      if (isScrollingDown) {
+        // Scrolling down: reveal more words
+        newWordCount = Math.min(introText.length, currentWordCount + 1);
+      } else {
+        // Scrolling up: remove words
+        newWordCount = Math.max(0, currentWordCount - 1);
+      }
+
+      // Update revealed words
+      const newRevealedWords = introText.slice(0, newWordCount);
+      setRevealedWords(newRevealedWords);
+
+      // Update background opacity
+      const newOpacity = Math.min(0.7, newWordCount / introText.length);
+      setBackgroundOpacity(newOpacity);
+
+      // Reset welcome text if going backwards
+      if (newWordCount === 0) {
+        setShowWelcomeText(false);
+        setWelcomeTextOpacity(0);
+        setWelcomeTextAnimationComplete(false);
+        setNavbarOpacity(0);
+      }
+
+      // Show welcome text only when fully revealed and not already animated
+      if (newWordCount >= introText.length && !welcomeTextAnimationComplete) {
+        setShowWelcomeText(true);
+        
+        // Optimized smooth animation
+        let start = null;
+        const animateFadeIn = (timestamp) => {
+          if (!start) start = timestamp;
+          
+          const progress = Math.min((timestamp - start) / 400, 1);
+          const smoothProgress = progress * progress * (3 - 2 * progress); // Smoother interpolation
+          
+          setWelcomeTextOpacity(smoothProgress);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateFadeIn);
+          } else {
+            setWelcomeTextAnimationComplete(true);
+            
+            // Show navbar with gradual fade-in
+            let navbarOpacityStep = 0;
+            const navbarFadeIn = setInterval(() => {
+              navbarOpacityStep += 0.1;
+              setNavbarOpacity(Math.min(navbarOpacityStep, 1));
+              
+              if (navbarOpacityStep >= 1) {
+                clearInterval(navbarFadeIn);
+              }
+            }, 25);
+          }
+        };
+        
+        requestAnimationFrame(animateFadeIn);
+      }
+    };
+
+    // Add wheel event listener with reduced sensitivity
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      document.body.style.overflow = 'auto';
+    };
+  }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if welcome text element exists
+      if (welcomeTextRef.current) {
+        const rect = welcomeTextRef.current.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+        
+        if (isVisible) {
+          // Calculate opacity based on scroll position relative to welcome text
+          const scrollProgress = 1 - (rect.bottom / window.innerHeight);
+          const newOpacity = Math.min(Math.max(scrollProgress * 0.7, 0), 0.7);
+          setOverlayOpacity(newOpacity);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  const handleMouseLeave = useCallback(() => {
-    setIsHovering(false);
-    controls.start({ x: 0, y: 0 });
-  }, [controls]);
-
-  const getTextGlow = useMemo(() => (x, y, isName = true) => {
-    const baseStyles = {
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      color: 'white',
-      opacity: 1,
-      willChange: 'transform, opacity, background',
-    };
-
-    if (!isHovering) return baseStyles;
-    
-    const primaryColor = isName ? '#ff3366' : '#3366ff';
-    const secondaryColor = isName ? '#ff9933' : '#33ff99';
-    
-    return {
-      ...baseStyles,
-      background: `
-        radial-gradient(circle ${gradientSize}px at ${x}px ${y}px, 
-          ${primaryColor} 0%, 
-          ${secondaryColor} 25%, 
-          rgba(255,255,255,0.8) 50%, 
-          rgba(255,255,255,0) 100%)
-      `,
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      textShadow: `
-        0 0 30px ${primaryColor}66,
-        0 0 60px ${secondaryColor}66
-      `,
-      filter: 'brightness(1.4)',
-    };
-  }, [isHovering, gradientSize]);
-
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      position: 'relative',
-      width: '100%',
-      maxWidth: '100vw',
-      overflow: 'hidden',
-      background: 'transparent', 
-      transition: 'background 0.5s ease-in-out'
-    }}>
-      <Ripple />
-      <ShaderGradientCanvas
-        importedFiber={{ ...fiber, ...drei, ...reactSpring }}
-        style={{
+    <>
+      <WebGLBackground />
+      {/* Dark overlay for text readability */}
+      <Box 
+        sx={{
           position: 'fixed',
           top: 0,
           left: 0,
           width: '100%',
           height: '100%',
+          backgroundColor: 'black',
+          opacity: overlayOpacity,
           pointerEvents: 'none',
-          zIndex: -2,
+          zIndex: 0,
+          transition: 'opacity 0.3s ease'
         }}
-      >
-        <ShaderGradient
-          control='query'
-          urlString='https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=0.8&cAzimuthAngle=270&cDistance=0.5&cPolarAngle=180&cameraZoom=15.1&color1=%23b5001e&color2=%230015ff&color3=%23000000&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-0.1&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.4&rotationX=0&rotationY=130&rotationZ=70&shader=defaults&type=sphere&uAmplitude=3.2&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.3&uTime=0&wireframe=false'
-        />
-      </ShaderGradientCanvas>
-
+      />
       <Box 
-        className="home-container" 
-        sx={{ 
-          minHeight: '100vh',
-          width: '100%',
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'visible',
-          pointerEvents: 'none',
-          '& > *': {
-            pointerEvents: 'auto',
-          },
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: isHovering ? `radial-gradient(circle ${gradientSize * 2}px at ${mousePosition.x}px ${mousePosition.y}px, 
-              rgba(255,51,102,0.15) 0%, 
-              rgba(255,153,51,0.15) 30%, 
-              rgba(0,0,0,0) 70%)` : '',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            zIndex: -1,
-            willChange: 'background',
-            transform: 'translateZ(0)',
-            pointerEvents: 'none',
-          }
-        }}
-      >
-        <Box 
-          className="welcome-text" 
-          sx={{ 
-            textAlign: 'center',
-            transform: 'translateY(-20%)',
-            padding: '40px',
-          }}
-        >
-          <motion.div
-            animate={controls}
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Typography 
-              variant="h2" 
-              component="h1" 
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              sx={{ 
-                fontWeight: 'bold',
-                mb: 2,
-                ...getTextGlow(mousePosition.x, mousePosition.y, true),
-                display: 'inline-block'
-              }}
-            >
-              {name.map((el, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: i / 4 }}
-                  style={{ marginRight: '0.3em' }}
-                >
-                  {el}
-                </motion.span>
-              ))}
-            </Typography>
-          </motion.div>
-
-          <motion.div 
-            animate={controls}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Typography 
-              variant="h3" 
-              component="h2"
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              sx={{ 
-                ...getTextGlow(mousePosition.x, mousePosition.y, false),
-                display: 'inline-block'
-              }}
-            >
-              {welcomeText.map((el, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: name.length / 4 + i / 4 }}
-                  style={{ marginRight: '0.3em' }}
-                >
-                  {el}
-                </motion.span>
-              ))}
-            </Typography>
-          </motion.div>
-        </Box>
-      </Box>
-
-      <Container 
-        id="about-section"
-        maxWidth="md" 
-        sx={{ 
-          minHeight: '100vh',
-          py: 8,
+        sx={{
           position: 'relative',
           zIndex: 1,
-          width: '100%',
-          mx: 'auto',
-          px: { xs: 2, sm: 3, md: 4 },
+          minHeight: '100vh',
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: 'column',
           justifyContent: 'center',
-          background: 'transparent', 
-          transition: 'background 0.5s ease-in-out',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '100vw',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.8)', 
-            backdropFilter: 'blur(10px)', 
-            zIndex: -1,
-          }
+          alignItems: 'center',
+          color: '#E6E6E1'
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ 
-            opacity: 1, 
-            y: 0,
-            transition: {
-              type: "spring",
-              stiffness: 80,
-              damping: 10,
-              duration: 0.8,
-              delayChildren: 0.2,
-              staggerChildren: 0.1
+        <DropdownMenu />
+        {/* Menu Dropdown Button */}
+        <IconButton
+          sx={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            color: 'white',
+            zIndex: 1100,
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(10px)',
+            '&:hover': {
+              backgroundColor: 'rgba(255,255,255,0.2)'
             }
           }}
-          exit={{ 
-            opacity: 0, 
-            y: -50,
-            transition: {
-              type: "tween",
-              duration: 0.5
+          onClick={handleMenuClick}
+        >
+          <MenuIcon />
+        </IconButton>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          PaperProps={{
+            sx: {
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(15px)',
+              borderRadius: '10px',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              '& .MuiMenuItem-root': {
+                color: 'rgba(0,0,0,0.8)',
+                fontFamily: 'Montserrat',
+                '&:hover': {
+                  backgroundColor: 'rgba(255,255,255,0.3)'
+                }
+              }
             }
-          }}
-          viewport={{ 
-            once: false,
-            amount: 0.3,
-            margin: "-100px"
-          }}
-          style={{
-            width: '100%'
           }}
         >
-          <Box sx={{ 
+          {menuItems.map((item) => (
+            <MenuItem 
+              key={item.label} 
+              onClick={() => {
+                handleMenuClose();
+                window.location.href = item.link;
+              }}
+            >
+              {item.label}
+            </MenuItem>
+          ))}
+        </Menu>
+
+        <Container 
+          maxWidth="lg"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
             textAlign: 'center',
-            mb: 6 
-          }}>
-            <motion.div
-              initial={{ 
-                opacity: 0, 
-                scale: 0.9,
-                y: 20
-              }}
-              whileInView={{ 
-                opacity: 1, 
-                scale: 1,
-                y: 0,
-                transition: {
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 8
-                }
-              }}
-              viewport={{ once: false }}
-            >
-              <Typography variant="h2" sx={{ 
-                mb: 3,
-                background: 'linear-gradient(45deg, #ff3366, #ff9933)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent',
-                fontWeight: 'bold'
-              }}>
-                About Me
-              </Typography>
-            </motion.div>
-
-            <motion.div
-              initial={{ 
-                opacity: 0, 
-                y: 30,
-                filter: 'blur(10px)'
-              }}
-              whileInView={{ 
-                opacity: 1, 
-                y: 0,
-                filter: 'blur(0px)',
-                transition: {
-                  type: "spring",
-                  stiffness: 70,
-                  damping: 10,
-                  delay: 0.2
-                }
-              }}
-              viewport={{ once: false }}
-            >
-              <Typography variant="body1" sx={{ 
-                fontSize: '1.1rem',
-                lineHeight: 1.8,
-                color: 'rgba(255, 255, 255, 0.9)',
-                maxWidth: '800px',
-                margin: '0 auto'
-              }}>
-                {/* Your about me content */}
-              </Typography>
-            </motion.div>
-          </Box>
-
-          <motion.div
-            initial={{ 
-              opacity: 0, 
-              y: 40,
-              filter: 'blur(10px)'
+            height: '100%',
+            padding: '20px',
+            width: '100%',
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)'
+          }}
+        >
+          {/* Intro Text */}
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              display: 'flex', 
+              flexWrap: 'none', 
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '5px',
+              height: '100px', 
+              marginBottom: '0px',
+              textAlign: 'center',
+              width: '100%',
+              overflow: 'hidden',
+              fontFamily: 'Montserrat',
+              fontSize: '2rem',
+              lineHeight: 1.2,
+              whiteSpace: 'nowrap',
+              position: 'absolute',
+              top: '40%',
+              transform: 'translateY(-50%)'
             }}
-            whileInView={{ 
-              opacity: 1, 
-              y: 0,
-              filter: 'blur(0px)',
-              transition: {
-                type: "spring",
-                stiffness: 70,
-                damping: 10,
-                delay: 0.4
-              }
-            }}
-            viewport={{ once: false }}
           >
-            <Box sx={{ 
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-              gap: 4,
-              mt: 6
-            }}>
-              {/* Skills section */}
-              <Box>
-                <Typography variant="h5" sx={{ mb: 3, color: '#ff3366' }}>
-                  Technical Skills
-                </Typography>
-                {/* Add your skills content */}
-              </Box>
+            {introText.map((word, index) => (
+              <span 
+                key={index} 
+                style={{ 
+                  opacity: revealedWords.includes(word) ? 1 : 0,
+                  transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+                  transform: revealedWords.includes(word) 
+                    ? 'translateY(0)' 
+                    : 'translateY(20px)',
+                  display: 'inline-block',
+                  margin: '0 3px',
+                  color: 'white'
+                }}
+              >
+                {word}
+              </span>
+            ))}
+          </Typography>
 
-              {/* Experience section */}
-              <Box>
-                <Typography variant="h5" sx={{ mb: 3, color: '#ff9933' }}>
-                  Experience
-                </Typography>
-                {/* Add your experience content */}
+          {/* Welcome Text */}
+          {showWelcomeText && (
+            <Container ref={welcomeTextRef} sx={{ 
+              textAlign: 'center', 
+              maxWidth: 'md',
+              px: 3 
+            }}>
+              <Typography 
+                variant="h5" 
+                sx={{
+                  position: 'absolute',
+                  top: '47%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  opacity: welcomeTextOpacity,
+                  transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
+                  fontFamily: 'Montserrat',
+                  fontSize: '2rem',
+                  willChange: 'opacity',
+                  textAlign: 'center'
+                }}
+              >
+                Welcome to my Website!
+              </Typography>
+
+              {/* About Me Button */}
+              <Box 
+                sx={{
+                  position: 'absolute',
+                  top: '58%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  opacity: welcomeTextOpacity,
+                  transition: 'opacity 0.4s ease-out',
+                  willChange: 'opacity',
+                  maxWidth: '80%',
+                  textAlign: 'center'
+                }}
+              >
+                <Button
+                  onClick={handleAboutMeClick}
+                  sx={{
+                    display: 'inline-block',
+                    fontFamily: '"Montserrat"',
+                    fontSize: '20px',
+                    letterSpacing: '5px',
+                    textAlign: 'center',
+                    position: 'relative',
+                    minWidth: '100px',
+                    minHeight: '10px',
+                    margin: '20px',
+                    background: 'none',
+                    border: 'none',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    color: '#E6E6E1', // Soft off-white for text
+                    borderRadius: '10px',
+                    padding: '12px 20px',
+                    boxSizing: 'content-box',
+                    border: '2px solid transparent',
+                    lineHeight: '30px',
+                    transition: '0.75s ease',
+                    '&:before, & span:before, &:after, & span:after': {
+                      display: 'block',
+                      content: '""',
+                      width: '15px',
+                      height: '15px',
+                      position: 'absolute',
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    },
+                    '&:before': {
+                      top: '-2px',
+                      left: '-2px',
+                      borderTop: '2px solid #D1CCC1', // Muted off-white border
+                      borderTopLeftRadius: '8px',
+                      borderLeft: '2px solid #D1CCC1',
+                      transition: '0.75s all'
+                    },
+                    '&:after': {
+                      top: '-2px',
+                      right: '-2px',
+                      borderTop: '2px solid #D1CCC1',
+                      borderTopRightRadius: '8px',
+                      borderRight: '2px solid #D1CCC1',
+                      transition: '0.75s all'
+                    },
+                    '& span': {
+                      display: 'block',
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginLeft: '8px',
+                      '&:before': {
+                        bottom: '-2px',
+                        left: '-2px',
+                        borderBottom: '2px solid #D1CCC1',
+                        borderBottomLeftRadius: '8px',
+                        borderLeft: '2px solid #D1CCC1',
+                        transition: '0.75s all'
+                      },
+                      '&:after': {
+                        bottom: '-2px',
+                        right: '-2px',
+                        borderBottom: '2px solid #D1CCC1',
+                        borderBottomRightRadius: '8px',
+                        borderRight: '2px solid #D1CCC1',
+                        transition: '0.75s all'
+                      }
+                    },
+                    '&:hover': {
+                      color: '#FFFFFF', // Pure white on hover
+                      borderRadius: '10px',
+                      '&:before, &:after': {
+                        borderColor: '#F0EDE5', // Lighter off-white on hover
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '10px'
+                      },
+                      '& span:before, & span:after': {
+                        borderColor: '#F0EDE5',
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '10px'
+                      }
+                    },
+                    fontWeight: 600 // Added to bolden the text
+                  }}
+                >
+                  <span>About Me</span>
+                </Button>
+              </Box>
+            </Container>
+          )}
+
+          {/* Navbar */}
+          {navbarOpacity > 0 && (
+            <Box 
+              sx={{
+                position: 'fixed',
+                top: '65%',
+                left: 0,
+                right: 0,
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                opacity: navbarOpacity,
+                zIndex: 1000,
+                transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), transform 2s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: `scale(${0.95 + (navbarOpacity * 0.05)})`
+              }}
+            >
+              <Box
+                sx={{
+                  width: '100vw',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  backdropFilter: 'blur(30px) brightness(110%) contrast(120%)',
+                  borderRadius: '30px',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: '0 10px 40px 0 rgba(31, 38, 135, 0.4)',
+                  padding: '15px 0',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  overflow: 'hidden',
+                  WebkitMask: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                  mask: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                  '& > *': {
+                    color: 'rgba(0, 0, 0, 0.8)',
+                    fontWeight: 'bold'
+                  }
+                }}
+              >
+                <Navbar />
               </Box>
             </Box>
-          </motion.div>
-        </motion.div>
+          )}
 
-        <ScrollIndicator targetSection="contact-section" text="View More" />
-      </Container>
+          {/* Scroll Indicator */}
+          {showScrollIndicator && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: '40px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                animation: 'bounce 2s infinite',
+                '@keyframes bounce': {
+                  '0%, 100%': { transform: 'translateY(0)' },
+                  '50%': { transform: 'translateY(-10px)' }
+                }
+              }}
+            >
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'white', 
+                  marginBottom: '5px',
+                  opacity: 0.7 
+                }}
+              >
+                Scroll Down
+              </Typography>
+              <KeyboardArrowDown 
+                sx={{ 
+                  color: 'white', 
+                  fontSize: 40,
+                  opacity: 0.7
+                }} 
+              />
+            </Box>
+          )}
+        </Container>
 
-      <ScrollIndicator targetSection="contact-section" />
-    </Box>
+        {/* Progress Indicator */}
+        <Box 
+          sx={{
+            position: 'absolute',
+            bottom: '20px',
+            width: '200px',
+            height: '4px',
+            background: 'rgba(255,255,255,0.2)',
+            borderRadius: '1.5px'
+          }}
+        >
+          <Box 
+            sx={{
+              width: `${revealedWords.length * (100 / introText.length)}%`,
+              height: '100%',
+              background: 'white',
+              borderRadius: '1.5px',
+              transition: 'width 0.3s ease'
+            }}
+          />
+        </Box>
+
+        {/* About Me Modal */}
+        <Modal
+          open={showAboutMeModal}
+          onClose={handleAboutMeClose}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Paper
+            sx={{
+              width: '80%',
+              maxWidth: '600px',
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              padding: '2rem',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(15px)',
+              borderRadius: '15px',
+              color: 'white',
+              position: 'relative'
+            }}
+          >
+            <IconButton
+              onClick={handleAboutMeClose}
+              sx={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                color: 'white'
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            
+            <Typography 
+              variant="h4" 
+              gutterBottom 
+              sx={{ 
+                fontFamily: 'Montserrat', 
+                marginBottom: '1rem' 
+              }}
+            >
+              About Me
+            </Typography>
+            
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                fontFamily: 'Montserrat', 
+                lineHeight: 1.6 
+              }}
+            >
+              Hi, I'm Muhammad Khan, a passionate computational researcher dedicated to pushing the boundaries of technology and scientific understanding. 
+              My work spans across machine learning, data science, and innovative computational methodologies.
+
+              With a strong academic background and a keen interest in solving complex problems, I strive to develop cutting-edge solutions that bridge theoretical research and practical applications.
+            </Typography>
+          </Paper>
+        </Modal>
+      </Box>
+    </>
   );
 };
 

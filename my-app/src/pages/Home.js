@@ -19,6 +19,38 @@ const Home = () => {
   const previousTimeRef = React.useRef();
   const targetGradientSize = React.useRef(0);
 
+  useEffect(() => {
+    // Create a style element to globally disable animations
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .MuiAppBar-root * {
+        transition: none !important;
+        animation: none !important;
+      }
+      .MuiAppBar-root .MuiButton-root {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      .MuiAppBar-root .MuiButton-root:hover,
+      .MuiAppBar-root .MuiButton-root:active,
+      .MuiAppBar-root .MuiButton-root:focus {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Cleanup function to remove the style when component unmounts
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const animate = time => {
     if (previousTimeRef.current !== undefined) {
       const deltaTime = time - previousTimeRef.current;

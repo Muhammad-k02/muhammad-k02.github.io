@@ -1,7 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Box } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const location = useLocation();
@@ -15,28 +14,58 @@ const Navbar = () => {
   ];
 
   return (
-    <AppBar position="fixed" sx={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)' }}>
-      <Toolbar>
-        <Box sx={{ display: 'flex', gap: 2, width: '100%', justifyContent: 'center' }}>
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        background: 'transparent', 
+        backdropFilter: 'none', 
+        boxShadow: 'none',
+        transition: 'none'
+      }}
+    >
+      <Toolbar 
+        sx={{ 
+          background: 'transparent',
+          transition: 'none'
+        }}
+      >
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2, 
+          width: '100%', 
+          justifyContent: 'center' 
+        }}>
           {navItems.map((item) => (
-            <motion.div
+            <Button
               key={item.path}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              component={Link}
+              to={item.path}
+              disableRipple
+              disableFocusRipple
+              sx={{
+                color: 'white',
+                background: 'transparent',
+                transition: 'none',
+                padding: '6px 16px',
+                minWidth: 'auto',
+                borderRadius: 0,
+                '&:hover, &:active, &:focus': {
+                  background: 'transparent',
+                  color: 'white',
+                  transform: 'none',
+                  boxShadow: 'none',
+                  outline: 'none'
+                },
+                pointerEvents: 'auto',
+                cursor: 'pointer'
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = item.path;
+              }}
             >
-              <Button
-                component={Link}
-                to={item.path}
-                sx={{
-                  color: location.pathname === item.path ? '#fff' : 'rgba(255, 255, 255, 0.7)',
-                  '&:hover': {
-                    color: '#fff',
-                  },
-                }}
-              >
-                {item.label}
-              </Button>
-            </motion.div>
+              {item.label}
+            </Button>
           ))}
         </Box>
       </Toolbar>

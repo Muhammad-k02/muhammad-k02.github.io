@@ -91,9 +91,9 @@ const WebGLBackground = () => {
         this.uniforms = {
           resolution: { type: "v2", value: [ this.canvasWidth, this.canvasHeight ] },
           time: { type: "f", value: 0.0 },
-          xScale: { type: "f", value: 1.2 },  
-          yScale: { type: "f", value: 0.5 },  
-          distortion: { type: "f", value: 0.050 }  
+          xScale: { type: "f", value: 0.8 },  
+          yScale: { type: "f", value: 0.8 },  
+          distortion: { type: "f", value: 0.035 }  
         };
 
         this.mesh = null;
@@ -151,11 +151,11 @@ const WebGLBackground = () => {
             float gx = p.x;
             float bx = p.x * (1.0 - d);
 
-            float timeProgression = time * 1.5;
+            float timeProgression = time * 0.8;
             
-            float r = 0.05 / abs(p.y + sin((rx + timeProgression) * xScale) * yScale);
-            float g = 0.05 / abs(p.y + sin((gx + timeProgression * 1.1) * xScale) * yScale);
-            float b = 0.05 / abs(p.y + sin((bx + timeProgression * 0.9) * xScale) * yScale);
+            float r = 0.08 / abs(p.y + sin((rx + timeProgression) * xScale) * yScale);
+            float g = 0.08 / abs(p.y + sin((gx + timeProgression * 1.1) * xScale) * yScale);
+            float b = 0.08 / abs(p.y + sin((bx + timeProgression * 0.9) * xScale) * yScale);
             
             r *= 1.5;
             g *= 1.3;
@@ -177,7 +177,7 @@ const WebGLBackground = () => {
       }
       
       _render() {
-        this.uniforms.time.value += 0.01;  
+        this.uniforms.time.value += 0.005;  
       }
 
       onRaf() {

@@ -31,11 +31,13 @@ const Resume = () => {
           height: '100%',
           pointerEvents: 'none',
           zIndex: -2,
+          filter: 'contrast(1.2) brightness(1.2)',
+          mixBlendMode: 'normal'
         }}
       >
         <ShaderGradient
           control='query'
-          urlString='https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.4&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%23000000&color2=%23ff000d&color3=%23ff0019&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=2.6&positionX=0&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.7&uFrequency=5.5&uSpeed=0.3&uStrength=3.2&uTime=0&wireframe=false'
+          urlString='https://www.shadergradient.co/customize?animate=on&axesHelper=on&brightness=1.1&cAzimuthAngle=180&cDistance=3.9&cPolarAngle=115&cameraZoom=1&color1=%235606FF&color2=%23FE8989&color3=%23000000&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&grain=off&lightType=3d&pixelDensity=1&positionX=-0.5&positionY=0.1&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=0&rotationZ=235&shader=defaults&type=waterPlane&uAmplitude=0&uDensity=1.1&uFrequency=5.5&uSpeed=0.1&uStrength=2.4&uTime=0.2&wireframe=false&zoomOut=false'
         />
       </ShaderGradientCanvas>
 
@@ -45,7 +47,18 @@ const Resume = () => {
           pt: 12, 
           pb: 6,
           position: 'relative',
-          zIndex: 1 
+          zIndex: 1,
+          '& .MuiTypography-root': {
+            color: 'white',
+            textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          },
+          '& .MuiButton-root': {
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(10px)',
+            '&:hover': {
+              background: 'rgba(255,255,255,0.2)'
+            }
+          }
         }}
       >
         <motion.div

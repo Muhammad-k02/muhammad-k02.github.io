@@ -1,5 +1,4 @@
-
- import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
 import * as reactSpring from '@react-spring/three';
@@ -170,9 +169,6 @@ const Home = () => {
             transform: 'translateY(-20%)',
             padding: '40px',
           }}
-          onMouseMove={handleMouseMove}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           <motion.div
             animate={controls}
@@ -183,10 +179,14 @@ const Home = () => {
             <Typography 
               variant="h2" 
               component="h1" 
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
               sx={{ 
                 fontWeight: 'bold',
                 mb: 2,
-                ...getTextGlow(mousePosition.x, mousePosition.y, true)
+                ...getTextGlow(mousePosition.x, mousePosition.y, true),
+                display: 'inline-block'
               }}
             >
               {name.map((el, i) => (
@@ -212,8 +212,12 @@ const Home = () => {
             <Typography 
               variant="h3" 
               component="h2"
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
               sx={{ 
-                ...getTextGlow(mousePosition.x, mousePosition.y, false)
+                ...getTextGlow(mousePosition.x, mousePosition.y, false),
+                display: 'inline-block'
               }}
             >
               {welcomeText.map((el, i) => (

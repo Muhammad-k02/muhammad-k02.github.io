@@ -6,9 +6,9 @@ import SchoolIcon from '@mui/icons-material/School';
 const Education = () => {
   const education = [
     {
-      school: "Your University Name",
-      degree: "Your Degree",
-      year: "20XX - Present",
+      school: "YLoyola University Chicago",
+      degree: "B.S Software Engineering",
+      year: "2021 - Present",
       description: "Brief description of your studies and achievements"
     },
     // Add more education entries here

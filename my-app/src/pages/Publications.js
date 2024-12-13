@@ -38,7 +38,7 @@ const Publications = () => {
           width: '100%',
           height: '100%',
           pointerEvents: 'none',
-          zIndex: -2,
+          zIndex: -2
         }}
       >
         <ShaderGradient

@@ -15,7 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { motion, AnimatePresence } from 'framer-motion';
 import DropdownMenu from '../components/DropdownMenu';
-import WebGLBackground from '../components/WebGLBackground';
+import RainBackground from '../components/RainBackground';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
@@ -55,143 +55,136 @@ const Projects = () => {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+    setSelectedProject(null);
   };
 
   return (
-    <>
-      <DropdownMenu />
-      <WebGLBackground />
-      <Box sx={{
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100%',
-        overflow: 'hidden',
-        backgroundColor: 'transparent'
+    <Box sx={{ 
+      position: 'relative', 
+      minHeight: '100vh', 
+      width: '100%', 
+      overflow: 'hidden', 
+      backgroundColor: 'transparent' 
+    }}>
+      <RainBackground />
+      <Container maxWidth="lg" sx={{ 
+        position: 'relative', 
+        zIndex: 1, 
+        py: 4 
       }}>
-        <Box
-          sx={{
-            position: 'relative',
-            zIndex: 1,
-            minHeight: '100vh',
-            padding: { xs: '20px', md: '40px' },
-            color: '#E6E6E1'
-          }}
+        <DropdownMenu />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <Container maxWidth="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Typography 
-                variant="h2" 
-                component="h1" 
-                gutterBottom
-                sx={{
-                  fontWeight: 300,
-                  textAlign: 'center',
-                  mb: 6,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' }
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            gutterBottom
+            sx={{
+              fontWeight: 300,
+              textAlign: 'center',
+              mb: 6,
+              fontSize: { xs: '2.5rem', md: '3.5rem' }
+            }}
+          >
+            Projects
+          </Typography>
+        </motion.div>
+
+        <Grid container spacing={4}>
+          {projects.map((project, index) => (
+            <Grid item xs={12} md={6} key={index}>
+              <MotionCard
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                sx={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.15)',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: `
+                      0 4px 30px rgba(0, 0, 0, 0.4),
+                      0 0 30px rgba(255, 255, 255, 0.3)
+                    `,
+                    background: 'rgba(255, 255, 255, 0.35)',
+                    backdropFilter: 'blur(25px)',
+                    WebkitBackdropFilter: 'blur(25px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)'
+                  }
                 }}
               >
-                Projects
-              </Typography>
-            </motion.div>
-
-            <Grid container spacing={4}>
-              {projects.map((project, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                  <MotionCard
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
-                    sx={{ 
-                      height: '100%', 
-                      display: 'flex', 
-                      flexDirection: 'column',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(12px)',
-                      WebkitBackdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      boxShadow: '0 4px 30px rgba(0, 0, 0, 0.15)',
-                      borderRadius: '16px',
-                      overflow: 'hidden',
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography 
+                    variant="h5" 
+                    component="a"
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: '#E6E6E1',
+                      textDecoration: 'none',
+                      display: 'block',
+                      cursor: 'pointer',
+                      mb: 2,
+                      textShadow: '0 0 5px rgba(144, 202, 249, 0.3), 0 0 10px rgba(144, 202, 249, 0.2)',
                       transition: 'all 0.3s ease',
                       '&:hover': {
-                        transform: 'translateY(-4px)',
-                        boxShadow: `
-                          0 4px 30px rgba(0, 0, 0, 0.4),
-                          0 0 30px rgba(255, 255, 255, 0.3)
-                        `,
-                        background: 'rgba(255, 255, 255, 0.35)',
-                        backdropFilter: 'blur(25px)',
-                        WebkitBackdropFilter: 'blur(25px)',
-                        border: '1px solid rgba(255, 255, 255, 0.3)'
+                        color: '#90caf9',
+                        textShadow: '0 0 10px rgba(144, 202, 249, 0.6), 0 0 20px rgba(144, 202, 249, 0.4), 0 0 30px rgba(144, 202, 249, 0.3)'
                       }
                     }}
                   >
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography 
-                        variant="h5" 
-                        component="a"
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          color: '#E6E6E1',
-                          textDecoration: 'none',
-                          display: 'block',
-                          cursor: 'pointer',
-                          mb: 2,
-                          textShadow: '0 0 5px rgba(144, 202, 249, 0.3), 0 0 10px rgba(144, 202, 249, 0.2)',
-                          transition: 'all 0.3s ease',
-                          '&:hover': {
-                            color: '#90caf9',
-                            textShadow: '0 0 10px rgba(144, 202, 249, 0.6), 0 0 20px rgba(144, 202, 249, 0.4), 0 0 30px rgba(144, 202, 249, 0.3)'
-                          }
-                        }}
-                      >
-                        {project.title}
-                      </Typography>
-                      <Box sx={{ position: 'relative', mt: 2 }}>
-                        <Typography 
-                          variant="body1" 
-                          sx={{ 
-                            display: 'inline',
-                            mr: 1
-                          }}
-                        >
-                          {project.shortDescription.substring(0, 150)}...
-                        </Typography>
-                        <Button
-                          onClick={() => handleDialogOpen(project)}
-                          sx={{
-                            color: '#90caf9',
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            display: 'inline',
-                            padding: '0 4px',
-                            minWidth: 'auto',
-                            verticalAlign: 'baseline',
-                            '&:hover': {
-                              background: 'rgba(144, 202, 249, 0.08)',
-                              textDecoration: 'underline'
-                            }
-                          }}
-                        >
-                          Read More →
-                        </Button>
-                      </Box>
-                      <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                        Technologies: {project.technologies.join(', ')}
-                      </Typography>
-                    </CardContent>
-                  </MotionCard>
-                </Grid>
-              ))}
+                    {project.title}
+                  </Typography>
+                  <Box sx={{ position: 'relative', mt: 2 }}>
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        display: 'inline',
+                        mr: 1
+                      }}
+                    >
+                      {project.shortDescription.substring(0, 150)}...
+                    </Typography>
+                    <Button
+                      onClick={() => handleDialogOpen(project)}
+                      sx={{
+                        color: '#90caf9',
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        display: 'inline',
+                        padding: '0 4px',
+                        minWidth: 'auto',
+                        verticalAlign: 'baseline',
+                        '&:hover': {
+                          background: 'rgba(144, 202, 249, 0.08)',
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      Read More →
+                    </Button>
+                  </Box>
+                  <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+                    Technologies: {project.technologies.join(', ')}
+                  </Typography>
+                </CardContent>
+              </MotionCard>
             </Grid>
-          </Container>
-        </Box>
+          ))}
+        </Grid>
 
         <AnimatePresence>
           {dialogOpen && (
@@ -296,8 +289,8 @@ const Projects = () => {
             </>
           )}
         </AnimatePresence>
-      </Box>
-    </>
+      </Container>
+    </Box>
   );
 };
 

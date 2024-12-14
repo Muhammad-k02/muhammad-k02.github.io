@@ -15,8 +15,8 @@ import {
 } from '@mui/icons-material';
 import Navbar from '../components/Navbar';
 import DropdownMenu from '../components/DropdownMenu';
-import WebGLBackground from '../components/WebGLBackground';
 import TypeWriter from '../components/TypeWriter';
+import StarBackground from '../components/StarBackground';
 import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
 import * as reactSpring from '@react-spring/three';
 import * as drei from '@react-three/drei';
@@ -27,7 +27,6 @@ function Home() {
   const [revealedWords, setRevealedWords] = useState([]);
   const [showWelcomeText, setShowWelcomeText] = useState(false);
   const [welcomeTextOpacity, setWelcomeTextOpacity] = useState(0);
-  const [backgroundOpacity, setBackgroundOpacity] = useState(0);
   const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [navbarOpacity, setNavbarOpacity] = useState(0);
@@ -92,10 +91,6 @@ function Home() {
       const newRevealedWords = introText.slice(0, newWordCount);
       setRevealedWords(newRevealedWords);
 
-      // Update background opacity
-      const newOpacity = Math.min(0.7, newWordCount / introText.length);
-      setBackgroundOpacity(newOpacity);
-
       // Reset welcome text if going backwards
       if (newWordCount === 0) {
         setShowWelcomeText(false);
@@ -150,37 +145,18 @@ function Home() {
   }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator]);
 
   return (
-    <Box sx={{ position: 'relative', minHeight: '100vh', width: '100%' }}>
-      <WebGLBackground isHome={true} />
+    <Box 
+      sx={{ 
+        position: 'relative', 
+        minHeight: '100vh', 
+        width: '100%', 
+        overflow: 'hidden', 
+        backgroundColor: 'black' 
+      }}
+    >
+      <StarBackground />
       <TypeWriter />
       {/* Dark filter that appears on scroll down */}
-      <Box 
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: `rgba(0, 0, 0, ${filterOpacity})`,
-          pointerEvents: 'none',
-          zIndex: 1,
-          transition: 'background-color 0.3s ease'
-        }}
-      />
-      {/* Scroll-based overlay */}
-      <Box 
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: `rgba(0, 0, 0, ${overlayOpacity})`,
-          pointerEvents: 'none',
-          zIndex: 2,
-          transition: 'opacity 0.3s ease'
-        }}
-      />
       <Box 
         sx={{
           position: 'relative',
@@ -201,7 +177,6 @@ function Home() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            textAlign: 'center',
             height: '100%',
             padding: '20px',
             width: '100%',
@@ -210,7 +185,6 @@ function Home() {
             transform: 'translateY(-50%)'
           }}
         >
-          {/* Intro Text */}
           <Typography 
             variant="h4" 
             sx={{ 

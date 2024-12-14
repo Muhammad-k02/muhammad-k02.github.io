@@ -14,12 +14,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import CloseIcon from '@mui/icons-material/Close';
 import DropdownMenu from '../components/DropdownMenu';
-import WebGLBackground from '../components/WebGLBackground';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
 
-const Publications = () => {
+const Publications = ({ backgroundImage }) => {
+  console.log('Background Image:', backgroundImage);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
 
@@ -46,7 +46,6 @@ const Publications = () => {
   return (
     <>
       <DropdownMenu />
-      <WebGLBackground />
       <Box sx={{ 
         position: 'relative',
         minHeight: '100vh',
@@ -54,6 +53,23 @@ const Publications = () => {
         overflow: 'hidden',
         backgroundColor: 'transparent'
       }}>
+        {backgroundImage && (
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: 0.3,
+              zIndex: 0,
+              filter: 'brightness(0.5) blur(2px)'
+            }}
+          />
+        )}
         <Box
           sx={{
             position: 'relative',

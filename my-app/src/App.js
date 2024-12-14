@@ -16,6 +16,17 @@ import Education from './pages/Education';
 import Resume from './pages/Resume';
 import AboutMe from './pages/AboutMe';
 
+// Import background images
+import ProjectsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
+import PublicationsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted-3 (dragged).jpg';
+import EducationBg from './assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
+
+const backgroundImages = {
+  projects: ProjectsBg,
+  publications: PublicationsBg,
+  education: EducationBg
+};
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -26,9 +37,18 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<AboutMe />} />
-              <Route path="/publications" element={<Publications />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/education" element={<Education />} />
+              <Route 
+                path="/publications" 
+                element={<Publications backgroundImage={backgroundImages.publications} />} 
+              />
+              <Route 
+                path="/projects" 
+                element={<Projects backgroundImage={backgroundImages.projects} />} 
+              />
+              <Route 
+                path="/education" 
+                element={<Education backgroundImage={backgroundImages.education} />} 
+              />
               <Route path="/resume" element={<Resume />} />
             </Routes>
           </AnimatePresence>

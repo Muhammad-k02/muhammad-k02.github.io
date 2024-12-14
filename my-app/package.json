@@ -35,7 +35,11 @@
     "predeploy": "yarn run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "analyze:deps": "madge --circular src",
+    "check:unused": "depcheck"
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +61,10 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gh-pages": "^6.2.0"
+    "depcheck": "^1.4.7",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "gh-pages": "^6.2.0",
+    "madge": "^8.0.0"
   }
 }

@@ -9,72 +9,27 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import "./styles.css";
-import WebGLBackground from './components/WebGLBackground';
 import Home from './pages/Home';
 import Publications from './pages/Publications';
 import Projects from './pages/Projects';
 import Education from './pages/Education';
 import Resume from './pages/Resume';
 import AboutMe from './pages/AboutMe';
-import PageTransition from './components/PageTransition';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <div className="app-container">
-          <WebGLBackground />
+        <div className="App">
           <AnimatePresence mode="wait">
             <Routes>
-              <Route 
-                path="/" 
-                element={
-                  <PageTransition>
-                    <Home />
-                  </PageTransition>
-                } 
-              />
-              <Route 
-                path="/about" 
-                element={
-                  <PageTransition>
-                    <AboutMe />
-                  </PageTransition>
-                } 
-              />
-              <Route 
-                path="/publications" 
-                element={
-                  <PageTransition>
-                    <Publications />
-                  </PageTransition>
-                } 
-              />
-              <Route 
-                path="/projects" 
-                element={
-                  <PageTransition>
-                    <Projects />
-                  </PageTransition>
-                } 
-              />
-              <Route 
-                path="/education" 
-                element={
-                  <PageTransition>
-                    <Education />
-                  </PageTransition>
-                } 
-              />
-              <Route 
-                path="/resume" 
-                element={
-                  <PageTransition>
-                    <Resume />
-                  </PageTransition>
-                } 
-              />
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<AboutMe />} />
+              <Route path="/publications" element={<Publications />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/resume" element={<Resume />} />
             </Routes>
           </AnimatePresence>
         </div>

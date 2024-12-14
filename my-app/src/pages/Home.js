@@ -19,6 +19,7 @@ import {
 import Navbar from '../components/Navbar';
 import DropdownMenu from '../components/DropdownMenu';
 import WebGLBackground from '../components/WebGLBackground';
+import TypeWriter from '../components/TypeWriter';
 import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
 import * as reactSpring from '@react-spring/three';
 import * as drei from '@react-three/drei';
@@ -162,8 +163,9 @@ function Home() {
   }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator]);
 
   return (
-    <>
-      <WebGLBackground />
+    <Box sx={{ position: 'relative', minHeight: '100vh', width: '100%' }}>
+      <WebGLBackground isHome={true} />
+      <TypeWriter />
       {/* Dark filter that appears on scroll down */}
       <Box 
         sx={{
@@ -624,7 +626,7 @@ function Home() {
           </Paper>
         </Modal>
       </Box>
-    </>
+    </Box>
   );
 };
 

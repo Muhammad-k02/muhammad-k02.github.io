@@ -1,64 +1,63 @@
 import React from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import DropdownMenu from '../components/DropdownMenu';
 import WebGLBackground from '../components/WebGLBackground';
+import DropdownMenu from '../components/DropdownMenu';
 
 const Resume = () => {
-  // Replace with your actual resume PDF URL
   const resumeUrl = "/path-to-your-resume.pdf";
 
   return (
-    <>
-      <WebGLBackground />
-      <Box sx={{ 
-        position: 'relative',
-        zIndex: 1,
-        minHeight: '100vh', 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-        color: 'black',
-        flexDirection: 'column'
-      }}>
-        <DropdownMenu />
+    <Box sx={{ 
+      position: 'relative',
+      minHeight: '100vh',
+      width: '100%',
+      overflow: 'hidden'
+    }}>
+      <WebGLBackground isHome={false} />
+      <DropdownMenu />
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          minHeight: '100vh',
+          padding: { xs: '20px', md: '40px' },
+          color: '#E6E6E1'
+        }}
+      >
         <Container maxWidth="lg">
-          <Typography variant="h2" component="h1" gutterBottom>
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            gutterBottom
+            sx={{
+              fontWeight: 300,
+              textAlign: 'center',
+              mb: 6,
+              fontSize: { xs: '2.5rem', md: '3.5rem' }
+            }}
+          >
             Resume
           </Typography>
-
-          <Box sx={{ 
-            textAlign: 'center',
-            p: 4,
-            borderRadius: 2
-          }}>
-            <Typography variant="h6" sx={{ mb: 3 }}>
-              View or download my complete resume
-            </Typography>
-            
-            <Button
-              variant="contained"
-              startIcon={<DownloadIcon />}
-              href={resumeUrl}
-              target="_blank"
-              sx={{
-                minWidth: '100px',
-                minHeight: '10px',
-                margin: '20px',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                color: 'black',
-                '&:hover': {
-                  backgroundColor: 'rgba(255,255,255,0.3)'
-                }
-              }}
-            >
-              Download Resume
-            </Button>
-          </Box>
+          <Button
+            variant="contained"
+            startIcon={<DownloadIcon />}
+            href={resumeUrl}
+            download
+            sx={{
+              mt: 2,
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              }
+            }}
+          >
+            Download Resume
+          </Button>
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };
 

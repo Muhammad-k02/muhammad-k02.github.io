@@ -1,68 +1,110 @@
 import React from 'react';
-import { Container, Typography, Card, CardContent, Grid, Box } from '@mui/material';
-import DropdownMenu from '../components/DropdownMenu';
+import { Box, Container, Typography, Card, CardContent } from '@mui/material';
 import WebGLBackground from '../components/WebGLBackground';
-import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
-import * as reactSpring from '@react-spring/three';
-import * as drei from '@react-three/drei';
-import * as fiber from '@react-three/fiber';
+import DropdownMenu from '../components/DropdownMenu';
 
-function Publications() {
-  // Replace with your actual publications
+const Publications = () => {
   const publications = [
     {
-      title: "Example Publication 1",
-      authors: "Khan, M., et al.",
-      journal: "Nature Communications",
-      year: "2024",
-      link: "#"
+      title: "Identification and Analysis of the Spread of {Mis}information on Social Media",
+      authors: "Muhammad Khan et al.",
+      journal: "Springer",
+      year: "2023",
+      doi: "https://doi.org/10.1007/978-981-97-0669-3_33",
+      abstract: "This study investigates the relationship between musical complexity and aesthetic pleasure..."
     },
-    // Add more publications here
+   
   ];
 
   return (
-    <>
-      <WebGLBackground />
-      <Box 
+    <Box sx={{ 
+      position: 'relative',
+      minHeight: '100vh',
+      width: '100%',
+      overflow: 'hidden'
+    }}>
+      <WebGLBackground isHome={false} />
+      <DropdownMenu />
+      <Box
         sx={{
           position: 'relative',
           zIndex: 1,
           minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'black',
-          padding: '20px'
+          padding: { xs: '20px', md: '40px' },
+          color: '#E6E6E1'
         }}
       >
-        <DropdownMenu />
         <Container maxWidth="lg">
-          <Typography variant="h2" component="h1" gutterBottom>
+          <Typography 
+            variant="h2" 
+            component="h1" 
+            gutterBottom
+            sx={{
+              fontWeight: 300,
+              textAlign: 'center',
+              mb: 6,
+              fontSize: { xs: '2.5rem', md: '3.5rem' }
+            }}
+          >
             Publications
           </Typography>
-          <Grid container spacing={3}>
-            {publications.map((pub, index) => (
-              <Grid item xs={12} key={index}>
-                <Card sx={{ backgroundColor: 'transparent' }}>
-                  <CardContent>
-                    <Typography variant="h6" component="h2">
-                      {pub.title}
-                    </Typography>
-                    <Typography color="textSecondary">
-                      {pub.authors}
-                    </Typography>
-                    <Typography variant="body2">
-                      {pub.journal} ({pub.year})
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          {publications.map((pub, index) => (
+            <Card 
+              key={index}
+              sx={{
+                mb: 4,
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: `
+                    0 4px 30px rgba(0, 0, 0, 0.2),
+                    0 0 20px rgba(255, 255, 255, 0.1)
+                  `
+                }
+              }}
+            >
+              <CardContent>
+                <Typography variant="h5" component="h2" gutterBottom>
+                  {pub.title}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+                  {pub.authors}
+                </Typography>
+                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                  {pub.journal} ({pub.year})
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  {pub.abstract}
+                </Typography>
+                <Typography 
+                  variant="body2" 
+                  component="a" 
+                  href={pub.doi}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: '#90caf9',
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline'
+                    }
+                  }}
+                >
+                  {pub.doi}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };
 

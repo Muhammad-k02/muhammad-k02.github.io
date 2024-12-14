@@ -1,10 +1,38 @@
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
+  typography: {
+    fontFamily: '"Montserrat", sans-serif',
+    h1: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    h2: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    h3: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    h4: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    h5: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    h6: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    body1: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+    body2: {
+      fontFamily: '"Montserrat", sans-serif',
+    },
+  },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
+          fontFamily: '"Montserrat", sans-serif',
           transition: 'none',
           '&:hover': {
             backgroundColor: 'transparent',
@@ -17,6 +45,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
+          fontFamily: '"Montserrat", sans-serif',
           transition: 'none',
           '&:hover': {
             backgroundColor: 'transparent',
@@ -37,6 +66,7 @@ const theme = createTheme({
     MuiLink: {
       styleOverrides: {
         root: {
+          fontFamily: '"Montserrat", sans-serif',
           transition: 'none',
           '&:hover': {
             textDecoration: 'none',
@@ -48,6 +78,7 @@ const theme = createTheme({
     MuiListItem: {
       styleOverrides: {
         root: {
+          fontFamily: '"Montserrat", sans-serif',
           transition: 'none',
           '&:hover': {
             backgroundColor: 'transparent',

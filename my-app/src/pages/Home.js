@@ -5,15 +5,12 @@ import {
   Typography, 
   Container, 
   IconButton, 
-  Menu, 
-  MenuItem, 
   Button, 
   Modal, 
   Paper 
 } from '@mui/material';
 import { 
   KeyboardArrowDown, 
-  Menu as MenuIcon, 
   Close as CloseIcon 
 } from '@mui/icons-material';
 import Navbar from '../components/Navbar';
@@ -24,6 +21,7 @@ import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
 import * as reactSpring from '@react-spring/three';
 import * as drei from '@react-three/drei';
 import * as fiber from '@react-three/fiber';
+import { motion } from 'framer-motion';
 
 function Home() {
   const [revealedWords, setRevealedWords] = useState([]);
@@ -33,28 +31,17 @@ function Home() {
   const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [navbarOpacity, setNavbarOpacity] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [showAboutMeModal, setShowAboutMeModal] = useState(false);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
   const [filterOpacity, setFilterOpacity] = useState(0);
-  const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const welcomeTextRef = useRef(null);
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleAboutMeClick = () => {
     navigate('/about');
   };
 
   const handleAboutMeClose = () => {
-    setShowAboutMeModal(false);
+    // Placeholder for any future modal close logic
   };
 
   const menuItems = [
@@ -207,66 +194,6 @@ function Home() {
         }}
       >
         <DropdownMenu />
-        {/* Menu Dropdown Button */}
-        <IconButton
-          sx={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            color: 'white',
-            zIndex: 1100,
-            backgroundColor: 'rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(10px)',
-            '&:hover': {
-              backgroundColor: 'rgba(255,255,255,0.2)'
-            }
-          }}
-          onClick={handleMenuClick}
-        >
-          <MenuIcon />
-        </IconButton>
-
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          PaperProps={{
-            sx: {
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              backdropFilter: 'blur(15px)',
-              borderRadius: '10px',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              '& .MuiMenuItem-root': {
-                color: 'rgba(0,0,0,0.8)',
-                fontFamily: 'Montserrat',
-                '&:hover': {
-                  backgroundColor: 'rgba(255,255,255,0.3)'
-                }
-              }
-            }
-          }}
-        >
-          {menuItems.map((item) => (
-            <MenuItem 
-              key={item.label} 
-              onClick={() => {
-                handleMenuClose();
-                window.location.href = item.link;
-              }}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
-        </Menu>
-
         <Container 
           maxWidth="lg"
           sx={{
@@ -510,121 +437,174 @@ function Home() {
             <Box
               sx={{
                 position: 'absolute',
-                bottom: '40px',
+                bottom: '5%',
+                left: '50%',
+                transform: 'translateX(-50%)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                animation: 'bounce 2s infinite',
-                '@keyframes bounce': {
-                  '0%, 100%': { transform: 'translateY(0)' },
-                  '50%': { transform: 'translateY(-10px)' }
+                cursor: 'pointer',
+                opacity: 0.8,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  opacity: 1,
+                  transform: 'translateX(-50%) scale(1.1)'
+                }
+              }}
+              onClick={() => {
+                const aboutSection = document.getElementById('about-section');
+                if (aboutSection) {
+                  aboutSection.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
             >
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  color: 'white', 
-                  marginBottom: '5px',
-                  opacity: 0.7 
+              <motion.div
+                animate={{
+                  y: [0, 10, 0],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
                 }}
               >
-                Scroll Down
-              </Typography>
-              <KeyboardArrowDown 
-                sx={{ 
-                  color: 'white', 
-                  fontSize: 40,
-                  opacity: 0.7
-                }} 
-              />
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: 'white', 
+                    fontFamily: 'Montserrat', 
+                    marginBottom: '8px',
+                    textShadow: '0 0 10px rgba(255,255,255,0.5)'
+                  }}
+                >
+                  Scroll Down
+                </Typography>
+                <Box
+                  sx={{
+                    width: '30px',
+                    height: '50px',
+                    border: '2px solid white',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                    boxShadow: '0 0 15px rgba(255,255,255,0.3)'
+                  }}
+                >
+                  <motion.div
+                    animate={{
+                      y: [0, 15, 0],
+                      opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: 'easeInOut'
+                    }}
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      backgroundColor: 'white',
+                      position: 'absolute'
+                    }}
+                  />
+                </Box>
+              </motion.div>
             </Box>
           )}
-        </Container>
 
-        {/* Progress Indicator */}
-        <Box 
-          sx={{
-            position: 'absolute',
-            bottom: '20px',
-            width: '200px',
-            height: '4px',
-            background: 'rgba(255,255,255,0.2)',
-            borderRadius: '1.5px'
-          }}
-        >
+          {/* Progress Indicator */}
           <Box 
             sx={{
-              width: `${revealedWords.length * (100 / introText.length)}%`,
-              height: '100%',
-              background: 'white',
-              borderRadius: '1.5px',
-              transition: 'width 0.3s ease'
-            }}
-          />
-        </Box>
-
-        {/* About Me Modal */}
-        <Modal
-          open={showAboutMeModal}
-          onClose={handleAboutMeClose}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Paper
-            sx={{
-              width: '80%',
-              maxWidth: '600px',
-              maxHeight: '80vh',
-              overflowY: 'auto',
-              padding: '2rem',
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              backdropFilter: 'blur(15px)',
-              borderRadius: '15px',
-              color: 'white',
-              position: 'relative'
+              position: 'absolute',
+              bottom: '20px',
+              width: '200px',
+              height: '4px',
+              background: 'rgba(255,255,255,0.2)',
+              borderRadius: '1.5px'
             }}
           >
-            <IconButton
-              onClick={handleAboutMeClose}
+            <Box 
               sx={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                color: 'white'
+                width: `${revealedWords.length * (100 / introText.length)}%`,
+                height: '100%',
+                background: 'white',
+                borderRadius: '1.5px',
+                transition: 'width 0.3s ease'
               }}
-            >
-              <CloseIcon />
-            </IconButton>
-            
-            <Typography 
-              variant="h4" 
-              gutterBottom 
-              sx={{ 
-                fontFamily: 'Montserrat', 
-                marginBottom: '1rem' 
-              }}
-            >
-              About Me
-            </Typography>
-            
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                fontFamily: 'Montserrat', 
-                lineHeight: 1.6 
-              }}
-            >
-              Hi, I'm Muhammad Khan, a passionate computational researcher dedicated to pushing the boundaries of technology and scientific understanding. 
-              My work spans across machine learning, data science, and innovative computational methodologies.
+            />
+          </Box>
 
-              With a strong academic background and a keen interest in solving complex problems, I strive to develop cutting-edge solutions that bridge theoretical research and practical applications.
-            </Typography>
-          </Paper>
-        </Modal>
+          {/* About Me Modal */}
+          <Modal
+            open={false}
+            onClose={handleAboutMeClose}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Paper
+              sx={{
+                width: '80%',
+                maxWidth: '600px',
+                maxHeight: '80vh',
+                overflowY: 'auto',
+                padding: '2rem',
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(15px)',
+                borderRadius: '15px',
+                color: 'white',
+                position: 'relative'
+              }}
+            >
+              <IconButton
+                onClick={handleAboutMeClose}
+                sx={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  color: 'white'
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              
+              <Typography 
+                variant="h4" 
+                gutterBottom 
+                sx={{ 
+                  fontFamily: 'Montserrat', 
+                  marginBottom: '1rem' 
+                }}
+              >
+                About Me
+              </Typography>
+              
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontFamily: 'Montserrat', 
+                  lineHeight: 1.6 
+                }}
+              >
+                Hi, I'm Muhammad Khan, a passionate computational researcher dedicated to pushing the boundaries of technology and scientific understanding. 
+                My work spans across machine learning, data science, and innovative computational methodologies.
+
+                With a strong academic background and a keen interest in solving complex problems, I strive to develop cutting-edge solutions that bridge theoretical research and practical applications.
+              </Typography>
+            </Paper>
+          </Modal>
+        </Container>
       </Box>
     </Box>
   );

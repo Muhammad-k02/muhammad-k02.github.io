@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
-import { Box, Typography, Container, Dialog, IconButton } from '@mui/material';
+import { Box, Typography, Container, Dialog, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { motion, AnimatePresence } from 'framer-motion';
 import DropdownMenu from '../components/DropdownMenu';
+import WebGLBackground from '../components/WebGLBackground';
+
+// Update this path to your actual resume PDF
+const RESUME_PATH = '/Muhammad_Khan_Resume.pdf';
+
+const MotionDialog = motion(Dialog);
 
 const Resume = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleClick = () => {
-    setDialogOpen(true);
+    setIsDialogOpen(true);
   };
 
-  const handleClose = () => {
-    setDialogOpen(false);
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
   };
 
   return (
@@ -162,14 +168,14 @@ const Resume = () => {
         </Container>
 
         <AnimatePresence>
-          {dialogOpen && (
+          {isDialogOpen && (
             <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                onClick={handleClose}
+                onClick={handleDialogClose}
                 style={{
                   position: 'fixed',
                   top: 0,
@@ -182,9 +188,9 @@ const Resume = () => {
                   zIndex: 1299
                 }}
               />
-              <Dialog
-                open={dialogOpen}
-                onClose={handleClose}
+              <MotionDialog
+                open={isDialogOpen}
+                onClose={handleDialogClose}
                 maxWidth="lg"
                 fullWidth
                 initial={{ opacity: 0, y: 20 }}
@@ -196,22 +202,21 @@ const Resume = () => {
                     background: 'rgba(23, 23, 23, 0.95)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 215, 0, 0.2)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '16px',
                     boxShadow: `
                       0 4px 30px rgba(0, 0, 0, 0.3),
-                      inset 0 0 1px 0 rgba(255, 215, 0, 0.2)
+                      inset 0 0 1px 0 rgba(255, 255, 255, 0.2)
                     `,
                     color: '#E6E6E1',
-                    height: '90vh',
-                    margin: '20px',
-                    position: 'relative',
+                    zIndex: 1300,
+                    maxHeight: '90vh',
                     overflow: 'hidden'
                   }
                 }}
               >
                 <IconButton
-                  onClick={handleClose}
+                  onClick={handleDialogClose}
                   sx={{
                     position: 'absolute',
                     right: 8,
@@ -226,16 +231,18 @@ const Resume = () => {
                 >
                   <CloseIcon />
                 </IconButton>
-                <iframe
-                  src="/Muhammad_Khan_Resume.pdf"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: 'none'
-                  }}
-                  title="Resume"
-                />
-              </Dialog>
+                <DialogContent>
+                  <iframe
+                    src={RESUME_PATH}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none'
+                    }}
+                    title="Resume"
+                  />
+                </DialogContent>
+              </MotionDialog>
             </>
           )}
         </AnimatePresence>

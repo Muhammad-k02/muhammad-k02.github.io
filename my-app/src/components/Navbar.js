@@ -33,9 +33,29 @@ const Navbar = () => {
             textDecoration: 'none',
             fontSize: '1rem',
             cursor: 'pointer',
-            transition: 'color 0.3s ease',
+            transition: 'all 0.3s ease',
+            padding: '8px 16px',
+            borderRadius: '30px', 
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)',
+              transform: 'translateX(-100%)',
+              transition: 'transform 0.6s',
+            },
             '&:hover': {
-              color: 'rgba(255,255,255,0.7)'
+              color: 'rgba(255,255,255,1)',
+              textShadow: '0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(255,255,255,0.3)',
+              transform: 'scale(1.05)',
+              '&::before': {
+                transform: 'translateX(100%)',
+              },
             }
           }}
           onClick={(e) => {

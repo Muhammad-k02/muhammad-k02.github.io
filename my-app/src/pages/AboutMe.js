@@ -1,11 +1,12 @@
-import React from 'react';
 import { Box } from '@mui/material';
-import DropdownMenu from '../components/DropdownMenu';
-import WebGLBackground from '../components/WebGLBackground';
-import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
 import * as reactSpring from '@react-spring/three';
 import * as drei from '@react-three/drei';
 import * as fiber from '@react-three/fiber';
+import React from 'react';
+import { ShaderGradient,ShaderGradientCanvas } from 'shadergradient';
+
+import DropdownMenu from '../components/DropdownMenu';
+import WebGLBackground from '../components/WebGLBackground';
 
 function AboutMe() {
   return (

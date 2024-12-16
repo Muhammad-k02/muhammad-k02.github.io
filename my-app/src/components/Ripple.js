@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const Ripple = () => {
   const [ripples, setRipples] = useState([]);

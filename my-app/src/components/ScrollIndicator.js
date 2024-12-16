@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Box, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Box, Typography } from '@mui/material';
+import { AnimatePresence,motion } from 'framer-motion';
+import PropTypes from 'prop-types';
+import React, { useEffect,useState } from 'react';
 
 const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down' }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -47,7 +48,7 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
             opacity: 1, 
             y: 0,
             transition: {
-              type: "spring",
+              type: 'spring',
               stiffness: 100,
               damping: 10,
               duration: 0.5
@@ -57,7 +58,7 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
             opacity: 0, 
             y: 40,
             transition: {
-              type: "tween",
+              type: 'tween',
               duration: 0.3
             }
           }}
@@ -100,7 +101,7 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
                 textShadow: '0 2px 4px rgba(0,0,0,0.3)',
               }}
             >
-              Scroll Down
+              {text}
             </Typography>
             <motion.div
               animate={{
@@ -109,7 +110,7 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: 'easeInOut',
               }}
             >
               <KeyboardArrowDownIcon
@@ -135,7 +136,7 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: 'easeInOut',
               }}
             />
           </Box>
@@ -143,6 +144,11 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
       )}
     </AnimatePresence>
   );
+};
+
+ScrollIndicator.propTypes = {
+  targetSection: PropTypes.string,
+  text: PropTypes.string
 };
 
 export default ScrollIndicator;

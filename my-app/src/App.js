@@ -1,30 +1,30 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { AnimatePresence } from 'framer-motion';
-import theme from './theme';
 import './App.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import "./styles.css";
-import Home from './pages/Home';
-import Publications from './pages/Publications';
-import Projects from './pages/Projects';
-import Education from './pages/Education';
-import Resume from './pages/Resume';
-import AboutMe from './pages/AboutMe';
+import './styles.css';
+
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import { AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // Import background images
 import ProjectsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
 import PublicationsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted-3 (dragged).jpg';
-import EducationBg from './assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
+import AboutMe from './pages/AboutMe';
+import Education from './pages/Education';
+import Home from './pages/Home';
+import Projects from './pages/Projects';
+import Publications from './pages/Publications';
+import Resume from './pages/Resume';
+import theme from './theme';
 
 const backgroundImages = {
   projects: ProjectsBg,
   publications: PublicationsBg,
-  education: EducationBg
+  education: ProjectsBg
 };
 
 function App() {

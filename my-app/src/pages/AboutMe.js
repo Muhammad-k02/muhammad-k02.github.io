@@ -6,12 +6,10 @@ import React from 'react';
 import { ShaderGradient,ShaderGradientCanvas } from 'shadergradient';
 
 import DropdownMenu from '../components/DropdownMenu';
-import WebGLBackground from '../components/WebGLBackground';
 
 function AboutMe() {
   return (
     <>
-      <WebGLBackground />
       <ShaderGradientCanvas
         importedFiber={{ ...fiber, ...drei, ...reactSpring }}
         style={{

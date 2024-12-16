@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Typography, Container, Dialog, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Box, Container, Dialog, DialogContent, IconButton,Typography } from '@mui/material';
+import { AnimatePresence,motion } from 'framer-motion';
+import React, { useState } from 'react';
+
 import DropdownMenu from '../components/DropdownMenu';
-import WebGLBackground from '../components/WebGLBackground';
 
 // Update this path to your actual resume PDF
 const RESUME_PATH = '/Muhammad_Khan_Resume.pdf';
@@ -196,7 +196,7 @@ const Resume = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                transition={{ type: "spring", duration: 0.5 }}
+                transition={{ type: 'spring', duration: 0.5 }}
                 PaperProps={{
                   sx: {
                     background: 'rgba(23, 23, 23, 0.95)',

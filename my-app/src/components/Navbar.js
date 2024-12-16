@@ -1,9 +1,9 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { AppBar, Button, Box, Toolbar, Typography } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const location = useLocation();
+  const _location = useLocation();
 
   const navItems = [
     { label: 'Home', path: '/' },
@@ -33,7 +33,7 @@ const Navbar = () => {
             textDecoration: 'none',
             fontSize: '1rem',
             cursor: 'pointer',
-            transition: 'all 0.3s ease',
+            transition: 'all 1s ease',
             padding: '8px 16px',
             borderRadius: '30px', 
             position: 'relative',

@@ -1,24 +1,23 @@
-import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
+import CloseIcon from '@mui/icons-material/Close';
 import { 
-  Container, 
-  Typography, 
+  Box,
+  Button,
   Card, 
   CardContent, 
-  Box,
+  Container, 
   Dialog,
-  DialogTitle,
   DialogContent,
-  IconButton,
+  DialogTitle,
   Grid,
-  Button
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { motion, AnimatePresence } from 'framer-motion';
+  IconButton,
+  Typography} from '@mui/material';
+import { AnimatePresence,motion } from 'framer-motion';
+import React, { useCallback,useState } from 'react';
+
 import DropdownMenu from '../components/DropdownMenu';
-import logger from '../utils/logger';
 import { projects } from '../config/projectData';
-import { backgroundImagePropType, projectPropTypes } from '../utils/propValidation';
+import logger from '../utils/logger';
+import { backgroundImagePropType } from '../utils/propValidation';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);

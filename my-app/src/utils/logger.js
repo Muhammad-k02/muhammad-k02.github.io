@@ -10,24 +10,28 @@ const currentLogLevel = process.env.NODE_ENV === 'production'
   : LOG_LEVELS.DEBUG;
 
 const logger = {
-  error: (...args) => {
+  error: (message) => {
     if (currentLogLevel >= LOG_LEVELS.ERROR) {
-      console.error('🔴 [ERROR]', ...args);
+      // eslint-disable-next-line no-console
+      console.error('🔴 [ERROR]', message);
     }
   },
-  warn: (...args) => {
+  warn: (message) => {
     if (currentLogLevel >= LOG_LEVELS.WARN) {
-      console.warn('🟠 [WARN]', ...args);
+      // eslint-disable-next-line no-console
+      console.warn('🟠 [WARN]', message);
     }
   },
-  info: (...args) => {
+  info: (message) => {
     if (currentLogLevel >= LOG_LEVELS.INFO) {
-      console.log('🔵 [INFO]', ...args);
+      // eslint-disable-next-line no-console
+      console.log('🔵 [INFO]', message);
     }
   },
-  debug: (...args) => {
+  debug: (message) => {
     if (currentLogLevel >= LOG_LEVELS.DEBUG) {
-      console.debug('🟢 [DEBUG]', ...args);
+      // eslint-disable-next-line no-console
+      console.debug('🟢 [DEBUG]', message);
     }
   }
 };

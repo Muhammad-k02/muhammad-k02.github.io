@@ -1,27 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
-  Box, 
-  Typography, 
-  Container, 
-  IconButton, 
-  Button, 
-  Modal, 
-  Paper 
-} from '@mui/material';
-import { 
-  KeyboardArrowDown, 
   Close as CloseIcon 
 } from '@mui/icons-material';
-import Navbar from '../components/Navbar';
-import DropdownMenu from '../components/DropdownMenu';
-import TypeWriter from '../components/TypeWriter';
-import StarBackground from '../components/StarBackground';
-import { ShaderGradientCanvas, ShaderGradient } from 'shadergradient';
-import * as reactSpring from '@react-spring/three';
-import * as drei from '@react-three/drei';
-import * as fiber from '@react-three/fiber';
+import { 
+  Box, 
+  Button, 
+  Container, 
+  IconButton, 
+  Modal, 
+  Paper, 
+  Typography} from '@mui/material';
 import { motion } from 'framer-motion';
+import React, { useEffect, useRef,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import DropdownMenu from '../components/DropdownMenu';
+import Navbar from '../components/Navbar';
+import TypeWriter from '../components/TypeWriter';
 
 function Home() {
   const [revealedWords, setRevealedWords] = useState([]);
@@ -30,10 +24,11 @@ function Home() {
   const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [navbarOpacity, setNavbarOpacity] = useState(0);
-  const [overlayOpacity, setOverlayOpacity] = useState(0);
-  const [filterOpacity, setFilterOpacity] = useState(0);
+  const [_overlayOpacity, setOverlayOpacity] = useState(0);
+  const [_filterOpacity, setFilterOpacity] = useState(0);
   const navigate = useNavigate();
   const welcomeTextRef = useRef(null);
+  const _containerRef = useRef(null);
 
   const handleAboutMeClick = () => {
     navigate('/about');
@@ -43,7 +38,7 @@ function Home() {
     // Placeholder for any future modal close logic
   };
 
-  const menuItems = [
+  const _menuItems = [
     { label: 'Home', link: '/' },
     { label: 'Resume', link: '/resume' },
     { label: 'Publications', link: '/publications' },
@@ -51,8 +46,7 @@ function Home() {
     { label: 'Education', link: '/education' }
   ];
 
-  const introText = "Hello! My Name is Muhammad Khan, I am a Computational Researcher!".split(' ');
-  const containerRef = useRef(null);
+  const introText = 'Hello! My Name is Muhammad Khan, I am a Computational Researcher!'.split(' ');
 
   useEffect(() => {
     // Add Google Fonts link
@@ -142,7 +136,7 @@ function Home() {
       window.removeEventListener('wheel', handleWheel);
       document.body.style.overflow = 'auto';
     };
-  }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator]);
+  }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator, introText]);
 
   return (
     <Box 
@@ -154,7 +148,6 @@ function Home() {
         backgroundColor: 'black' 
       }}
     >
-      <StarBackground />
       <TypeWriter />
       {/* Dark filter that appears on scroll down */}
       <Box 
@@ -279,16 +272,12 @@ function Home() {
                     minHeight: '10px',
                     margin: '20px',
                     background: 'none',
-                    border: 'none',
                     textDecoration: 'none',
                     cursor: 'pointer',
                     color: '#E6E6E1', // Soft off-white for text
                     borderRadius: '10px',
                     padding: '12px 20px',
                     boxSizing: 'content-box',
-                    border: '2px solid transparent',
-                    lineHeight: '30px',
-                    transition: '0.75s ease',
                     '&:before, & span:before, &:after, & span:after': {
                       display: 'block',
                       content: '""',
@@ -354,7 +343,8 @@ function Home() {
                         borderRadius: '10px'
                       }
                     },
-                    fontWeight: 600 // Added to bolden the text
+                    fontWeight: 600, // Added to bolden the text
+                    lineHeight: '30px'
                   }}
                 >
                   <span>About Me</span>
@@ -367,42 +357,19 @@ function Home() {
           {navbarOpacity > 0 && (
             <Box 
               sx={{
-                position: 'fixed',
-                top: '65%',
+                position: 'absolute',
+                bottom: '10%', 
                 left: 0,
                 right: 0,
-                width: '100%',
+                zIndex: 3,
                 display: 'flex',
                 justifyContent: 'center',
-                opacity: navbarOpacity,
-                zIndex: 1000,
-                transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), transform 2s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: `scale(${0.95 + (navbarOpacity * 0.05)})`
+                alignItems: 'center',
+                color: 'white',
+                width: '100%'
               }}
             >
-              <Box
-                sx={{
-                  width: '100vw',
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(30px) brightness(110%) contrast(120%)',
-                  borderRadius: '30px',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  boxShadow: '0 10px 40px 0 rgba(31, 38, 135, 0.4)',
-                  padding: '15px 0',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  overflow: 'hidden',
-                  WebkitMask: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-                  mask: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-                  '& > *': {
-                    color: 'rgba(0, 0, 0, 0.8)',
-                    fontWeight: 'bold'
-                  }
-                }}
-              >
-                <Navbar />
-              </Box>
+              <Navbar />
             </Box>
           )}
 
@@ -571,7 +538,7 @@ function Home() {
                   lineHeight: 1.6 
                 }}
               >
-                Hi, I'm Muhammad Khan, a passionate computational researcher dedicated to pushing the boundaries of technology and scientific understanding. 
+                Hi, I&apos;m Muhammad Khan, a passionate computational researcher dedicated to pushing the boundaries of technology and scientific understanding. 
                 My work spans across machine learning, data science, and innovative computational methodologies.
 
                 With a strong academic background and a keen interest in solving complex problems, I strive to develop cutting-edge solutions that bridge theoretical research and practical applications.
@@ -582,6 +549,6 @@ function Home() {
       </Box>
     </Box>
   );
-};
+}
 
 export default Home;

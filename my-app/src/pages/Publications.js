@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 import { 
   Box, 
-  Container, 
-  Typography, 
+  Button,
   Card, 
   CardContent,
+  Container, 
   Dialog,
-  DialogTitle,
   DialogContent,
+  DialogTitle,
   IconButton,
-  Button
-} from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
-import CloseIcon from '@mui/icons-material/Close';
+  Typography} from '@mui/material';
+import { AnimatePresence,motion } from 'framer-motion';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+
 import DropdownMenu from '../components/DropdownMenu';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
 
 const Publications = ({ backgroundImage }) => {
-  console.log('Background Image:', backgroundImage);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
 
   const publications = [
     {
-      title: "Identification and Analysis of the Spread of {Mis}information on Social Media",
-      authors: "Muhammad Khan et al.",
-      journal: "Springer",
-      year: "2023",
-      doi: "https://doi.org/10.1007/978-981-97-0669-3_33",
-      abstract: "With unfolding crises such as the COVID-19 pandemic, it is essential that factual information is dispersed at a rapid pace. One of the major setbacks to mitigating the effects of such crises is misinformation. Advancing technologies such as transformer-based architectures that can pick up underlying patterns and correlational information that constitutes information provide tools that can be used to identify what is misinformation/information. To identify and analyze the spread of misinformation, this work performs a quantitative analysis that uses X (previously Twitter) as the data source and a BERT-based model to identify misinformation. The information of the posts, users, and followers was collected based on hashtags and then processed and manually labeled. Furthermore, we tracked the spread of misinformation related to COVID-19 during the year 2021 and determined how communities that spread information and/or misinformation on social networks interact from an analytical perspective. Our findings suggest that users tend to post more misinformation than information, possibly intentionally spreading misinformation. Our model showed good performance in classifying tweets as information/misinformation, resulting in an accuracy of 86%."
+      title: 'Identification and Analysis of the Spread of {Mis}information on Social Media',
+      authors: 'Muhammad Khan et al.',
+      journal: 'Springer',
+      year: '2023',
+      doi: 'https://doi.org/10.1007/978-981-97-0669-3_33',
+      abstract: 'With unfolding crises such as the COVID-19 pandemic, it is essential that factual information is dispersed at a rapid pace. One of the major setbacks to mitigating the effects of such crises is misinformation. Advancing technologies such as transformer-based architectures that can pick up underlying patterns and correlational information that constitutes information provide tools that can be used to identify what is misinformation/information. To identify and analyze the spread of misinformation, this work performs a quantitative analysis that uses X (previously Twitter) as the data source and a BERT-based model to identify misinformation. The information of the posts, users, and followers was collected based on hashtags and then processed and manually labeled. Furthermore, we tracked the spread of misinformation related to COVID-19 during the year 2021 and determined how communities that spread information and/or misinformation on social networks interact from an analytical perspective. Our findings suggest that users tend to post more misinformation than information, possibly intentionally spreading misinformation. Our model showed good performance in classifying tweets as information/misinformation, resulting in an accuracy of 86%.'
     },
   ];
 
@@ -220,7 +220,7 @@ const Publications = ({ backgroundImage }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                transition={{ type: "spring", duration: 0.5 }}
+                transition={{ type: 'spring', duration: 0.5 }}
                 PaperProps={{
                   sx: {
                     background: 'rgba(23, 23, 23, 0.95)',
@@ -307,6 +307,10 @@ const Publications = ({ backgroundImage }) => {
       </Box>
     </>
   );
+};
+
+Publications.propTypes = {
+  backgroundImage: PropTypes.string.isRequired,
 };
 
 export default Publications;

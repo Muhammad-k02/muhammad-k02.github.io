@@ -1,60 +1,58 @@
-import React, { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 import { 
   Box, 
-  Container, 
-  Typography, 
+  Button,
   Card, 
   CardContent,
+  Container, 
   Dialog,
-  DialogTitle,
   DialogContent,
+  DialogTitle,
   IconButton,
-  Collapse,
-  Button
-} from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CloseIcon from '@mui/icons-material/Close';
+  Typography} from '@mui/material';
+import { AnimatePresence,motion } from 'framer-motion';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+
 import DropdownMenu from '../components/DropdownMenu';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
 
 const Education = ({ backgroundImage }) => {
-  console.log('Background Image:', backgroundImage);
-  const [expandedId, setExpandedId] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedEducation, setSelectedEducation] = useState(null);
+  const [_expandedId, setExpandedId] = useState(null);
+  const [_dialogOpen, setDialogOpen] = useState(false);
+  const [_selectedEducation, setSelectedEducation] = useState(null);
 
   const education = [
     {
-      school: "Loyola University Chicago",
-      degree: "Bachelor of Science in Computer Science",
-      year: "2020-2025",
-      description: "A comprehensive study in computer science with a focus on artificial intelligence and machine learning. Key achievements include:\n\n" +
-        "• Maintained a 3.9+ GPA throughout the program\n" +
-        "• Completed advanced coursework in Neural Networks and Deep Learning\n" +
-        "• Conducted research on spread of misinformation and violence detection\n" +
-        "• First Author of a research paper on Misinformation\n" +
-        "• Received the Dean's List recognition for all semesters",
+      school: 'Loyola University Chicago',
+      degree: 'Bachelor of Science in Computer Science',
+      year: '2020-2025',
+      description: 'A comprehensive study in computer science with a focus on artificial intelligence and machine learning. Key achievements include:\n\n' +
+        '• Maintained a 3.9+ GPA throughout the program\n' +
+        '• Completed advanced coursework in Neural Networks and Deep Learning\n' +
+        '• Conducted research on spread of misinformation and violence detection\n' +
+        '• First Author of a research paper on Misinformation\n' +
+        '• Received the Dean\'s List recognition for all semesters',
       achievements: [
-        "Dean's List Scholar (All Semesters)",
-        "David Prasse Scholarship (2021- 2025)"
+        'Dean\'s List Scholar (All Semesters)',
+        'David Prasse Scholarship (2021- 2025)'
       ]
     },
     // Add more education entries here
   ];
 
-  const handleExpandClick = (id) => {
-    setExpandedId(expandedId === id ? null : id);
+  const _handleExpandClick = (id) => {
+    setExpandedId(_expandedId === id ? null : id);
   };
 
-  const handleDialogOpen = (edu) => {
+  const _handleDialogOpen = (edu) => {
     setSelectedEducation(edu);
     setDialogOpen(true);
   };
 
-  const handleDialogClose = () => {
+  const _handleDialogClose = () => {
     setDialogOpen(false);
   };
 
@@ -161,7 +159,7 @@ const Education = ({ backgroundImage }) => {
                     </Typography>
                     
                     <Button
-                      onClick={() => handleDialogOpen(edu)}
+                      onClick={() => _handleDialogOpen(edu)}
                       sx={{
                         color: '#90caf9',
                         textTransform: 'none',
@@ -180,14 +178,14 @@ const Education = ({ backgroundImage }) => {
         </Box>
 
         <AnimatePresence>
-          {dialogOpen && (
+          {_dialogOpen && (
             <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                onClick={handleDialogClose}
+                onClick={_handleDialogClose}
                 style={{
                   position: 'fixed',
                   top: 0,
@@ -201,14 +199,14 @@ const Education = ({ backgroundImage }) => {
                 }}
               />
               <MotionDialog
-                open={dialogOpen}
-                onClose={handleDialogClose}
+                open={_dialogOpen}
+                onClose={_handleDialogClose}
                 maxWidth="md"
                 fullWidth
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                transition={{ type: "spring", duration: 0.5 }}
+                transition={{ type: 'spring', duration: 0.5 }}
                 PaperProps={{
                   sx: {
                     background: 'rgba(23, 23, 23, 0.95)',
@@ -225,16 +223,16 @@ const Education = ({ backgroundImage }) => {
                   }
                 }}
               >
-                {selectedEducation && (
+                {_selectedEducation && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                   >
                     <DialogTitle sx={{ pr: 6 }}>
-                      {selectedEducation.school}
+                      {_selectedEducation.school}
                       <IconButton
-                        onClick={handleDialogClose}
+                        onClick={_handleDialogClose}
                         sx={{
                           position: 'absolute',
                           right: 8,
@@ -252,20 +250,20 @@ const Education = ({ backgroundImage }) => {
                         transition={{ delay: 0.3 }}
                       >
                         <Typography variant="subtitle1" gutterBottom>
-                          {selectedEducation.degree}
+                          {_selectedEducation.degree}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                          {selectedEducation.year}
+                          {_selectedEducation.year}
                         </Typography>
                         <Typography variant="body1" sx={{ whiteSpace: 'pre-line', mt: 2 }}>
-                          {selectedEducation.description}
+                          {_selectedEducation.description}
                         </Typography>
-                        {selectedEducation.achievements && (
+                        {_selectedEducation.achievements && (
                           <Box sx={{ mt: 3 }}>
                             <Typography variant="h6" gutterBottom>
                               Achievements
                             </Typography>
-                            {selectedEducation.achievements.map((achievement, index) => (
+                            {_selectedEducation.achievements.map((achievement, index) => (
                               <motion.div
                                 key={index}
                                 initial={{ opacity: 0, x: -20 }}
@@ -290,6 +288,10 @@ const Education = ({ backgroundImage }) => {
       </Box>
     </>
   );
+};
+
+Education.propTypes = {
+  backgroundImage: PropTypes.string.isRequired,
 };
 
 export default Education;

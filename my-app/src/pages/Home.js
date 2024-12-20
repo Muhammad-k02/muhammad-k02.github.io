@@ -525,20 +525,18 @@ function Home() {
 
           {/* Navbar positioned below About Me section */}
           {navbarOpacity > 0 && (
-            <Box 
+            <Box
               sx={{
                 position: 'absolute',
-                bottom: '190px', 
+                bottom: '190px',
                 left: 0,
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
                 opacity: navbarOpacity,
                 transition: 'opacity 1s ease, transform 0.5s ease',
-                transform: navbarOpacity > 0 
-                  ? 'translateY(0)' 
-                  : 'translateY(20px)',
-                zIndex: 10 
+                transform: navbarOpacity > 0 ? 'translateY(0)' : 'translateY(20px)',
+                zIndex: 10,
               }}
             >
               <Navbar />

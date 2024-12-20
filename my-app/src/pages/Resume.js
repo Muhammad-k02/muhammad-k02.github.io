@@ -35,13 +35,13 @@ const Resume = () => {
           transition: 'all 0.8s ease',
           '&::before': isHovered
             ? {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: `
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: `
                   linear-gradient(
                     45deg,
                     transparent 0%,
@@ -51,10 +51,10 @@ const Resume = () => {
                     transparent 100%
                   )
                 `,
-              backgroundSize: '200% 200%',
-              animation: 'shimmer 4s linear infinite',
-              zIndex: 0,
-            }
+                backgroundSize: '200% 200%',
+                animation: 'shimmer 4s linear infinite',
+                zIndex: 0,
+              }
             : {},
           '@keyframes shimmer': {
             '0%': {
@@ -133,15 +133,15 @@ const Resume = () => {
               },
               '&::after': isHovered
                 ? {
-                  content: '""',
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  background:
+                    content: '""',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    background:
                       'radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%)',
-                  animation: 'glow 2s infinite',
-                }
+                    animation: 'glow 2s infinite',
+                  }
                 : {},
               '@keyframes glow': {
                 '0%': {

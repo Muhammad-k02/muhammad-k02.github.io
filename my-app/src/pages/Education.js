@@ -36,9 +36,9 @@ const Education = ({ backgroundImage }) => {
         '• Completed advanced coursework in Neural Networks and Deep Learning\n' +
         '• Conducted research on spread of misinformation and violence detection\n' +
         '• First Author of a research paper on Misinformation\n' +
-        "• Received the Dean's List recognition for all semesters",
+        '• Received the Dean\'s List recognition for all semesters',
       achievements: [
-        "Dean's List Scholar (All Semesters)",
+        'Dean\'s List Scholar (All Semesters)',
         'David Prasse Scholarship (2021- 2025)',
       ],
     },

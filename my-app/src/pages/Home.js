@@ -111,15 +111,8 @@ function Home() {
           } else {
             setWelcomeTextAnimationComplete(true);
             
-            let navbarOpacityStep = 0;
-            const navbarFadeIn = setInterval(() => {
-              navbarOpacityStep += 0.1;
-              setNavbarOpacity(Math.min(navbarOpacityStep, 1));
-              
-              if (navbarOpacityStep >= 1) {
-                clearInterval(navbarFadeIn);
-              }
-            }, 25);
+            // Trigger navbar appearance after welcome text
+            setNavbarOpacity(1);
           }
         };
         
@@ -263,7 +256,7 @@ function Home() {
                   onClick={handleAboutMeClick}
                   sx={{
                     display: 'inline-block',
-                    fontFamily: '"Montserrat"',
+                    fontFamily: 'Montserrat',
                     fontSize: '20px',
                     letterSpacing: '5px',
                     textAlign: 'center',
@@ -351,26 +344,6 @@ function Home() {
                 </Button>
               </Box>
             </Container>
-          )}
-
-          {/* Navbar */}
-          {navbarOpacity > 0 && (
-            <Box 
-              sx={{
-                position: 'absolute',
-                bottom: '10%', 
-                left: 0,
-                right: 0,
-                zIndex: 3,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: 'white',
-                width: '100%'
-              }}
-            >
-              <Navbar />
-            </Box>
           )}
 
           {/* Scroll Indicator */}
@@ -545,6 +518,26 @@ function Home() {
               </Typography>
             </Paper>
           </Modal>
+
+          {/* Navbar positioned below About Me section */}
+          {navbarOpacity > 0 && (
+            <Box 
+              sx={{
+                position: 'absolute',
+                bottom: '190px', // Positioned just above the scroll indicator
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                opacity: navbarOpacity,
+                transition: 'opacity 1s ease',
+                zIndex: 10 // Ensure it's above other elements
+              }}
+            >
+              <Navbar />
+            </Box>
+          )}
         </Container>
       </Box>
     </Box>

@@ -39,6 +39,75 @@ export const getBackgroundGlow = (x, y, isHovering, gradientSize) => {
   `;
 };
 
+export const homeStyles = {
+  container: {
+    position: 'relative', 
+    minHeight: '100vh', 
+    width: '100%', 
+    overflow: 'hidden', 
+    backgroundColor: 'black'
+  },
+  contentWrapper: {
+    position: 'relative',
+    zIndex: 3,
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#E6E6E1'
+  },
+  introContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    padding: '20px',
+    width: '100%',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)'
+  },
+  introText: {
+    display: 'flex', 
+    flexWrap: 'none', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontFamily: 'Montserrat',
+    fontSize: '20px',
+    letterSpacing: '5px',
+    textAlign: 'center',
+    color: 'white'
+  },
+  welcomeSection: {
+    marginTop: '2rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  aboutMeButton: {
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.05)',
+      color: '#61dafb'
+    }
+  },
+  navbarContainer: (opacity) => ({
+    position: 'absolute',
+    bottom: '190px', 
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    opacity: opacity,
+    transition: 'opacity 1s ease',
+    zIndex: 10
+  })
+};
+
 export const aboutMeStyles = {
   container: {
     position: 'relative',

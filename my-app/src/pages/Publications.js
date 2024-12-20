@@ -1,16 +1,17 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { 
-  Box, 
+import {
+  Box,
   Button,
-  Card, 
+  Card,
   CardContent,
-  Container, 
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
-  Typography} from '@mui/material';
-import { AnimatePresence,motion } from 'framer-motion';
+  Typography,
+} from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
@@ -30,7 +31,8 @@ const Publications = ({ backgroundImage }) => {
       journal: 'Springer',
       year: '2023',
       doi: 'https://doi.org/10.1007/978-981-97-0669-3_33',
-      abstract: 'With unfolding crises such as the COVID-19 pandemic, it is essential that factual information is dispersed at a rapid pace. One of the major setbacks to mitigating the effects of such crises is misinformation. Advancing technologies such as transformer-based architectures that can pick up underlying patterns and correlational information that constitutes information provide tools that can be used to identify what is misinformation/information. To identify and analyze the spread of misinformation, this work performs a quantitative analysis that uses X (previously Twitter) as the data source and a BERT-based model to identify misinformation. The information of the posts, users, and followers was collected based on hashtags and then processed and manually labeled. Furthermore, we tracked the spread of misinformation related to COVID-19 during the year 2021 and determined how communities that spread information and/or misinformation on social networks interact from an analytical perspective. Our findings suggest that users tend to post more misinformation than information, possibly intentionally spreading misinformation. Our model showed good performance in classifying tweets as information/misinformation, resulting in an accuracy of 86%.'
+      abstract:
+        'With unfolding crises such as the COVID-19 pandemic, it is essential that factual information is dispersed at a rapid pace. One of the major setbacks to mitigating the effects of such crises is misinformation. Advancing technologies such as transformer-based architectures that can pick up underlying patterns and correlational information that constitutes information provide tools that can be used to identify what is misinformation/information. To identify and analyze the spread of misinformation, this work performs a quantitative analysis that uses X (previously Twitter) as the data source and a BERT-based model to identify misinformation. The information of the posts, users, and followers was collected based on hashtags and then processed and manually labeled. Furthermore, we tracked the spread of misinformation related to COVID-19 during the year 2021 and determined how communities that spread information and/or misinformation on social networks interact from an analytical perspective. Our findings suggest that users tend to post more misinformation than information, possibly intentionally spreading misinformation. Our model showed good performance in classifying tweets as information/misinformation, resulting in an accuracy of 86%.',
     },
   ];
 
@@ -46,13 +48,15 @@ const Publications = ({ backgroundImage }) => {
   return (
     <>
       <DropdownMenu />
-      <Box sx={{ 
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100%',
-        overflow: 'hidden',
-        backgroundColor: 'transparent'
-      }}>
+      <Box
+        sx={{
+          position: 'relative',
+          minHeight: '100vh',
+          width: '100%',
+          overflow: 'hidden',
+          backgroundColor: 'transparent',
+        }}
+      >
         {backgroundImage && (
           <Box
             sx={{
@@ -66,7 +70,7 @@ const Publications = ({ backgroundImage }) => {
               backgroundPosition: 'center',
               opacity: 0.3,
               zIndex: 0,
-              filter: 'brightness(0.5) blur(2px)'
+              filter: 'brightness(0.5) blur(2px)',
             }}
           />
         )}
@@ -76,7 +80,7 @@ const Publications = ({ backgroundImage }) => {
             zIndex: 1,
             minHeight: '100vh',
             padding: { xs: '20px', md: '40px' },
-            color: '#E6E6E1'
+            color: '#E6E6E1',
           }}
         >
           <Container maxWidth="lg">
@@ -85,15 +89,15 @@ const Publications = ({ backgroundImage }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Typography 
-                variant="h2" 
-                component="h1" 
+              <Typography
+                variant="h2"
+                component="h1"
                 gutterBottom
                 sx={{
                   fontWeight: 300,
                   textAlign: 'center',
                   mb: 6,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' }
+                  fontSize: { xs: '2.5rem', md: '3.5rem' },
                 }}
               >
                 Publications
@@ -101,7 +105,7 @@ const Publications = ({ backgroundImage }) => {
             </motion.div>
 
             {publications.map((pub, index) => (
-              <MotionCard 
+              <MotionCard
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -125,13 +129,13 @@ const Publications = ({ backgroundImage }) => {
                     background: 'rgba(255, 255, 255, 0.35)',
                     backdropFilter: 'blur(25px)',
                     WebkitBackdropFilter: 'blur(25px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)'
-                  }
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  },
                 }}
               >
                 <CardContent sx={{ textAlign: 'center' }}>
-                  <Typography 
-                    variant="h5" 
+                  <Typography
+                    variant="h5"
                     component="a"
                     onClick={(e) => {
                       e.preventDefault();
@@ -144,8 +148,8 @@ const Publications = ({ backgroundImage }) => {
                       mb: 2,
                       cursor: 'pointer',
                       '&:hover': {
-                        color: '#90caf9'
-                      }
+                        color: '#90caf9',
+                      },
                     }}
                   >
                     {pub.title}
@@ -157,11 +161,11 @@ const Publications = ({ backgroundImage }) => {
                     {pub.journal} ({pub.year})
                   </Typography>
                   <Box sx={{ position: 'relative', mt: 2 }}>
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
+                    <Typography
+                      variant="body1"
+                      sx={{
                         display: 'inline',
-                        mr: 1
+                        mr: 1,
                       }}
                     >
                       {pub.abstract.substring(0, 150)}...
@@ -178,8 +182,8 @@ const Publications = ({ backgroundImage }) => {
                         verticalAlign: 'baseline',
                         '&:hover': {
                           background: 'rgba(144, 202, 249, 0.08)',
-                          textDecoration: 'underline'
-                        }
+                          textDecoration: 'underline',
+                        },
                       }}
                     >
                       Read More →
@@ -209,7 +213,7 @@ const Publications = ({ backgroundImage }) => {
                   background: 'rgba(0, 0, 0, 0.75)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
-                  zIndex: 1299
+                  zIndex: 1299,
                 }}
               />
               <MotionDialog
@@ -233,8 +237,8 @@ const Publications = ({ backgroundImage }) => {
                       inset 0 0 1px 0 rgba(255, 255, 255, 0.2)
                     `,
                     color: '#E6E6E1',
-                    zIndex: 1300
-                  }
+                    zIndex: 1300,
+                  },
                 }}
               >
                 {selectedPublication && (
@@ -251,7 +255,7 @@ const Publications = ({ backgroundImage }) => {
                           position: 'absolute',
                           right: 8,
                           top: 8,
-                          color: 'rgba(255, 255, 255, 0.7)'
+                          color: 'rgba(255, 255, 255, 0.7)',
                         }}
                       >
                         <CloseIcon />
@@ -272,16 +276,18 @@ const Publications = ({ backgroundImage }) => {
                         <Typography variant="body1" sx={{ mt: 2, mb: 3 }}>
                           {selectedPublication.abstract}
                         </Typography>
-                        <Box sx={{ 
-                          display: 'flex', 
-                          justifyContent: 'center', 
-                          mt: 3,
-                          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                          pt: 2
-                        }}>
-                          <Typography 
-                            variant="body2" 
-                            component="a" 
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            mt: 3,
+                            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                            pt: 2,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            component="a"
                             href={selectedPublication.doi}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -289,8 +295,8 @@ const Publications = ({ backgroundImage }) => {
                               color: '#90caf9',
                               textDecoration: 'none',
                               '&:hover': {
-                                textDecoration: 'underline'
-                              }
+                                textDecoration: 'underline',
+                              },
                             }}
                           >
                             {selectedPublication.doi}

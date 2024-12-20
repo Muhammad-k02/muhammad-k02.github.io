@@ -1,18 +1,19 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { 
+import {
   Box,
   Button,
-  Card, 
-  CardContent, 
-  Container, 
+  Card,
+  CardContent,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
   Grid,
   IconButton,
-  Typography} from '@mui/material';
-import { AnimatePresence,motion } from 'framer-motion';
-import React, { useCallback,useState } from 'react';
+  Typography,
+} from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useCallback, useState } from 'react';
 
 import DropdownMenu from '../components/DropdownMenu';
 import { projects } from '../config/projectData';
@@ -39,12 +40,14 @@ const Projects = ({ backgroundImage }) => {
   }, []);
 
   return (
-    <Box sx={{ 
-      position: 'relative', 
-      minHeight: '100vh', 
-      width: '100%',
-      backgroundColor: 'transparent'
-    }}>
+    <Box
+      sx={{
+        position: 'relative',
+        minHeight: '100vh',
+        width: '100%',
+        backgroundColor: 'transparent',
+      }}
+    >
       {backgroundImage && (
         <Box
           sx={{
@@ -58,30 +61,33 @@ const Projects = ({ backgroundImage }) => {
             backgroundPosition: 'center',
             opacity: 0.3,
             zIndex: 0,
-            filter: 'brightness(0.5) blur(2px)'
+            filter: 'brightness(0.5) blur(2px)',
           }}
         />
       )}
-      <Container maxWidth="lg" sx={{ 
-        position: 'relative', 
-        zIndex: 1, 
-        py: 4 
-      }}>
+      <Container
+        maxWidth="lg"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          py: 4,
+        }}
+      >
         <DropdownMenu />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Typography 
-            variant="h2" 
-            component="h1" 
+          <Typography
+            variant="h2"
+            component="h1"
             gutterBottom
             sx={{
               fontWeight: 300,
               textAlign: 'center',
               mb: 6,
-              fontSize: { xs: '2.5rem', md: '3.5rem' }
+              fontSize: { xs: '2.5rem', md: '3.5rem' },
             }}
           >
             Projects
@@ -95,12 +101,12 @@ const Projects = ({ backgroundImage }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: project.id * 0.2 }}
-                sx={{ 
-                  height: '100%', 
-                  display: 'flex', 
+                sx={{
+                  height: '100%',
+                  display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
                 onClick={() => handleDialogOpen(project)}
               >
@@ -115,8 +121,8 @@ const Projects = ({ backgroundImage }) => {
 
         <AnimatePresence>
           {dialogOpen && selectedProject && (
-            <MotionDialog 
-              open={dialogOpen} 
+            <MotionDialog
+              open={dialogOpen}
               onClose={handleDialogClose}
               maxWidth="md"
               fullWidth
@@ -127,8 +133,8 @@ const Projects = ({ backgroundImage }) => {
             >
               <DialogTitle>
                 {selectedProject.title}
-                <IconButton 
-                  onClick={handleDialogClose} 
+                <IconButton
+                  onClick={handleDialogClose}
                   sx={{ position: 'absolute', right: 8, top: 8 }}
                 >
                   <CloseIcon />
@@ -136,10 +142,10 @@ const Projects = ({ backgroundImage }) => {
               </DialogTitle>
               <DialogContent>
                 <Typography variant="body1">{selectedProject.fullDescription}</Typography>
-                <Button 
-                  variant="outlined" 
-                  href={selectedProject.github} 
-                  target="_blank" 
+                <Button
+                  variant="outlined"
+                  href={selectedProject.github}
+                  target="_blank"
                   sx={{ mt: 2 }}
                 >
                   View on GitHub
@@ -154,7 +160,7 @@ const Projects = ({ backgroundImage }) => {
 };
 
 Projects.propTypes = {
-  backgroundImage: backgroundImagePropType
+  backgroundImage: backgroundImagePropType,
 };
 
 export default Projects;

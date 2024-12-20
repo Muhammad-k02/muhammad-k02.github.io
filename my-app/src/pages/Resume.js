@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Container, Dialog, DialogContent, IconButton,Typography } from '@mui/material';
-import { AnimatePresence,motion } from 'framer-motion';
+import { Box, Container, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 
 import DropdownMenu from '../components/DropdownMenu';
@@ -25,21 +25,23 @@ const Resume = () => {
   return (
     <>
       <DropdownMenu />
-      <Box sx={{ 
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100%',
-        overflow: 'hidden',
-        backgroundColor: 'transparent',
-        transition: 'all 0.8s ease',
-        '&::before': isHovered ? {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
+      <Box
+        sx={{
+          position: 'relative',
+          minHeight: '100vh',
+          width: '100%',
+          overflow: 'hidden',
+          backgroundColor: 'transparent',
+          transition: 'all 0.8s ease',
+          '&::before': isHovered
+            ? {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: `
             linear-gradient(
               45deg,
               transparent 0%,
@@ -49,31 +51,36 @@ const Resume = () => {
               transparent 100%
             )
           `,
-          backgroundSize: '200% 200%',
-          animation: 'shimmer 4s linear infinite',
-          zIndex: 0
-        } : {},
-        '@keyframes shimmer': {
-          '0%': {
-            backgroundPosition: '0% 50%'
+                backgroundSize: '200% 200%',
+                animation: 'shimmer 4s linear infinite',
+                zIndex: 0,
+              }
+            : {},
+          '@keyframes shimmer': {
+            '0%': {
+              backgroundPosition: '0% 50%',
+            },
+            '50%': {
+              backgroundPosition: '100% 50%',
+            },
+            '100%': {
+              backgroundPosition: '0% 50%',
+            },
           },
-          '50%': {
-            backgroundPosition: '100% 50%'
-          },
-          '100%': {
-            backgroundPosition: '0% 50%'
-          }
-        }
-      }}>
-        <Container maxWidth="lg" sx={{ 
-          position: 'relative',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1
-        }}>
+        }}
+      >
+        <Container
+          maxWidth="lg"
+          sx={{
+            position: 'relative',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1,
+          }}
+        >
           <Box
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -95,14 +102,16 @@ const Resume = () => {
                 borderRadius: '50%',
                 border: '2px solid #ffd700',
                 animation: 'pulse 2s infinite',
-                boxShadow: isHovered ? `
+                boxShadow: isHovered
+                  ? `
                   0 0 30px rgba(255, 215, 0, 0.5),
                   0 0 60px rgba(255, 215, 0, 0.3),
                   0 0 90px rgba(255, 215, 0, 0.2),
                   inset 0 0 30px rgba(255, 215, 0, 0.5),
                   inset 0 0 60px rgba(255, 215, 0, 0.3),
                   inset 0 0 90px rgba(255, 215, 0, 0.2)
-                ` : `
+                `
+                  : `
                   0 0 20px rgba(255, 215, 0, 0.3),
                   0 0 40px rgba(255, 215, 0, 0.2),
                   0 0 60px rgba(255, 215, 0, 0.1)
@@ -122,44 +131,47 @@ const Resume = () => {
                   opacity: 0.8,
                 },
               },
-              '&::after': isHovered ? {
-                content: '""',
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%)',
-                animation: 'glow 2s infinite',
-              } : {},
+              '&::after': isHovered
+                ? {
+                    content: '""',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    background:
+                      'radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%)',
+                    animation: 'glow 2s infinite',
+                  }
+                : {},
               '@keyframes glow': {
                 '0%': {
                   opacity: 0.5,
-                  transform: 'scale(1)'
+                  transform: 'scale(1)',
                 },
                 '50%': {
                   opacity: 0.8,
-                  transform: 'scale(1.1)'
+                  transform: 'scale(1.1)',
                 },
                 '100%': {
                   opacity: 0.5,
-                  transform: 'scale(1)'
-                }
-              }
+                  transform: 'scale(1)',
+                },
+              },
             }}
           >
-            <Typography 
-              variant="h2" 
+            <Typography
+              variant="h2"
               component="h1"
               sx={{
                 color: isHovered ? '#ffd700' : '#E6E6E1',
                 fontWeight: 300,
                 textAlign: 'center',
                 fontSize: { xs: '2.5rem', md: '3.5rem' },
-                textShadow: isHovered ?
-                  '0 0 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6), 0 0 45px rgba(255, 215, 0, 0.4)' :
-                  '0 0 5px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2)',
+                textShadow: isHovered
+                  ? '0 0 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6), 0 0 45px rgba(255, 215, 0, 0.4)'
+                  : '0 0 5px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2)',
                 transition: 'all 0.3s ease',
-                zIndex: 1
+                zIndex: 1,
               }}
             >
               Resume
@@ -185,7 +197,7 @@ const Resume = () => {
                   background: 'rgba(0, 0, 0, 0.75)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
-                  zIndex: 1299
+                  zIndex: 1299,
                 }}
               />
               <MotionDialog
@@ -211,8 +223,8 @@ const Resume = () => {
                     color: '#E6E6E1',
                     zIndex: 1300,
                     maxHeight: '90vh',
-                    overflow: 'hidden'
-                  }
+                    overflow: 'hidden',
+                  },
                 }}
               >
                 <IconButton
@@ -225,8 +237,8 @@ const Resume = () => {
                     zIndex: 1,
                     '&:hover': {
                       color: '#ffd700',
-                      background: 'rgba(255, 215, 0, 0.1)'
-                    }
+                      background: 'rgba(255, 215, 0, 0.1)',
+                    },
                   }}
                 >
                   <CloseIcon />
@@ -237,7 +249,7 @@ const Resume = () => {
                     style={{
                       width: '100%',
                       height: '100%',
-                      border: 'none'
+                      border: 'none',
                     }}
                     title="Resume"
                   />

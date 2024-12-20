@@ -24,7 +24,7 @@ import theme from './theme';
 const backgroundImages = {
   projects: ProjectsBg,
   publications: PublicationsBg,
-  education: ProjectsBg
+  education: ProjectsBg,
 };
 
 function App() {
@@ -37,17 +37,17 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<AboutMe />} />
-              <Route 
-                path="/publications" 
-                element={<Publications backgroundImage={backgroundImages.publications} />} 
+              <Route
+                path="/publications"
+                element={<Publications backgroundImage={backgroundImages.publications} />}
               />
-              <Route 
-                path="/projects" 
-                element={<Projects backgroundImage={backgroundImages.projects} />} 
+              <Route
+                path="/projects"
+                element={<Projects backgroundImage={backgroundImages.projects} />}
               />
-              <Route 
-                path="/education" 
-                element={<Education backgroundImage={backgroundImages.education} />} 
+              <Route
+                path="/education"
+                element={<Education backgroundImage={backgroundImages.education} />}
               />
               <Route path="/resume" element={<Resume />} />
             </Routes>

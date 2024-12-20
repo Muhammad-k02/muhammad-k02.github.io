@@ -1,8 +1,8 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box, Typography } from '@mui/material';
-import { AnimatePresence,motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down' }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -12,16 +12,16 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
     const handleScroll = () => {
       const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const isScrollingDown = currentScrollTop > lastScrollTop;
-      
+
       // Hide indicator when scrolling down from top
       if (currentScrollTop > 100 && isScrollingDown) {
         setIsVisible(false);
-      } 
+      }
       // Show indicator when scrolling back up to top
       else if (currentScrollTop < 100) {
         setIsVisible(true);
       }
-      
+
       setLastScrollTop(currentScrollTop);
     };
 
@@ -32,9 +32,9 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
   const scrollToSection = () => {
     const section = document.getElementById(targetSection);
     if (section) {
-      section.scrollIntoView({ 
+      section.scrollIntoView({
         behavior: 'smooth',
-        block: 'start'
+        block: 'start',
       });
     }
   };
@@ -44,23 +44,23 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
       {isVisible && (
         <motion.div
           initial={{ opacity: 0, y: 40 }}
-          animate={{ 
-            opacity: 1, 
+          animate={{
+            opacity: 1,
             y: 0,
             transition: {
               type: 'spring',
               stiffness: 100,
               damping: 10,
-              duration: 0.5
-            }
+              duration: 0.5,
+            },
           }}
-          exit={{ 
-            opacity: 0, 
+          exit={{
+            opacity: 0,
             y: 40,
             transition: {
               type: 'tween',
-              duration: 0.3
-            }
+              duration: 0.3,
+            },
           }}
           style={{
             position: 'fixed',
@@ -148,7 +148,7 @@ const ScrollIndicator = ({ targetSection = 'about-section', text = 'Scroll Down'
 
 ScrollIndicator.propTypes = {
   targetSection: PropTypes.string,
-  text: PropTypes.string
+  text: PropTypes.string,
 };
 
 export default ScrollIndicator;

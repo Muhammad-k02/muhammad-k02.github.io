@@ -6,7 +6,7 @@ const Ripple = () => {
 
   const createRipple = useCallback((e) => {
     // Get precise mouse coordinates
-    const x = e.pageX;  // Use pageX/pageY to account for scrolled page
+    const x = e.pageX; // Use pageX/pageY to account for scrolled page
     const y = e.pageY;
 
     const ripple = {
@@ -16,7 +16,7 @@ const Ripple = () => {
       id: Date.now(),
     };
 
-    setRipples(prev => [...prev, ripple]);
+    setRipples((prev) => [...prev, ripple]);
   }, []);
 
   useEffect(() => {
@@ -25,9 +25,7 @@ const Ripple = () => {
 
     // Cleanup ripples older than 1.5 seconds
     const cleanupInterval = setInterval(() => {
-      setRipples(prev => 
-        prev.filter(ripple => Date.now() - ripple.timestamp < 1500)
-      );
+      setRipples((prev) => prev.filter((ripple) => Date.now() - ripple.timestamp < 1500));
     }, 1000);
 
     // Cleanup event listeners
@@ -38,7 +36,7 @@ const Ripple = () => {
   }, [createRipple]);
 
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         top: 0,
@@ -54,7 +52,7 @@ const Ripple = () => {
           <motion.div
             key={ripple.id}
             initial={{
-              left: ripple.x,  // Use left/top for absolute positioning
+              left: ripple.x, // Use left/top for absolute positioning
               top: ripple.y,
               scale: 0,
               opacity: 0.8,
@@ -72,11 +70,11 @@ const Ripple = () => {
               ease: [0.4, 0, 0.2, 1],
             }}
             style={{
-              position: 'absolute',  // Changed to absolute
+              position: 'absolute', // Changed to absolute
               width: '100px',
               height: '100px',
               borderRadius: '50%',
-              transform: 'translate(-50%, -50%)',  // Center the ripple
+              transform: 'translate(-50%, -50%)', // Center the ripple
               background: `
                 radial-gradient(circle, 
                   rgba(255, 69, 0, 0.4) 0%,

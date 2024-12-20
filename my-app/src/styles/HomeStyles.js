@@ -30,7 +30,7 @@ export const getTextGlowStyles = (x, y, isHovering, gradientSize, isName = true)
 
 export const getBackgroundGlow = (x, y, isHovering, gradientSize) => {
   if (!isHovering) return '';
-  
+
   return `
     radial-gradient(circle ${gradientSize * 2}px at ${x}px ${y}px, 
       rgba(255,51,102,0.15) 0%, 
@@ -41,11 +41,11 @@ export const getBackgroundGlow = (x, y, isHovering, gradientSize) => {
 
 export const homeStyles = {
   container: {
-    position: 'relative', 
-    minHeight: '100vh', 
-    width: '100%', 
-    overflow: 'hidden', 
-    backgroundColor: 'black'
+    position: 'relative',
+    minHeight: '100vh',
+    width: '100%',
+    overflow: 'hidden',
+    backgroundColor: 'black',
   },
   contentWrapper: {
     position: 'relative',
@@ -55,7 +55,7 @@ export const homeStyles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#E6E6E1'
+    color: '#E6E6E1',
   },
   introContainer: {
     display: 'flex',
@@ -67,36 +67,36 @@ export const homeStyles = {
     width: '100%',
     position: 'absolute',
     top: '50%',
-    transform: 'translateY(-50%)'
+    transform: 'translateY(-50%)',
   },
   introText: {
-    display: 'flex', 
-    flexWrap: 'none', 
+    display: 'flex',
+    flexWrap: 'none',
     justifyContent: 'center',
     alignItems: 'center',
     fontFamily: 'Montserrat',
     fontSize: '20px',
     letterSpacing: '5px',
     textAlign: 'center',
-    color: 'white'
+    color: 'white',
   },
   welcomeSection: {
     marginTop: '2rem',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   aboutMeButton: {
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     '&:hover': {
       transform: 'scale(1.05)',
-      color: '#61dafb'
-    }
+      color: '#61dafb',
+    },
   },
   navbarContainer: (opacity) => ({
     position: 'absolute',
-    bottom: '190px', 
+    bottom: '190px',
     left: '50%',
     transform: 'translateX(-50%)',
     width: '100%',
@@ -104,8 +104,8 @@ export const homeStyles = {
     justifyContent: 'center',
     opacity: opacity,
     transition: 'opacity 1s ease',
-    zIndex: 10
-  })
+    zIndex: 10,
+  }),
 };
 
 export const aboutMeStyles = {

@@ -1,16 +1,17 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { 
-  Box, 
+import {
+  Box,
   Button,
-  Card, 
+  Card,
   CardContent,
-  Container, 
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
-  Typography} from '@mui/material';
-import { AnimatePresence,motion } from 'framer-motion';
+  Typography,
+} from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
@@ -29,16 +30,17 @@ const Education = ({ backgroundImage }) => {
       school: 'Loyola University Chicago',
       degree: 'Bachelor of Science in Computer Science',
       year: '2020-2025',
-      description: 'A comprehensive study in computer science with a focus on artificial intelligence and machine learning. Key achievements include:\n\n' +
+      description:
+        'A comprehensive study in computer science with a focus on artificial intelligence and machine learning. Key achievements include:\n\n' +
         '• Maintained a 3.9+ GPA throughout the program\n' +
         '• Completed advanced coursework in Neural Networks and Deep Learning\n' +
         '• Conducted research on spread of misinformation and violence detection\n' +
         '• First Author of a research paper on Misinformation\n' +
-        '• Received the Dean\'s List recognition for all semesters',
+        "• Received the Dean's List recognition for all semesters",
       achievements: [
-        'Dean\'s List Scholar (All Semesters)',
-        'David Prasse Scholarship (2021- 2025)'
-      ]
+        "Dean's List Scholar (All Semesters)",
+        'David Prasse Scholarship (2021- 2025)',
+      ],
     },
     // Add more education entries here
   ];
@@ -59,13 +61,15 @@ const Education = ({ backgroundImage }) => {
   return (
     <>
       <DropdownMenu />
-      <Box sx={{ 
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100%',
-        overflow: 'hidden',
-        backgroundColor: 'transparent'
-      }}>
+      <Box
+        sx={{
+          position: 'relative',
+          minHeight: '100vh',
+          width: '100%',
+          overflow: 'hidden',
+          backgroundColor: 'transparent',
+        }}
+      >
         {backgroundImage && (
           <Box
             sx={{
@@ -79,7 +83,7 @@ const Education = ({ backgroundImage }) => {
               backgroundPosition: 'center',
               opacity: 0.3,
               zIndex: 0,
-              filter: 'brightness(0.5) blur(2px)'
+              filter: 'brightness(0.5) blur(2px)',
             }}
           />
         )}
@@ -89,7 +93,7 @@ const Education = ({ backgroundImage }) => {
             zIndex: 1,
             minHeight: '100vh',
             padding: { xs: '20px', md: '40px' },
-            color: '#E6E6E1'
+            color: '#E6E6E1',
           }}
         >
           <Container maxWidth="lg">
@@ -98,23 +102,23 @@ const Education = ({ backgroundImage }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Typography 
-                variant="h2" 
-                component="h1" 
+              <Typography
+                variant="h2"
+                component="h1"
                 gutterBottom
                 sx={{
                   fontWeight: 300,
                   textAlign: 'center',
                   mb: 6,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' }
+                  fontSize: { xs: '2.5rem', md: '3.5rem' },
                 }}
               >
                 Education
               </Typography>
             </motion.div>
-            
+
             {education.map((edu, index) => (
-              <MotionCard 
+              <MotionCard
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -138,8 +142,8 @@ const Education = ({ backgroundImage }) => {
                     background: 'rgba(255, 255, 255, 0.35)',
                     backdropFilter: 'blur(25px)',
                     WebkitBackdropFilter: 'blur(25px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)'
-                  }
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                  },
                 }}
               >
                 <CardContent>
@@ -152,20 +156,20 @@ const Education = ({ backgroundImage }) => {
                   <Typography variant="subtitle2" color="textSecondary" gutterBottom>
                     {edu.year}
                   </Typography>
-                  
+
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="body1" paragraph>
                       {edu.description.split('\n\n')[0]}
                     </Typography>
-                    
+
                     <Button
                       onClick={() => _handleDialogOpen(edu)}
                       sx={{
                         color: '#90caf9',
                         textTransform: 'none',
                         '&:hover': {
-                          background: 'rgba(255, 255, 255, 0.05)'
-                        }
+                          background: 'rgba(255, 255, 255, 0.05)',
+                        },
                       }}
                     >
                       Read More
@@ -195,7 +199,7 @@ const Education = ({ backgroundImage }) => {
                   background: 'rgba(0, 0, 0, 0.75)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
-                  zIndex: 1299
+                  zIndex: 1299,
                 }}
               />
               <MotionDialog
@@ -219,8 +223,8 @@ const Education = ({ backgroundImage }) => {
                       inset 0 0 1px 0 rgba(255, 255, 255, 0.2)
                     `,
                     color: '#E6E6E1',
-                    zIndex: 1300
-                  }
+                    zIndex: 1300,
+                  },
                 }}
               >
                 {_selectedEducation && (
@@ -237,7 +241,7 @@ const Education = ({ backgroundImage }) => {
                           position: 'absolute',
                           right: 8,
                           top: 8,
-                          color: 'rgba(255, 255, 255, 0.7)'
+                          color: 'rgba(255, 255, 255, 0.7)',
                         }}
                       >
                         <CloseIcon />

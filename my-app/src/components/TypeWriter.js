@@ -1,11 +1,11 @@
-import { Box,Typography } from '@mui/material';
-import React, { useEffect,useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 const TypeWriter = () => {
   const [text, setText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const fullText = 'Hello World!';
-  
+
   useEffect(() => {
     let currentIndex = 0;
     const interval = setInterval(() => {
@@ -23,7 +23,7 @@ const TypeWriter = () => {
   // Blinking cursor effect
   useEffect(() => {
     const cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
+      setShowCursor((prev) => !prev);
     }, 530);
 
     return () => clearInterval(cursorInterval);
@@ -38,7 +38,7 @@ const TypeWriter = () => {
         transform: 'translateX(-50%)',
         zIndex: 2,
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
       <Typography
@@ -46,7 +46,7 @@ const TypeWriter = () => {
         sx={{
           fontFamily: '"Special Elite", monospace',
           color: '#E6E6E1',
-          fontSize: '5rem'
+          fontSize: '5rem',
         }}
       >
         {text}
@@ -59,7 +59,7 @@ const TypeWriter = () => {
           fontSize: '5rem',
           opacity: showCursor ? 1 : 0,
           transition: 'opacity 0.1s',
-          marginLeft: '4px'
+          marginLeft: '4px',
         }}
       >
         |

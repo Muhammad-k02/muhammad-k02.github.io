@@ -14,12 +14,12 @@ const Navbar = () => {
   ];
 
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
         width: '100%',
-        gap: 3
+        gap: 3,
       }}
     >
       {navItems.map((item) => (
@@ -35,7 +35,7 @@ const Navbar = () => {
             cursor: 'pointer',
             transition: 'all 1s ease',
             padding: '8px 16px',
-            borderRadius: '30px', 
+            borderRadius: '30px',
             position: 'relative',
             overflow: 'hidden',
             '&::before': {
@@ -56,7 +56,7 @@ const Navbar = () => {
               '&::before': {
                 transform: 'translateX(100%)',
               },
-            }
+            },
           }}
           onClick={(e) => {
             e.preventDefault();

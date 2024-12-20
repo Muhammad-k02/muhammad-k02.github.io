@@ -2,12 +2,10 @@ const LOG_LEVELS = {
   ERROR: 0,
   WARN: 1,
   INFO: 2,
-  DEBUG: 3
+  DEBUG: 3,
 };
 
-const currentLogLevel = process.env.NODE_ENV === 'production' 
-  ? LOG_LEVELS.WARN 
-  : LOG_LEVELS.DEBUG;
+const currentLogLevel = process.env.NODE_ENV === 'production' ? LOG_LEVELS.WARN : LOG_LEVELS.DEBUG;
 
 const logger = {
   error: (message) => {
@@ -33,7 +31,7 @@ const logger = {
       // eslint-disable-next-line no-console
       console.debug('🟢 [DEBUG]', message);
     }
-  }
+  },
 };
 
 export default logger;

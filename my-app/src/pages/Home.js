@@ -1,16 +1,7 @@
-import { 
-  Close as CloseIcon 
-} from '@mui/icons-material';
-import { 
-  Box, 
-  Button, 
-  Container, 
-  IconButton, 
-  Modal, 
-  Paper, 
-  Typography} from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Box, Button, Container, IconButton, Modal, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import React, { useEffect, useRef,useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import DropdownMenu from '../components/DropdownMenu';
@@ -43,7 +34,7 @@ function Home() {
     { label: 'Resume', link: '/resume' },
     { label: 'Publications', link: '/publications' },
     { label: 'Projects', link: '/projects' },
-    { label: 'Education', link: '/education' }
+    { label: 'Education', link: '/education' },
   ];
 
   const introText = 'Hello! My Name is Muhammad Khan, I am a Computational Researcher!'.split(' ');
@@ -51,24 +42,25 @@ function Home() {
   useEffect(() => {
     // Add Google Fonts link
     const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
+    link.href =
+      'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
 
     // Disable default scrolling for custom scroll effect
     document.body.style.overflow = 'hidden';
-    
+
     const handleWheel = (event) => {
       event.preventDefault();
-      
+
       // Hide scroll indicator on first scroll
       if (showScrollIndicator) {
         setShowScrollIndicator(false);
       }
-      
+
       // Determine scroll direction
       const isScrollingDown = event.deltaY > 0;
-      
+
       // Calculate words to reveal
       const currentWordCount = revealedWords.length;
       let newWordCount;
@@ -96,26 +88,26 @@ function Home() {
       // Show welcome text only when fully revealed and not already animated
       if (newWordCount >= introText.length && !welcomeTextAnimationComplete) {
         setShowWelcomeText(true);
-        
+
         let start = null;
         const animateFadeIn = (timestamp) => {
           if (!start) start = timestamp;
-          
+
           const progress = Math.min((timestamp - start) / 400, 1);
           const smoothProgress = progress * progress * (3 - 2 * progress);
-          
+
           setWelcomeTextOpacity(smoothProgress);
-          
+
           if (progress < 1) {
             requestAnimationFrame(animateFadeIn);
           } else {
             setWelcomeTextAnimationComplete(true);
-            
+
             // Trigger navbar appearance after welcome text
             setNavbarOpacity(1);
           }
         };
-        
+
         requestAnimationFrame(animateFadeIn);
       }
 
@@ -132,18 +124,18 @@ function Home() {
   }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator, introText]);
 
   return (
-    <Box 
-      sx={{ 
-        position: 'relative', 
-        minHeight: '100vh', 
-        width: '100%', 
-        overflow: 'hidden', 
-        backgroundColor: 'black' 
+    <Box
+      sx={{
+        position: 'relative',
+        minHeight: '100vh',
+        width: '100%',
+        overflow: 'hidden',
+        backgroundColor: 'black',
       }}
     >
       <TypeWriter />
       {/* Dark filter that appears on scroll down */}
-      <Box 
+      <Box
         sx={{
           position: 'relative',
           zIndex: 3,
@@ -152,11 +144,11 @@ function Home() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          color: '#E6E6E1'
+          color: '#E6E6E1',
         }}
       >
         <DropdownMenu />
-        <Container 
+        <Container
           maxWidth="lg"
           sx={{
             display: 'flex',
@@ -168,18 +160,18 @@ function Home() {
             width: '100%',
             position: 'absolute',
             top: '50%',
-            transform: 'translateY(-50%)'
+            transform: 'translateY(-50%)',
           }}
         >
-          <Typography 
-            variant="h4" 
-            sx={{ 
-              display: 'flex', 
-              flexWrap: 'none', 
+          <Typography
+            variant="h4"
+            sx={{
+              display: 'flex',
+              flexWrap: 'none',
               justifyContent: 'center',
               alignItems: 'center',
               gap: '5px',
-              height: '100px', 
+              height: '100px',
               marginBottom: '0px',
               textAlign: 'center',
               width: '100%',
@@ -190,21 +182,19 @@ function Home() {
               whiteSpace: 'nowrap',
               position: 'absolute',
               top: '40%',
-              transform: 'translateY(-50%)'
+              transform: 'translateY(-50%)',
             }}
           >
             {introText.map((word, index) => (
-              <span 
-                key={index} 
-                style={{ 
+              <span
+                key={index}
+                style={{
                   opacity: revealedWords.includes(word) ? 1 : 0,
                   transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-                  transform: revealedWords.includes(word) 
-                    ? 'translateY(0)' 
-                    : 'translateY(20px)',
+                  transform: revealedWords.includes(word) ? 'translateY(0)' : 'translateY(20px)',
                   display: 'inline-block',
                   margin: '0 3px',
-                  color: 'white'
+                  color: 'white',
                 }}
               >
                 {word}
@@ -214,13 +204,16 @@ function Home() {
 
           {/* Welcome Text */}
           {showWelcomeText && (
-            <Container ref={welcomeTextRef} sx={{ 
-              textAlign: 'center', 
-              maxWidth: 'md',
-              px: 3 
-            }}>
-              <Typography 
-                variant="h5" 
+            <Container
+              ref={welcomeTextRef}
+              sx={{
+                textAlign: 'center',
+                maxWidth: 'md',
+                px: 3,
+              }}
+            >
+              <Typography
+                variant="h5"
                 sx={{
                   position: 'absolute',
                   top: '47%',
@@ -232,14 +225,14 @@ function Home() {
                   fontFamily: 'Montserrat',
                   fontSize: '2rem',
                   willChange: 'opacity',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 Welcome to my Website!
               </Typography>
 
               {/* About Me Button */}
-              <Box 
+              <Box
                 sx={{
                   position: 'absolute',
                   top: '58%',
@@ -249,7 +242,7 @@ function Home() {
                   transition: 'opacity 0.4s ease-out',
                   willChange: 'opacity',
                   maxWidth: '80%',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 <Button
@@ -279,7 +272,7 @@ function Home() {
                       position: 'absolute',
                       textAlign: 'center',
                       justifyContent: 'center',
-                      alignItems: 'center'
+                      alignItems: 'center',
                     },
                     '&:before': {
                       top: '-2px',
@@ -287,7 +280,7 @@ function Home() {
                       borderTop: '2px solid #D1CCC1', // Muted off-white border
                       borderTopLeftRadius: '8px',
                       borderLeft: '2px solid #D1CCC1',
-                      transition: '0.75s all'
+                      transition: '0.75s all',
                     },
                     '&:after': {
                       top: '-2px',
@@ -295,7 +288,7 @@ function Home() {
                       borderTop: '2px solid #D1CCC1',
                       borderTopRightRadius: '8px',
                       borderRight: '2px solid #D1CCC1',
-                      transition: '0.75s all'
+                      transition: '0.75s all',
                     },
                     '& span': {
                       display: 'block',
@@ -309,7 +302,7 @@ function Home() {
                         borderBottom: '2px solid #D1CCC1',
                         borderBottomLeftRadius: '8px',
                         borderLeft: '2px solid #D1CCC1',
-                        transition: '0.75s all'
+                        transition: '0.75s all',
                       },
                       '&:after': {
                         bottom: '-2px',
@@ -317,8 +310,8 @@ function Home() {
                         borderBottom: '2px solid #D1CCC1',
                         borderBottomRightRadius: '8px',
                         borderRight: '2px solid #D1CCC1',
-                        transition: '0.75s all'
-                      }
+                        transition: '0.75s all',
+                      },
                     },
                     '&:hover': {
                       color: '#FFFFFF', // Pure white on hover
@@ -327,17 +320,17 @@ function Home() {
                         borderColor: '#F0EDE5', // Lighter off-white on hover
                         width: '100%',
                         height: '100%',
-                        borderRadius: '10px'
+                        borderRadius: '10px',
                       },
                       '& span:before, & span:after': {
                         borderColor: '#F0EDE5',
                         width: '100%',
                         height: '100%',
-                        borderRadius: '10px'
-                      }
+                        borderRadius: '10px',
+                      },
                     },
                     fontWeight: 600, // Added to bolden the text
-                    lineHeight: '30px'
+                    lineHeight: '30px',
                   }}
                 >
                   <span>About Me</span>
@@ -362,8 +355,8 @@ function Home() {
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   opacity: 1,
-                  transform: 'translateX(-50%) scale(1.1)'
-                }
+                  transform: 'translateX(-50%) scale(1.1)',
+                },
               }}
               onClick={() => {
                 const aboutSection = document.getElementById('about-section');
@@ -375,26 +368,26 @@ function Home() {
               <motion.div
                 animate={{
                   y: [0, 10, 0],
-                  opacity: [0.7, 1, 0.7]
+                  opacity: [0.7, 1, 0.7],
                 }}
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
-                  ease: 'easeInOut'
+                  ease: 'easeInOut',
                 }}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: 'white', 
-                    fontFamily: 'Montserrat', 
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    fontFamily: 'Montserrat',
                     marginBottom: '8px',
-                    textShadow: '0 0 10px rgba(255,255,255,0.5)'
+                    textShadow: '0 0 10px rgba(255,255,255,0.5)',
                   }}
                 >
                   Scroll Down
@@ -409,25 +402,25 @@ function Home() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     position: 'relative',
-                    boxShadow: '0 0 15px rgba(255,255,255,0.3)'
+                    boxShadow: '0 0 15px rgba(255,255,255,0.3)',
                   }}
                 >
                   <motion.div
                     animate={{
                       y: [0, 15, 0],
-                      opacity: [0.7, 1, 0.7]
+                      opacity: [0.7, 1, 0.7],
                     }}
                     transition={{
                       duration: 1.5,
                       repeat: Infinity,
-                      ease: 'easeInOut'
+                      ease: 'easeInOut',
                     }}
                     style={{
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
                       backgroundColor: 'white',
-                      position: 'absolute'
+                      position: 'absolute',
                     }}
                   />
                 </Box>
@@ -436,23 +429,23 @@ function Home() {
           )}
 
           {/* Progress Indicator */}
-          <Box 
+          <Box
             sx={{
               position: 'absolute',
               bottom: '20px',
               width: '200px',
               height: '4px',
               background: 'rgba(255,255,255,0.2)',
-              borderRadius: '1.5px'
+              borderRadius: '1.5px',
             }}
           >
-            <Box 
+            <Box
               sx={{
                 width: `${revealedWords.length * (100 / introText.length)}%`,
                 height: '100%',
                 background: 'white',
                 borderRadius: '1.5px',
-                transition: 'width 0.3s ease'
+                transition: 'width 0.3s ease',
               }}
             />
           </Box>
@@ -464,7 +457,7 @@ function Home() {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Paper
@@ -478,7 +471,7 @@ function Home() {
                 backdropFilter: 'blur(15px)',
                 borderRadius: '15px',
                 color: 'white',
-                position: 'relative'
+                position: 'relative',
               }}
             >
               <IconButton
@@ -487,41 +480,43 @@ function Home() {
                   position: 'absolute',
                   top: '10px',
                   right: '10px',
-                  color: 'white'
+                  color: 'white',
                 }}
               >
                 <CloseIcon />
               </IconButton>
-              
-              <Typography 
-                variant="h4" 
-                gutterBottom 
-                sx={{ 
-                  fontFamily: 'Montserrat', 
-                  marginBottom: '1rem' 
+
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontFamily: 'Montserrat',
+                  marginBottom: '1rem',
                 }}
               >
                 About Me
               </Typography>
-              
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  fontFamily: 'Montserrat', 
-                  lineHeight: 1.6 
+
+              <Typography
+                variant="body1"
+                sx={{
+                  fontFamily: 'Montserrat',
+                  lineHeight: 1.6,
                 }}
               >
-                Hi, I&apos;m Muhammad Khan, a passionate computational researcher dedicated to pushing the boundaries of technology and scientific understanding. 
-                My work spans across machine learning, data science, and innovative computational methodologies.
-
-                With a strong academic background and a keen interest in solving complex problems, I strive to develop cutting-edge solutions that bridge theoretical research and practical applications.
+                Hi, I&apos;m Muhammad Khan, a passionate computational researcher dedicated to
+                pushing the boundaries of technology and scientific understanding. My work spans
+                across machine learning, data science, and innovative computational methodologies.
+                With a strong academic background and a keen interest in solving complex problems, I
+                strive to develop cutting-edge solutions that bridge theoretical research and
+                practical applications.
               </Typography>
             </Paper>
           </Modal>
 
           {/* Navbar positioned below About Me section */}
           {navbarOpacity > 0 && (
-            <Box 
+            <Box
               sx={{
                 position: 'absolute',
                 bottom: '190px', // Positioned just above the scroll indicator
@@ -532,7 +527,7 @@ function Home() {
                 justifyContent: 'center',
                 opacity: navbarOpacity,
                 transition: 'opacity 1s ease',
-                zIndex: 10 // Ensure it's above other elements
+                zIndex: 10, // Ensure it's above other elements
               }}
             >
               <Navbar />

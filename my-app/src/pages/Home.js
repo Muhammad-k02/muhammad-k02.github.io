@@ -13,6 +13,7 @@ function Home() {
   const [showWelcomeText, setShowWelcomeText] = useState(false);
   const [welcomeTextOpacity, setWelcomeTextOpacity] = useState(0);
   const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
+  const [showAboutMeButton, setShowAboutMeButton] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [navbarOpacity, setNavbarOpacity] = useState(0);
   const [_overlayOpacity, setOverlayOpacity] = useState(0);
@@ -82,6 +83,7 @@ function Home() {
         setShowWelcomeText(false);
         setWelcomeTextOpacity(0);
         setWelcomeTextAnimationComplete(false);
+        setShowAboutMeButton(false);
         setNavbarOpacity(0);
       }
 
@@ -103,8 +105,13 @@ function Home() {
           } else {
             setWelcomeTextAnimationComplete(true);
 
-            // Trigger navbar appearance after welcome text
-            setNavbarOpacity(1);
+            // Trigger About Me button appearance after welcome text
+            setShowAboutMeButton(true);
+
+            // Trigger navbar appearance after About Me button
+            setTimeout(() => {
+              setNavbarOpacity(1);
+            }, 500); // Reduced delay from 1000 to 500
           }
         };
 
@@ -232,110 +239,112 @@ function Home() {
               </Typography>
 
               {/* About Me Button */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '58%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  opacity: welcomeTextOpacity,
-                  transition: 'opacity 0.4s ease-out',
-                  willChange: 'opacity',
-                  maxWidth: '80%',
-                  textAlign: 'center',
-                }}
-              >
-                <Button
-                  onClick={handleAboutMeClick}
+              {showAboutMeButton && (
+                <Box
                   sx={{
-                    display: 'inline-block',
-                    fontFamily: 'Montserrat',
-                    fontSize: '20px',
-                    letterSpacing: '5px',
+                    position: 'absolute',
+                    top: '58%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    opacity: welcomeTextOpacity,
+                    transition: 'opacity 0.4s ease-out',
+                    willChange: 'opacity',
+                    maxWidth: '80%',
                     textAlign: 'center',
-                    position: 'relative',
-                    minWidth: '100px',
-                    minHeight: '10px',
-                    margin: '20px',
-                    background: 'none',
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                    color: '#E6E6E1', // Soft off-white for text
-                    borderRadius: '10px',
-                    padding: '12px 20px',
-                    boxSizing: 'content-box',
-                    '&:before, & span:before, &:after, & span:after': {
-                      display: 'block',
-                      content: '""',
-                      width: '15px',
-                      height: '15px',
-                      position: 'absolute',
+                  }}
+                >
+                  <Button
+                    onClick={handleAboutMeClick}
+                    sx={{
+                      display: 'inline-block',
+                      fontFamily: 'Montserrat',
+                      fontSize: '20px',
+                      letterSpacing: '5px',
                       textAlign: 'center',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    },
-                    '&:before': {
-                      top: '-2px',
-                      left: '-2px',
-                      borderTop: '2px solid #D1CCC1', // Muted off-white border
-                      borderTopLeftRadius: '8px',
-                      borderLeft: '2px solid #D1CCC1',
-                      transition: '0.75s all',
-                    },
-                    '&:after': {
-                      top: '-2px',
-                      right: '-2px',
-                      borderTop: '2px solid #D1CCC1',
-                      borderTopRightRadius: '8px',
-                      borderRight: '2px solid #D1CCC1',
-                      transition: '0.75s all',
-                    },
-                    '& span': {
-                      display: 'block',
-                      textAlign: 'center',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginLeft: '8px',
+                      position: 'relative',
+                      minWidth: '100px',
+                      minHeight: '10px',
+                      margin: '20px',
+                      background: 'none',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      color: '#E6E6E1', // Soft off-white for text
+                      borderRadius: '10px',
+                      padding: '12px 20px',
+                      boxSizing: 'content-box',
+                      '&:before, & span:before, &:after, & span:after': {
+                        display: 'block',
+                        content: '""',
+                        width: '15px',
+                        height: '15px',
+                        position: 'absolute',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      },
                       '&:before': {
-                        bottom: '-2px',
+                        top: '-2px',
                         left: '-2px',
-                        borderBottom: '2px solid #D1CCC1',
-                        borderBottomLeftRadius: '8px',
+                        borderTop: '2px solid #D1CCC1', // Muted off-white border
+                        borderTopLeftRadius: '8px',
                         borderLeft: '2px solid #D1CCC1',
                         transition: '0.75s all',
                       },
                       '&:after': {
-                        bottom: '-2px',
+                        top: '-2px',
                         right: '-2px',
-                        borderBottom: '2px solid #D1CCC1',
-                        borderBottomRightRadius: '8px',
+                        borderTop: '2px solid #D1CCC1',
+                        borderTopRightRadius: '8px',
                         borderRight: '2px solid #D1CCC1',
                         transition: '0.75s all',
                       },
-                    },
-                    '&:hover': {
-                      color: '#FFFFFF', // Pure white on hover
-                      borderRadius: '10px',
-                      '&:before, &:after': {
-                        borderColor: '#F0EDE5', // Lighter off-white on hover
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '10px',
+                      '& span': {
+                        display: 'block',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginLeft: '8px',
+                        '&:before': {
+                          bottom: '-2px',
+                          left: '-2px',
+                          borderBottom: '2px solid #D1CCC1',
+                          borderBottomLeftRadius: '8px',
+                          borderLeft: '2px solid #D1CCC1',
+                          transition: '0.75s all',
+                        },
+                        '&:after': {
+                          bottom: '-2px',
+                          right: '-2px',
+                          borderBottom: '2px solid #D1CCC1',
+                          borderBottomRightRadius: '8px',
+                          borderRight: '2px solid #D1CCC1',
+                          transition: '0.75s all',
+                        },
                       },
-                      '& span:before, & span:after': {
-                        borderColor: '#F0EDE5',
-                        width: '100%',
-                        height: '100%',
+                      '&:hover': {
+                        color: '#FFFFFF', // Pure white on hover
                         borderRadius: '10px',
+                        '&:before, &:after': {
+                          borderColor: '#F0EDE5', // Lighter off-white on hover
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '10px',
+                        },
+                        '& span:before, & span:after': {
+                          borderColor: '#F0EDE5',
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '10px',
+                        },
                       },
-                    },
-                    fontWeight: 600, // Added to bolden the text
-                    lineHeight: '30px',
-                  }}
-                >
-                  <span>About Me</span>
-                </Button>
-              </Box>
+                      fontWeight: 600, // Added to bolden the text
+                      lineHeight: '30px',
+                    }}
+                  >
+                    <span>About Me</span>
+                  </Button>
+                </Box>
+              )}
             </Container>
           )}
 
@@ -516,18 +525,20 @@ function Home() {
 
           {/* Navbar positioned below About Me section */}
           {navbarOpacity > 0 && (
-            <Box
+            <Box 
               sx={{
                 position: 'absolute',
-                bottom: '190px', // Positioned just above the scroll indicator
-                left: '50%',
-                transform: 'translateX(-50%)',
+                bottom: '190px', 
+                left: 0,
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
                 opacity: navbarOpacity,
-                transition: 'opacity 1s ease',
-                zIndex: 10, // Ensure it's above other elements
+                transition: 'opacity 1s ease, transform 0.5s ease',
+                transform: navbarOpacity > 0 
+                  ? 'translateY(0)' 
+                  : 'translateY(20px)',
+                zIndex: 10 
               }}
             >
               <Navbar />

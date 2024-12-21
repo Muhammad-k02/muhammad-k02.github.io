@@ -7,20 +7,41 @@ import { useNavigate } from 'react-router-dom';
 import DropdownMenu from '../components/DropdownMenu';
 import Navbar from '../components/Navbar';
 import TypeWriter from '../components/TypeWriter';
+import { HOME_CONFIG } from '../config/homeConfig';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 function Home() {
-  const [revealedWords, setRevealedWords] = useState([]);
-  const [showWelcomeText, setShowWelcomeText] = useState(false);
-  const [welcomeTextOpacity, setWelcomeTextOpacity] = useState(0);
-  const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
-  const [showAboutMeButton, setShowAboutMeButton] = useState(false);
-  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
-  const [navbarOpacity, setNavbarOpacity] = useState(0);
-  const [_overlayOpacity, setOverlayOpacity] = useState(0);
-  const [_filterOpacity, setFilterOpacity] = useState(0);
   const navigate = useNavigate();
-  const welcomeTextRef = useRef(null);
-  const _containerRef = useRef(null);
+  const [scrollState, setScrollState] = useState({
+    revealedWords: [],
+    showWelcomeText: false,
+    welcomeTextOpacity: 0,
+    showAboutMeButton: false,
+    showScrollIndicator: true,
+    navbarOpacity: 0,
+  });
+
+  const { handleScroll } = useScrollAnimation({
+    introText: HOME_CONFIG.introText,
+    scrollState,
+    setScrollState,
+  });
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href =
+      'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('wheel', handleScroll, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleScroll);
+      document.body.style.overflow = 'auto';
+    };
+  }, [handleScroll]);
 
   const handleAboutMeClick = () => {
     navigate('/about');
@@ -37,98 +58,6 @@ function Home() {
     { label: 'Projects', link: '/projects' },
     { label: 'Education', link: '/education' },
   ];
-
-  const introText = 'Hello! My Name is Muhammad Khan, I am a Computational Researcher!'.split(' ');
-
-  useEffect(() => {
-    // Add Google Fonts link
-    const link = document.createElement('link');
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-
-    // Disable default scrolling for custom scroll effect
-    document.body.style.overflow = 'hidden';
-
-    const handleWheel = (event) => {
-      event.preventDefault();
-
-      // Hide scroll indicator on first scroll
-      if (showScrollIndicator) {
-        setShowScrollIndicator(false);
-      }
-
-      // Determine scroll direction
-      const isScrollingDown = event.deltaY > 0;
-
-      // Calculate words to reveal
-      const currentWordCount = revealedWords.length;
-      let newWordCount;
-
-      if (isScrollingDown) {
-        // Scrolling down: reveal more words
-        newWordCount = Math.min(introText.length, currentWordCount + 1);
-      } else {
-        // Scrolling up: remove words
-        newWordCount = Math.max(0, currentWordCount - 1);
-      }
-
-      // Update revealed words
-      const newRevealedWords = introText.slice(0, newWordCount);
-      setRevealedWords(newRevealedWords);
-
-      // Reset welcome text if going backwards
-      if (newWordCount === 0) {
-        setShowWelcomeText(false);
-        setWelcomeTextOpacity(0);
-        setWelcomeTextAnimationComplete(false);
-        setShowAboutMeButton(false);
-        setNavbarOpacity(0);
-      }
-
-      // Show welcome text only when fully revealed and not already animated
-      if (newWordCount >= introText.length && !welcomeTextAnimationComplete) {
-        setShowWelcomeText(true);
-
-        let start = null;
-        const animateFadeIn = (timestamp) => {
-          if (!start) start = timestamp;
-
-          const progress = Math.min((timestamp - start) / 400, 1);
-          const smoothProgress = progress * progress * (3 - 2 * progress);
-
-          setWelcomeTextOpacity(smoothProgress);
-
-          if (progress < 1) {
-            requestAnimationFrame(animateFadeIn);
-          } else {
-            setWelcomeTextAnimationComplete(true);
-
-            // Trigger About Me button appearance after welcome text
-            setShowAboutMeButton(true);
-
-            // Trigger navbar appearance after About Me button
-            setTimeout(() => {
-              setNavbarOpacity(1);
-            }, 500); // Reduced delay from 1000 to 500
-          }
-        };
-
-        requestAnimationFrame(animateFadeIn);
-      }
-
-      // Update filter opacity based on scroll direction
-      setFilterOpacity(isScrollingDown ? 0.5 : 0);
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      document.body.style.overflow = 'auto';
-    };
-  }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator, introText]);
 
   return (
     <Box
@@ -192,13 +121,13 @@ function Home() {
               transform: 'translateY(-50%)',
             }}
           >
-            {introText.map((word, index) => (
+            {HOME_CONFIG.introText.map((word, index) => (
               <span
                 key={index}
                 style={{
-                  opacity: revealedWords.includes(word) ? 1 : 0,
+                  opacity: scrollState.revealedWords.includes(word) ? 1 : 0,
                   transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-                  transform: revealedWords.includes(word) ? 'translateY(0)' : 'translateY(20px)',
+                  transform: scrollState.revealedWords.includes(word) ? 'translateY(0)' : 'translateY(20px)',
                   display: 'inline-block',
                   margin: '0 3px',
                   color: 'white',
@@ -210,9 +139,8 @@ function Home() {
           </Typography>
 
           {/* Welcome Text */}
-          {showWelcomeText && (
+          {scrollState.showWelcomeText && (
             <Container
-              ref={welcomeTextRef}
               sx={{
                 textAlign: 'center',
                 maxWidth: 'md',
@@ -227,7 +155,7 @@ function Home() {
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   color: 'white',
-                  opacity: welcomeTextOpacity,
+                  opacity: scrollState.welcomeTextOpacity,
                   transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
                   fontFamily: 'Montserrat',
                   fontSize: '2rem',
@@ -239,14 +167,14 @@ function Home() {
               </Typography>
 
               {/* About Me Button */}
-              {showAboutMeButton && (
+              {scrollState.showAboutMeButton && (
                 <Box
                   sx={{
                     position: 'absolute',
                     top: '58%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    opacity: welcomeTextOpacity,
+                    opacity: scrollState.welcomeTextOpacity,
                     transition: 'opacity 0.4s ease-out',
                     willChange: 'opacity',
                     maxWidth: '80%',
@@ -349,7 +277,7 @@ function Home() {
           )}
 
           {/* Scroll Indicator */}
-          {showScrollIndicator && (
+          {scrollState.showScrollIndicator && (
             <Box
               sx={{
                 position: 'absolute',
@@ -450,7 +378,7 @@ function Home() {
           >
             <Box
               sx={{
-                width: `${revealedWords.length * (100 / introText.length)}%`,
+                width: `${scrollState.revealedWords.length * (100 / HOME_CONFIG.introText.length)}%`,
                 height: '100%',
                 background: 'white',
                 borderRadius: '1.5px',
@@ -524,7 +452,7 @@ function Home() {
           </Modal>
 
           {/* Navbar positioned below About Me section */}
-          {navbarOpacity > 0 && (
+          {scrollState.navbarOpacity > 0 && (
             <Box
               sx={{
                 position: 'absolute',
@@ -533,9 +461,9 @@ function Home() {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                opacity: navbarOpacity,
+                opacity: scrollState.navbarOpacity,
                 transition: 'opacity 1s ease, transform 0.5s ease',
-                transform: navbarOpacity > 0 ? 'translateY(0)' : 'translateY(20px)',
+                transform: scrollState.navbarOpacity > 0 ? 'translateY(0)' : 'translateY(20px)',
                 zIndex: 10,
               }}
             >

@@ -1,0 +1,100 @@
+// Star Background Styles
+// Modular, performant, and reusable star background animation
+
+// Variables for easy customization
+:root {
+  --star-color: rgba(255, 255, 255, 0.8);
+  --star-size-small: 1px;
+  --star-size-medium: 2px;
+  --star-size-large: 3px;
+  --background-color: #000020;
+  --animation-duration: 50s;
+}
+
+// Mixin for star generation
+@mixin generate-stars($count, $area-width, $area-height) {
+  $box-shadow: ();
+  
+  @for $i from 1 through $count {
+    $x: random($area-width);
+    $y: random($area-height);
+    $size: if(random(3) == 1, var(--star-size-large), 
+             if(random(2) == 1, var(--star-size-medium), var(--star-size-small)));
+    $box-shadow: append($box-shadow, $x + px $y + px $size var(--star-color), comma);
+  }
+  
+  box-shadow: $box-shadow;
+}
+
+.star-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-color);
+  overflow: hidden;
+  z-index: -1;
+
+  // Small stars
+  &::before {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    @include generate-stars(500, 1920, 1080);
+    animation: star-movement-small var(--animation-duration) linear infinite;
+  }
+
+  // Medium stars
+  &::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    @include generate-stars(250, 1920, 1080);
+    animation: star-movement-medium calc(var(--animation-duration) * 1.5) linear infinite;
+  }
+
+  // Large stars
+  .large-stars {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    @include generate-stars(100, 1920, 1080);
+    animation: star-movement-large calc(var(--animation-duration) * 2) linear infinite;
+  }
+}
+
+// Star movement animations
+@keyframes star-movement-small {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes star-movement-medium {
+  0% { transform: translateY(0) rotate(45deg); }
+  100% { transform: translateY(100vh) rotate(-45deg); }
+}
+
+@keyframes star-movement-large {
+  0% { transform: translateY(0) rotate(90deg); }
+  100% { transform: translateY(100vh) rotate(-90deg); }
+}
+
+// Responsive adjustments
+@media screen and (max-width: 768px) {
+  :root {
+    --animation-duration: 30s;
+  }
+}
+
+// Performance optimization
+.star-background {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000;
+}

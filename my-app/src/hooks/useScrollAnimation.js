@@ -28,6 +28,7 @@ export const useScrollAnimation = ({ introText, scrollState, setScrollState }) =
           revealedWords: [],
           showWelcomeText: false,
           welcomeTextOpacity: 0,
+          showAboutMeButton: false,
           showScrollIndicator: true,
           navbarOpacity: 0,
         });
@@ -60,6 +61,7 @@ const animateWelcomeText = (setScrollState) => {
       ...prev,
       showWelcomeText: true,
       welcomeTextOpacity: smoothProgress,
+      showAboutMeButton: true,
       navbarOpacity: smoothProgress,
     }));
 

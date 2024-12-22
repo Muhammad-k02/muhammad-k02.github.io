@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-const TypeWriter = () => {
+const TypeWriter = ({ visible = true }) => {
   const [text, setText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const fullText = 'Hello World!';
@@ -29,6 +29,8 @@ const TypeWriter = () => {
     return () => clearInterval(cursorInterval);
   }, []);
 
+  if (!visible) return null;
+
   return (
     <Box
       sx={{
@@ -50,19 +52,14 @@ const TypeWriter = () => {
         }}
       >
         {text}
-      </Typography>
-      <Typography
-        variant="h1"
-        sx={{
-          fontFamily: '"Special Elite", monospace',
-          color: '#E6E6E1',
-          fontSize: '5rem',
-          opacity: showCursor ? 1 : 0,
-          transition: 'opacity 0.1s',
-          marginLeft: '4px',
-        }}
-      >
-        |
+        <span
+          style={{
+            opacity: showCursor ? 1 : 0,
+            transition: 'opacity 0.5s ease',
+          }}
+        >
+          |
+        </span>
       </Typography>
     </Box>
   );

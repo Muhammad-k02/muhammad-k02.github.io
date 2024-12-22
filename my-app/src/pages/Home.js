@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import DropdownMenu from '../components/DropdownMenu';
+import GlitchCanvas from '../components/GlitchCanvas';
 import Navbar from '../components/Navbar';
 import TypeWriter from '../components/TypeWriter';
 
@@ -18,6 +19,8 @@ function Home() {
   const [navbarOpacity, setNavbarOpacity] = useState(0);
   const [_overlayOpacity, setOverlayOpacity] = useState(0);
   const [_filterOpacity, setFilterOpacity] = useState(0);
+  const [showTypeWriter, setShowTypeWriter] = useState(true);
+  const [showGlitchCanvas, setShowGlitchCanvas] = useState(false);
   const navigate = useNavigate();
   const welcomeTextRef = useRef(null);
   const _containerRef = useRef(null);
@@ -130,6 +133,32 @@ function Home() {
     };
   }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator, introText]);
 
+  useEffect(() => {
+    let timeoutId;
+    if (navbarOpacity > 0) {
+      timeoutId = setTimeout(() => {
+        setShowTypeWriter(false);
+      }, 2000);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [navbarOpacity]);
+
+  useEffect(() => {
+    let timeoutId;
+    if (!showTypeWriter) {
+      timeoutId = setTimeout(() => {
+        setShowGlitchCanvas(true);
+      }, 500); // Short delay after TypeWriter disappears
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [showTypeWriter]);
+
   return (
     <Box
       sx={{
@@ -140,7 +169,8 @@ function Home() {
         backgroundColor: 'black',
       }}
     >
-      <TypeWriter />
+      {showTypeWriter && <TypeWriter visibility={showTypeWriter} />}
+      {showGlitchCanvas && <GlitchCanvas />}
       {/* Dark filter that appears on scroll down */}
       <Box
         sx={{

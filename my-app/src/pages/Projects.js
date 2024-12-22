@@ -24,7 +24,64 @@ import backgroundImage from '../assets/backgrounds/Fletschhorn v2 TimeShifted-3 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
 
+const createStars = () => {
+  const starsContainer = document.createElement('div');
+  starsContainer.id = 'stars-container';
+  starsContainer.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  `;
+
+  const numStars = 250;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement('div');
+    star.style.cssText = `
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle ${Math.random() * 1 + 0.5}s infinite alternate;
+    `;
+
+    const size = Math.random() * 2;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    star.style.left = `${x}%`;
+    star.style.top = `${y}%`;
+
+    starsContainer.appendChild(star);
+  }
+
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes twinkle {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  return starsContainer;
+};
+
 const Projects = () => {
+  useEffect(() => {
+    const starsContainer = createStars();
+    document.body.appendChild(starsContainer);
+
+    return () => {
+      document.body.removeChild(starsContainer);
+    };
+  }, []);
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -79,30 +136,61 @@ const Projects = () => {
         }} 
       />
       <Box sx={overlayStyles} />
+      <Box 
+        sx={{
+          position: 'fixed',
+          top: '5vh',
+          left: 0,
+          width: '100%',
+          height: '8.5vh',
+          backgroundColor: 'white',
+          zIndex: 2,
+        }}
+      />
       <Container 
         maxWidth="lg" 
         sx={{ 
           position: 'relative', 
-          zIndex: 1,
-          backgroundColor: 'transparent' 
+          zIndex: 3,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '50vh',
+          padding: { xs: '20px', md: '40px' },
         }}
       >
-        <DropdownMenu />
+        <DropdownMenu 
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            zIndex: 10,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent dark background
+            backdropFilter: 'blur(5px)', // Glass-like effect
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
+            padding: '10px 0',
+          }}
+        />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          style={{ width: '100%' }}
         >
           <Typography
             variant="h2"
             component="h1"
             gutterBottom
             sx={{
-              fontWeight: 300,
+              fontWeight: 600,
               textAlign: 'center',
               mb: 6,
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: '#E6E6E1',
+              color: 'black',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
             }}
           >
             Projects

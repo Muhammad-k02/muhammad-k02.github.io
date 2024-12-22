@@ -19,6 +19,15 @@ const DropdownMenu = () => {
     handleMenuClose();
   };
 
+  const menuItems = [
+    { label: 'Home', link: '/' },
+    { label: 'Resume', link: '/resume' },
+    { label: 'Publications', link: '/publications' },
+    { label: 'Projects', link: '/projects' },
+    { label: 'Education', link: '/education' },
+    { label: 'Glitch', link: '/glitch' },
+  ];
+
   return (
     <Box
       sx={{
@@ -175,11 +184,11 @@ const DropdownMenu = () => {
         transformOrigin={{ horizontal: 'left', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
       >
-        <MenuItem onClick={() => handleNavigation('/')}>Home</MenuItem>
-        <MenuItem onClick={() => handleNavigation('/publications')}>Publications</MenuItem>
-        <MenuItem onClick={() => handleNavigation('/projects')}>Projects</MenuItem>
-        <MenuItem onClick={() => handleNavigation('/education')}>Education</MenuItem>
-        <MenuItem onClick={() => handleNavigation('/resume')}>Resume</MenuItem>
+        {menuItems.map((item) => (
+          <MenuItem key={item.label} onClick={() => handleNavigation(item.link)}>
+            {item.label}
+          </MenuItem>
+        ))}
       </Menu>
     </Box>
   );

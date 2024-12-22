@@ -20,69 +20,12 @@ import StarBackground from '../components/StarBackground';
 import { projects } from '../config/projectData';
 import logger from '../utils/logger';
 
-import backgroundImage from '../assets/backgrounds/Fletschhorn v2 TimeShifted-3 (dragged).jpg';
+import backgroundImage from '../assets/backgrounds/file.png';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
 
-const createStars = () => {
-  const starsContainer = document.createElement('div');
-  starsContainer.id = 'stars-container';
-  starsContainer.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-  `;
-
-  const numStars = 250;
-  for (let i = 0; i < numStars; i++) {
-    const star = document.createElement('div');
-    star.style.cssText = `
-      position: absolute;
-      background-color: white;
-      border-radius: 50%;
-      animation: twinkle ${Math.random() * 1 + 0.5}s infinite alternate;
-    `;
-
-    const size = Math.random() * 2;
-    star.style.width = `${size}px`;
-    star.style.height = `${size}px`;
-
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    star.style.left = `${x}%`;
-    star.style.top = `${y}%`;
-
-    starsContainer.appendChild(star);
-  }
-
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes twinkle {
-      0% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-  `;
-  document.head.appendChild(style);
-
-  return starsContainer;
-};
-
 const Projects = () => {
-  useEffect(() => {
-    const starsContainer = createStars();
-    document.body.appendChild(starsContainer);
-
-    return () => {
-      document.body.removeChild(starsContainer);
-    };
-  }, []);
-
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -127,7 +70,15 @@ const Projects = () => {
 
   return (
     <>
-      <StarBackground />
+      <StarBackground style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        zIndex: -2, 
+        pointerEvents: 'none' 
+      }} />
       <Box 
         sx={backgroundStyles} 
         style={{ 
@@ -138,17 +89,7 @@ const Projects = () => {
         }} 
       />
       <Box sx={overlayStyles} />
-      <Box 
-        sx={{
-          position: 'fixed',
-          top: '5vh',
-          left: 0,
-          width: '100%',
-          height: '8.5vh',
-          backgroundColor: 'white',
-          zIndex: 2,
-        }}
-      />
+      {/* Removed white bar */}
       <Container 
         maxWidth="lg" 
         sx={{ 
@@ -183,11 +124,15 @@ const Projects = () => {
             component="h1"
             gutterBottom
             sx={{
-              fontWeight: 600,
+              fontWeight: 'normal',
               textAlign: 'center',
               mb: 6,
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: 'black',
+              color: 'transparent',
+              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(230, 230, 225, 0.5) 100%)`,
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
             }}
           >

@@ -7,140 +7,20 @@ import { useNavigate } from 'react-router-dom';
 import DropdownMenu from '../components/DropdownMenu';
 import Navbar from '../components/Navbar';
 import TypeWriter from '../components/TypeWriter';
-import { HOME_CONFIG } from '../config/homeConfig';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 function Home() {
+  const [revealedWords, setRevealedWords] = useState([]);
+  const [showWelcomeText, setShowWelcomeText] = useState(false);
+  const [welcomeTextOpacity, setWelcomeTextOpacity] = useState(0);
+  const [welcomeTextAnimationComplete, setWelcomeTextAnimationComplete] = useState(false);
+  const [showAboutMeButton, setShowAboutMeButton] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [navbarOpacity, setNavbarOpacity] = useState(0);
+  const [_overlayOpacity, setOverlayOpacity] = useState(0);
+  const [_filterOpacity, setFilterOpacity] = useState(0);
   const navigate = useNavigate();
-  const [scrollState, setScrollState] = useState({
-    revealedWords: [],
-    showWelcomeText: false,
-    welcomeTextOpacity: 0,
-    showAboutMeButton: false,
-    showScrollIndicator: true,
-    navbarOpacity: 0,
-  });
-
-  const [showTypeWriter, setShowTypeWriter] = useState(true);
-  const [showGlitch, setShowGlitch] = useState(false);
-
-  const { handleScroll } = useScrollAnimation({
-    introText: HOME_CONFIG.introText,
-    scrollState,
-    setScrollState,
-  });
-
-  useEffect(() => {
-    let timeoutId;
-    if (scrollState.navbarOpacity === 1) {
-      timeoutId = setTimeout(() => {
-        setShowTypeWriter(false);
-        setShowGlitch(true);
-      }, 2000);
-    } else {
-      setShowTypeWriter(true);
-      setShowGlitch(false);
-    }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [scrollState.navbarOpacity]);
-
-  useEffect(() => {
-    if (showGlitch) {
-      // Glitch script
-      const style = document.createElement('style');
-      style.textContent = `
-        canvas {
-          background: none;
-          margin: auto;
-          position: fixed;
-          left: 50%;
-          top: 50%;
-          transform: translateX(-50%) translateY(-50%);
-        }
-      `;
-      document.head.appendChild(style);
-
-      // Create canvas
-      const canvas = document.createElement('canvas');
-      document.body.appendChild(canvas);
-
-      const glitchScript = () => {
-        var canvasHidden = document.createElement('canvas');
-        var ctxHidden = canvasHidden.getContext('2d');
-        var canvasShown = document.querySelector('canvas');
-        canvasShown.width = 800;
-        canvasShown.height = 400;
-        var ctxShown = canvasShown.getContext('2d');
-
-        function init() {
-          canvasHidden.width = 800;
-          canvasHidden.height = 400;
-
-          ctxHidden.clearRect(0, 0, ctxHidden.width, ctxHidden.height);
-          ctxHidden.textAlign = 'center';
-          ctxHidden.textBaseline = 'middle';
-          ctxHidden.font = 'bold 100px VT323, monospace';
-          ctxHidden.fillStyle = '#F44';
-
-          ctxHidden.fillText('HELLO WORLD', canvasHidden.width/2, canvasHidden.height/2);
-          
-          ctxShown.clearRect(0, 0, canvasShown.width, canvasShown.height);
-          ctxShown.drawImage(canvasHidden, 0, 0);
-          var i = 10; 
-          while(i--){ 
-            glitch(); 
-          }
-        }
-
-        function glitch() {
-          var width = 100 + Math.random()*100;
-          var height = 50 + Math.random()*50;
-
-          var x = Math.random()*canvasHidden.width;
-          var y = Math.random()*canvasHidden.height;
-
-          var dx = x + (Math.random() * 40 - 20);
-          var dy = y + (Math.random() * 30 - 15);
-
-          ctxShown.clearRect(x, y, width, height);
-          ctxShown.fillStyle = '#4a6';
-          ctxShown.drawImage(canvasHidden, x, y, width, height, dx, dy, width, height);
-        }
-
-        setInterval(function() {
-          init();
-        }, 1000/15);
-      };
-
-      // Run the script
-      glitchScript();
-
-      // Cleanup function
-      return () => {
-        document.head.removeChild(style);
-        document.body.removeChild(canvas);
-      };
-    }
-  }, [showGlitch]);
-
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('wheel', handleScroll, { passive: false });
-
-    return () => {
-      window.removeEventListener('wheel', handleScroll);
-      document.body.style.overflow = 'auto';
-    };
-  }, [handleScroll]);
+  const welcomeTextRef = useRef(null);
+  const _containerRef = useRef(null);
 
   const handleAboutMeClick = () => {
     navigate('/about');
@@ -158,6 +38,98 @@ function Home() {
     { label: 'Education', link: '/education' },
   ];
 
+  const introText = 'Hello! My Name is Muhammad Khan, I am a Computational Researcher!'.split(' ');
+
+  useEffect(() => {
+    // Add Google Fonts link
+    const link = document.createElement('link');
+    link.href =
+      'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100;1,200&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // Disable default scrolling for custom scroll effect
+    document.body.style.overflow = 'hidden';
+
+    const handleWheel = (event) => {
+      event.preventDefault();
+
+      // Hide scroll indicator on first scroll
+      if (showScrollIndicator) {
+        setShowScrollIndicator(false);
+      }
+
+      // Determine scroll direction
+      const isScrollingDown = event.deltaY > 0;
+
+      // Calculate words to reveal
+      const currentWordCount = revealedWords.length;
+      let newWordCount;
+
+      if (isScrollingDown) {
+        // Scrolling down: reveal more words
+        newWordCount = Math.min(introText.length, currentWordCount + 1);
+      } else {
+        // Scrolling up: remove words
+        newWordCount = Math.max(0, currentWordCount - 1);
+      }
+
+      // Update revealed words
+      const newRevealedWords = introText.slice(0, newWordCount);
+      setRevealedWords(newRevealedWords);
+
+      // Reset welcome text if going backwards
+      if (newWordCount === 0) {
+        setShowWelcomeText(false);
+        setWelcomeTextOpacity(0);
+        setWelcomeTextAnimationComplete(false);
+        setShowAboutMeButton(false);
+        setNavbarOpacity(0);
+      }
+
+      // Show welcome text only when fully revealed and not already animated
+      if (newWordCount >= introText.length && !welcomeTextAnimationComplete) {
+        setShowWelcomeText(true);
+
+        let start = null;
+        const animateFadeIn = (timestamp) => {
+          if (!start) start = timestamp;
+
+          const progress = Math.min((timestamp - start) / 400, 1);
+          const smoothProgress = progress * progress * (3 - 2 * progress);
+
+          setWelcomeTextOpacity(smoothProgress);
+
+          if (progress < 1) {
+            requestAnimationFrame(animateFadeIn);
+          } else {
+            setWelcomeTextAnimationComplete(true);
+
+            // Trigger About Me button appearance after welcome text
+            setShowAboutMeButton(true);
+
+            // Trigger navbar appearance after About Me button
+            setTimeout(() => {
+              setNavbarOpacity(1);
+            }, 500); // Reduced delay from 1000 to 500
+          }
+        };
+
+        requestAnimationFrame(animateFadeIn);
+      }
+
+      // Update filter opacity based on scroll direction
+      setFilterOpacity(isScrollingDown ? 0.5 : 0);
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      document.body.style.overflow = 'auto';
+    };
+  }, [revealedWords, welcomeTextAnimationComplete, showScrollIndicator, introText]);
+
   return (
     <Box
       sx={{
@@ -168,8 +140,7 @@ function Home() {
         backgroundColor: 'black',
       }}
     >
-      {showTypeWriter && <TypeWriter />}
-      {showGlitch && <canvas />}
+      <TypeWriter />
       {/* Dark filter that appears on scroll down */}
       <Box
         sx={{
@@ -221,13 +192,13 @@ function Home() {
               transform: 'translateY(-50%)',
             }}
           >
-            {HOME_CONFIG.introText.map((word, index) => (
+            {introText.map((word, index) => (
               <span
                 key={index}
                 style={{
-                  opacity: scrollState.revealedWords.includes(word) ? 1 : 0,
+                  opacity: revealedWords.includes(word) ? 1 : 0,
                   transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
-                  transform: scrollState.revealedWords.includes(word) ? 'translateY(0)' : 'translateY(20px)',
+                  transform: revealedWords.includes(word) ? 'translateY(0)' : 'translateY(20px)',
                   display: 'inline-block',
                   margin: '0 3px',
                   color: 'white',
@@ -239,8 +210,9 @@ function Home() {
           </Typography>
 
           {/* Welcome Text */}
-          {scrollState.showWelcomeText && (
+          {showWelcomeText && (
             <Container
+              ref={welcomeTextRef}
               sx={{
                 textAlign: 'center',
                 maxWidth: 'md',
@@ -255,7 +227,7 @@ function Home() {
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   color: 'white',
-                  opacity: scrollState.welcomeTextOpacity,
+                  opacity: welcomeTextOpacity,
                   transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
                   fontFamily: 'Montserrat',
                   fontSize: '2rem',
@@ -267,14 +239,14 @@ function Home() {
               </Typography>
 
               {/* About Me Button */}
-              {scrollState.showAboutMeButton && (
+              {showAboutMeButton && (
                 <Box
                   sx={{
                     position: 'absolute',
                     top: '58%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    opacity: scrollState.welcomeTextOpacity,
+                    opacity: welcomeTextOpacity,
                     transition: 'opacity 0.4s ease-out',
                     willChange: 'opacity',
                     maxWidth: '80%',
@@ -377,7 +349,7 @@ function Home() {
           )}
 
           {/* Scroll Indicator */}
-          {scrollState.showScrollIndicator && (
+          {showScrollIndicator && (
             <Box
               sx={{
                 position: 'absolute',
@@ -478,7 +450,7 @@ function Home() {
           >
             <Box
               sx={{
-                width: `${scrollState.revealedWords.length * (100 / HOME_CONFIG.introText.length)}%`,
+                width: `${revealedWords.length * (100 / introText.length)}%`,
                 height: '100%',
                 background: 'white',
                 borderRadius: '1.5px',
@@ -552,7 +524,7 @@ function Home() {
           </Modal>
 
           {/* Navbar positioned below About Me section */}
-          {scrollState.navbarOpacity > 0 && (
+          {navbarOpacity > 0 && (
             <Box
               sx={{
                 position: 'absolute',
@@ -561,9 +533,9 @@ function Home() {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                opacity: scrollState.navbarOpacity,
+                opacity: navbarOpacity,
                 transition: 'opacity 1s ease, transform 0.5s ease',
-                transform: scrollState.navbarOpacity > 0 ? 'translateY(0)' : 'translateY(20px)',
+                transform: navbarOpacity > 0 ? 'translateY(0)' : 'translateY(20px)',
                 zIndex: 10,
               }}
             >

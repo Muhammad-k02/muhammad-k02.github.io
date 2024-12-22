@@ -17,72 +17,24 @@ import React, { useState, useEffect } from 'react';
 
 import DropdownMenu from '../components/DropdownMenu';
 import StarBackground from '../components/StarBackground';
-import backgroundImage from '../assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
+import backgroundImage from '../assets/backgrounds/file.png';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
 
-const createStars = () => {
-  const starsContainer = document.createElement('div');
-  starsContainer.id = 'stars-container';
-  starsContainer.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-  `;
-
-  const numStars = 250;
-  for (let i = 0; i < numStars; i++) {
-    const star = document.createElement('div');
-    star.style.cssText = `
-      position: absolute;
-      background-color: white;
-      border-radius: 50%;
-      animation: twinkle ${Math.random() * 1 + 0.5}s infinite alternate;
-    `;
-
-    const size = Math.random() * 2;
-    star.style.width = `${size}px`;
-    star.style.height = `${size}px`;
-
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    star.style.left = `${x}%`;
-    star.style.top = `${y}%`;
-
-    starsContainer.appendChild(star);
-  }
-
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes twinkle {
-      0% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-  `;
-  document.head.appendChild(style);
-
-  return starsContainer;
-};
+const publications = [
+  {
+    title: 'Identification and Analysis of the Spread of {Mis}information on Social Media',
+    authors: 'Muhammad Khan et al.',
+    journal: 'Springer',
+    year: '2023',
+    doi: 'https://doi.org/10.1007/978-981-97-0669-3_33',
+    abstract:
+      'With unfolding crises such as the COVID-19 pandemic, it is essential that factual information is dispersed at a rapid pace. One of the major setbacks to mitigating the effects of such crises is misinformation. Advancing technologies such as transformer-based architectures that can pick up underlying patterns and correlational information that constitutes information provide tools that can be used to identify what is misinformation/information. To identify and analyze the spread of misinformation, this work performs a quantitative analysis that uses X (previously Twitter) as the data source and a BERT-based model to identify misinformation. The information of the posts, users, and followers was collected based on hashtags and then processed and manually labeled. Furthermore, we tracked the spread of misinformation related to COVID-19 during the year 2021 and determined how communities that spread information and/or misinformation on social networks interact from an analytical perspective. Our findings suggest that users tend to post more misinformation than information, possibly intentionally spreading misinformation. Our model showed good performance in classifying tweets as information/misinformation, resulting in an accuracy of 86%.',
+  },
+];
 
 const Publications = () => {
-  useEffect(() => {
-    const starsContainer = createStars();
-    document.body.appendChild(starsContainer);
-
-    return () => {
-      document.body.removeChild(starsContainer);
-    };
-  }, []);
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedPublication, setSelectedPublication] = useState(null);
-
   useEffect(() => {
     console.log('Background Image:', backgroundImage);
   }, []);
@@ -110,17 +62,8 @@ const Publications = () => {
     zIndex: -1,
   };
 
-  const publications = [
-    {
-      title: 'Identification and Analysis of the Spread of {Mis}information on Social Media',
-      authors: 'Muhammad Khan et al.',
-      journal: 'Springer',
-      year: '2023',
-      doi: 'https://doi.org/10.1007/978-981-97-0669-3_33',
-      abstract:
-        'With unfolding crises such as the COVID-19 pandemic, it is essential that factual information is dispersed at a rapid pace. One of the major setbacks to mitigating the effects of such crises is misinformation. Advancing technologies such as transformer-based architectures that can pick up underlying patterns and correlational information that constitutes information provide tools that can be used to identify what is misinformation/information. To identify and analyze the spread of misinformation, this work performs a quantitative analysis that uses X (previously Twitter) as the data source and a BERT-based model to identify misinformation. The information of the posts, users, and followers was collected based on hashtags and then processed and manually labeled. Furthermore, we tracked the spread of misinformation related to COVID-19 during the year 2021 and determined how communities that spread information and/or misinformation on social networks interact from an analytical perspective. Our findings suggest that users tend to post more misinformation than information, possibly intentionally spreading misinformation. Our model showed good performance in classifying tweets as information/misinformation, resulting in an accuracy of 86%.',
-    },
-  ];
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPublication, setSelectedPublication] = useState(null);
 
   const handleDialogOpen = (pub) => {
     setSelectedPublication(pub);
@@ -134,7 +77,15 @@ const Publications = () => {
 
   return (
     <>
-      <StarBackground />
+      <StarBackground style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        zIndex: -2, 
+        pointerEvents: 'none' 
+      }} />
       <Box 
         sx={backgroundStyles} 
         style={{ 
@@ -145,17 +96,7 @@ const Publications = () => {
         }} 
       />
       <Box sx={overlayStyles} />
-      <Box 
-        sx={{
-          position: 'fixed',
-          top: '5vh',
-          left: 0,
-          width: '100%',
-          height: '8.5vh',
-          backgroundColor: 'white',
-          zIndex: 2,
-        }}
-      />
+      {/* Removed white bar */}
       <Container 
         maxWidth="lg" 
         sx={{ 
@@ -190,11 +131,14 @@ const Publications = () => {
             component="h1"
             gutterBottom
             sx={{
-              fontWeight: 600,
               textAlign: 'center',
               mb: 6,
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: 'black',
+              color: 'transparent',
+              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(230, 230, 225, 0.5) 100%)`,
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
             }}
           >
@@ -248,6 +192,7 @@ const Publications = () => {
                   '&:hover': {
                     color: '#90caf9',
                   },
+                  fontWeight: 'normal',
                 }}
               >
                 {pub.title}

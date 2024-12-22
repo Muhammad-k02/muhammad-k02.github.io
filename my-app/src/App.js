@@ -15,7 +15,6 @@ import ProjectsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
 import PublicationsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted-3 (dragged).jpg';
 import AboutMe from './pages/AboutMe';
 import Education from './pages/Education';
-import Glitch from './pages/Glitch';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Publications from './pages/Publications';
@@ -51,7 +50,6 @@ function App() {
                 element={<Education backgroundImage={backgroundImages.education} />}
               />
               <Route path="/resume" element={<Resume />} />
-              <Route path="/glitch" element={<Glitch />} />
             </Routes>
           </AnimatePresence>
         </div>

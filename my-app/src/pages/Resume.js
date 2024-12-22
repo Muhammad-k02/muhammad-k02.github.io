@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 
 import DropdownMenu from '../components/DropdownMenu';
 
-// Update this path to your actual resume PDF
-const RESUME_PATH = `${process.env.PUBLIC_URL}/pdfs/Muhammad_Khan_Resume.pdf`;
+// Update this path to ensure it works in both development and production
+const RESUME_PATH = process.env.PUBLIC_URL + '/pdfs/Muhammad_Khan_Resume.pdf';
 
 const MotionDialog = motion(Dialog);
 
@@ -181,86 +181,52 @@ const Resume = () => {
 
         <AnimatePresence>
           {isDialogOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                onClick={handleDialogClose}
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'rgba(0, 0, 0, 0.75)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
-                  zIndex: 1299,
-                }}
-              />
-              <MotionDialog
-                open={isDialogOpen}
-                onClose={handleDialogClose}
-                maxWidth="xl"
-                fullWidth
-                PaperProps={{
-                  sx: {
-                    width: '90vw',
-                    height: '90vh',
-                    maxWidth: '1200px',
-                    maxHeight: '900px',
-                    borderRadius: '15px',
-                    overflow: 'hidden',
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    border: '2px solid rgba(255,215,0,0.3)',
-                    boxShadow: '0 0 30px rgba(255,215,0,0.2)',
-                  }
-                }}
-                sx={{
-                  zIndex: 1300,
-                }}
-              >
-                <DialogContent 
+            <MotionDialog
+              open={isDialogOpen}
+              onClose={handleDialogClose}
+              sx={{
+                '& .MuiPaper-root': {
+                  maxWidth: '90%',
+                  width: '90%',
+                  height: '90vh',
+                  borderRadius: '12px',
+                  padding: '10px',
+                  backgroundColor: '#1a1d23',
+                  border: '2px solid rgba(255, 215, 0, 0.5)',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.2)',
+                  overflow: 'hidden',
+                },
+              }}
+            >
+              <DialogContent>
+                <IconButton
                   sx={{
-                    padding: 0,
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'transparent',
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    color: 'rgba(255, 215, 0, 0.7)',
+                    zIndex: 1,
+                    '&:hover': {
+                      color: 'rgba(255, 215, 0, 1)',
+                      background: 'rgba(255, 215, 0, 0.1)',
+                    },
                   }}
+                  onClick={handleDialogClose}
                 >
-                  <iframe
-                    src={RESUME_PATH}
-                    width="100%"
-                    height="100%"
-                    title="Resume"
-                    style={{
-                      border: 'none',
-                      borderRadius: '15px',
-                    }}
-                  />
-                  <IconButton
-                    onClick={handleDialogClose}
-                    sx={{
-                      position: 'absolute',
-                      top: 10,
-                      right: 10,
-                      color: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                      '&:hover': {
-                        backgroundColor: 'rgba(255,255,255,0.2)',
-                      },
-                      zIndex: 1310,
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </DialogContent>
-              </MotionDialog>
-            </>
+                  <CloseIcon />
+                </IconButton>
+                <iframe
+                  src={RESUME_PATH}
+                  width="100%"
+                  height="100%"
+                  style={{
+                    border: 'none',
+                    borderRadius: '8px',
+                  }}
+                  title="Muhammad Khan Resume"
+                />
+              </DialogContent>
+            </MotionDialog>
           )}
         </AnimatePresence>
       </Box>

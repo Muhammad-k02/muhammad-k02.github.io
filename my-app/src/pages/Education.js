@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
 import DropdownMenu from '../components/DropdownMenu';
+import StarBackground from '../components/StarBackground';
 import backgroundImage from '../assets/backgrounds/Fletschhorn v2 TimeShifted-3 (dragged).jpg';
 
 const backgroundStyles = {
@@ -144,6 +145,7 @@ const Education = () => {
 
   return (
     <>
+      <StarBackground />
       <Box 
         sx={backgroundStyles} 
         style={{ 
@@ -186,10 +188,6 @@ const Education = () => {
             left: 0,
             width: '100%',
             zIndex: 10,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent dark background
-            backdropFilter: 'blur(5px)', // Glass-like effect
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
-            padding: '10px 0',
           }}
         />
         <motion.div

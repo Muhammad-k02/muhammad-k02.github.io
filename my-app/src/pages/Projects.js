@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useState, useEffect } from 'react';
 
 import DropdownMenu from '../components/DropdownMenu';
+import StarBackground from '../components/StarBackground';
 import { projects } from '../config/projectData';
 import logger from '../utils/logger';
 
@@ -126,6 +127,7 @@ const Projects = () => {
 
   return (
     <>
+      <StarBackground />
       <Box 
         sx={backgroundStyles} 
         style={{ 
@@ -168,10 +170,6 @@ const Projects = () => {
             left: 0,
             width: '100%',
             zIndex: 10,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent dark background
-            backdropFilter: 'blur(5px)', // Glass-like effect
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
-            padding: '10px 0',
           }}
         />
         <motion.div

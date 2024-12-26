@@ -1,5 +1,6 @@
-import React from 'react';
 import '../styles/StarBackground.scss';
+
+import React from 'react';
 
 const inRange = (max, min) => Math.floor(Math.random() * (max - min + 1)) + min;
 

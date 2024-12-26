@@ -8,19 +8,17 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Grid,
   IconButton,
   Typography,
 } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect,useState } from 'react';
 
+import backgroundImage from '../assets/backgrounds/file.png';
 import DropdownMenu from '../components/DropdownMenu';
 import StarBackground from '../components/StarBackground';
 import { projects } from '../config/projectData';
 import logger from '../utils/logger';
-
-import backgroundImage from '../assets/backgrounds/file.png';
 
 const MotionDialog = motion(Dialog);
 const MotionCard = motion(Card);
@@ -129,7 +127,7 @@ const Projects = () => {
               mb: 6,
               fontSize: { xs: '2.5rem', md: '3.5rem' },
               color: 'transparent',
-              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(230, 230, 225, 0.5) 100%)`,
+              backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(230, 230, 225, 0.5) 100%)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',

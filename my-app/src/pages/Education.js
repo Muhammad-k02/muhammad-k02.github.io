@@ -12,12 +12,11 @@ import {
   Typography,
 } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 
+import backgroundImage from '../assets/backgrounds/file.png';
 import DropdownMenu from '../components/DropdownMenu';
 import StarBackground from '../components/StarBackground';
-import backgroundImage from '../assets/backgrounds/file.png';
 
 const backgroundStyles = {
   backgroundImage: `url(${backgroundImage})`,
@@ -63,9 +62,9 @@ const Education = () => {
         '• Completed advanced coursework in Neural Networks and Deep Learning\n' +
         '• Conducted research on spread of misinformation and violence detection\n' +
         '• First Author of a research paper on Misinformation\n' +
-        "• Received the Dean's List recognition for all semesters",
+        '• Received the Dean\'s List recognition for all semesters',
       achievements: [
-        "Dean's List Scholar (All Semesters)",
+        'Dean\'s List Scholar (All Semesters)',
         'David Prasse Scholarship (2021- 2025)',
       ],
     },
@@ -147,7 +146,7 @@ const Education = () => {
               mb: 6,
               fontSize: { xs: '2.5rem', md: '3.5rem' },
               color: 'transparent',
-              backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(230, 230, 225, 0.5) 100%)`,
+              backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(230, 230, 225, 0.5) 100%)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',

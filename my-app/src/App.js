@@ -14,6 +14,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProjectsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted.jpg';
 import PublicationsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted-3 (dragged).jpg';
 import AboutMe from './pages/AboutMe';
+import CeramicsPage from './pages/AboutPages/CeramicsPage';
+import PhilosophyPage from './pages/AboutPages/PhilosophyPage';
+import MissionStatementPage from './pages/AboutPages/MissionStatementPage';
+import ProfessionPage from './pages/AboutPages/ProfessionPage';
 import Education from './pages/Education';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
@@ -37,6 +41,10 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<AboutMe />} />
+              <Route path="/about/ceramics" element={<CeramicsPage />} />
+              <Route path="/about/philosophy" element={<PhilosophyPage />} />
+              <Route path="/about/mission" element={<MissionStatementPage />} />
+              <Route path="/about/profession" element={<ProfessionPage />} />
               <Route
                 path="/publications"
                 element={<Publications backgroundImage={backgroundImages.publications} />}

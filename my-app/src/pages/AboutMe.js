@@ -21,7 +21,7 @@ const PANELS = [
   {
     id: 'mission',
     title: 'MISSION STATEMENT',
-    subtitle: 'MY PURPOSE',
+    subtitle: 'MY PHILOSOPHY',
     path: '/about/mission',
     image: 'philosophy'
   },

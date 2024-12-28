@@ -2,6 +2,7 @@ import './CeramicsPage.scss';
 
 import imagesLoaded from 'imagesloaded';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Utility functions
 const wrap = (n, max) => (n + max) % max;
@@ -85,11 +86,16 @@ const CERAMICS_DATA = {
 };
 
 const CeramicsPage = () => {
+  const navigate = useNavigate();
   const [imageIndices, setImageIndices] = useState({
     slide1: 0,
     slide2: 0,
     slide3: 0
   });
+
+  const handleBack = () => {
+    navigate('/about');
+  };
 
   useEffect(() => {
     const raf = new Raf();
@@ -311,6 +317,12 @@ const CeramicsPage = () => {
 
   return (
     <div className="ceramics-container">
+      <button className="back-button" onClick={handleBack}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
       <h1 className="title">Reflection Series</h1>
       <div className="slider">
         <button className="slider--btn slider--btn__prev">

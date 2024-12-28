@@ -1,0 +1,30 @@
+/* GPU-accelerated animations and transitions */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.layer-optimized {
+  contain: paint layout;
+  isolation: isolate;
+}
+
+.animation-optimized {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.paint-optimized {
+  contain: paint;
+}
+
+.layout-optimized {
+  contain: layout;
+}
+
+.composite-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+} 

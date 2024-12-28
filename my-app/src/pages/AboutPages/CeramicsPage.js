@@ -2,43 +2,10 @@ import React, { useEffect, useState } from 'react';
 import imagesLoaded from "imagesloaded";
 import './CeramicsPage.scss';
 
-// ============================================
-// EDIT YOUR CONTENT HERE
-// ============================================
-const CERAMICS_DATA = {
-    slide1: {
-        images: [
-            `${process.env.PUBLIC_URL}/assets/ceramics/Picture1.jpg`,
-            `${process.env.PUBLIC_URL}/assets/ceramics/Picture3.jpg`
-        ],
-        title: "Finality",
-        subtitle: "Constructing",
-        description: "For Us"
-    },
-    slide2: {
-        images: [
-            `${process.env.PUBLIC_URL}/assets/ceramics/Picture4.jpg`,
-            `${process.env.PUBLIC_URL}/assets/ceramics/Picture5.jpg`
-        ],
-        title: "Ɱ?┃┃⎕ꟽ?♢𝚫  𐤨ӿѬ?",
-        subtitle: "Counter Nihilism",
-        description: "For Who?"
-    },
-    slide3: {
-        images: [
-            `${process.env.PUBLIC_URL}/assets/ceramics/BA86EDC1-39E9-4755-BC21-9EB2137D6C2F_1_105_c.jpeg`
-        ],
-        title: "Laniakea",
-        subtitle: "Gold Weaver",
-        description: "For What?"
-    }
-};
-
 // Utility functions
 const wrap = (n, max) => (n + max) % max;
 const lerp = (a, b, t) => a + (b - a) * t;
 
-// Vec2 and RAF classes remain the same as they're utilities
 class Vec2 {
     constructor(x = 0, y = 0) {
         this.x = x;
@@ -86,61 +53,46 @@ class Raf {
     }
 }
 
+// Content data
+const CERAMICS_DATA = {
+    slide1: {
+        images: [
+            `${process.env.PUBLIC_URL}/assets/ceramics/Hand1.png`,
+            `${process.env.PUBLIC_URL}/assets/ceramics/Hand2.png`
+        ],
+        title: "Finality",
+        subtitle: "Constructing",
+        description: "For Us"
+    },
+    slide2: {
+        images: [
+            `${process.env.PUBLIC_URL}/assets/ceramics/torso1.png`,
+            `${process.env.PUBLIC_URL}/assets/ceramics/torso2.png`
+        ],
+        title: "Ɱ?┃┃⎕ꟽ?♢𝚫  𐤨ӿѬ?",
+        subtitle: "Counter Nihilism",
+        description: "For Who?"
+    },
+    slide3: {
+        images: [
+            `${process.env.PUBLIC_URL}/assets/ceramics/spiral1.png`,
+        ],
+        title: "Laniakea",
+        subtitle: "Gold Weaver",
+        description: "For What?"
+    }
+};
+
 const CeramicsPage = () => {
-    // State to track current image index for each slide
     const [imageIndices, setImageIndices] = useState({
         slide1: 0,
         slide2: 0,
         slide3: 0
     });
 
-    // Function to cycle to next image for a slide
-    const cycleImage = (slideId, event) => {
-        // Stop event propagation to prevent interference with slider navigation
-        event.stopPropagation();
-        
-        setImageIndices(prev => {
-            const currentIndex = prev[slideId];
-            const maxIndex = CERAMICS_DATA[slideId].images.length - 1;
-            // Wrap around to 0 when reaching the end
-            const nextIndex = currentIndex >= maxIndex ? 0 : currentIndex + 1;
-            return {
-                ...prev,
-                [slideId]: nextIndex
-            };
-        });
-    };
-
-    // Function to get current image URL for a slide
-    const getCurrentImage = (slideId) => {
-        try {
-            const images = CERAMICS_DATA[slideId].images;
-            const currentIndex = imageIndices[slideId];
-            return images[currentIndex];
-        } catch (error) {
-            console.error(`Error getting image for ${slideId}:`, error);
-            return '';
-        }
-    };
-
     useEffect(() => {
-        // Initialize RAF instance
         const raf = new Raf();
 
-        // Preload all images
-        const allImages = Object.values(CERAMICS_DATA).flatMap(slide => slide.images);
-        Promise.all(
-            allImages.map(src => 
-                new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.onload = resolve;
-                    img.onerror = reject;
-                    img.src = src;
-                })
-            )
-        ).catch(error => console.error('Error preloading images:', error));
-
-        // Tilt function implementation
         function tilt(node, options) {
             let { trigger, target } = resolveOptions(node, options);
             let lerpAmount = 0.06;
@@ -199,7 +151,6 @@ const CeramicsPage = () => {
             };
         }
 
-        // Setup function
         function setup() {
             const loaderText = document.querySelector(".loader__text");
             const images = [...document.querySelectorAll("img")];
@@ -231,7 +182,6 @@ const CeramicsPage = () => {
             });
         }
 
-        // Init function
         function init() {
             const loader = document.querySelector(".loader");
             const slides = [...document.querySelectorAll(".slide")];
@@ -258,7 +208,6 @@ const CeramicsPage = () => {
             }
         }
 
-        // Change function
         function change(direction) {
             return () => {
                 let current = {
@@ -277,47 +226,91 @@ const CeramicsPage = () => {
                     slideBg: document.querySelector(".slide__bg[data-next]")
                 };
 
+                // Remove all data attributes first
                 Object.values(current).forEach((el) => el?.removeAttribute("data-current"));
                 Object.values(previous).forEach((el) => el?.removeAttribute("data-previous"));
                 Object.values(next).forEach((el) => el?.removeAttribute("data-next"));
 
+                // Update z-index and data attributes based on direction
                 if (direction === 1) {
                     let temp = current;
                     current = next;
                     next = previous;
                     previous = temp;
 
-                    if (current.slide) current.slide.style.zIndex = "20";
-                    if (previous.slide) previous.slide.style.zIndex = "30";
-                    if (next.slide) next.slide.style.zIndex = "10";
+                    if (current.slide) {
+                        current.slide.style.zIndex = "20";
+                        current.slideBg.style.zIndex = "-1";
+                    }
+                    if (previous.slide) {
+                        previous.slide.style.zIndex = "30";
+                        previous.slideBg.style.zIndex = "-2";
+                    }
+                    if (next.slide) {
+                        next.slide.style.zIndex = "10";
+                        next.slideBg.style.zIndex = "-3";
+                    }
                 } else if (direction === -1) {
                     let temp = current;
                     current = previous;
                     previous = next;
                     next = temp;
 
-                    if (current.slide) current.slide.style.zIndex = "20";
-                    if (previous.slide) previous.slide.style.zIndex = "10";
-                    if (next.slide) next.slide.style.zIndex = "30";
+                    if (current.slide) {
+                        current.slide.style.zIndex = "20";
+                        current.slideBg.style.zIndex = "-1";
+                    }
+                    if (previous.slide) {
+                        previous.slide.style.zIndex = "10";
+                        previous.slideBg.style.zIndex = "-3";
+                    }
+                    if (next.slide) {
+                        next.slide.style.zIndex = "30";
+                        next.slideBg.style.zIndex = "-2";
+                    }
                 }
 
+                // Set new data attributes
                 Object.values(current).forEach((el) => el?.setAttribute("data-current", ""));
                 Object.values(previous).forEach((el) => el?.setAttribute("data-previous", ""));
                 Object.values(next).forEach((el) => el?.setAttribute("data-next", ""));
             };
         }
 
-        // Start the setup
         setup();
 
-        // Cleanup function
         return () => {
             raf.stop();
         };
-    }, []); // Empty dependency array means this effect runs once on mount
+    }, []);
+
+    const cycleImage = (slideId, event) => {
+        event.stopPropagation();
+        setImageIndices(prev => {
+            const currentIndex = prev[slideId];
+            const maxIndex = CERAMICS_DATA[slideId].images.length - 1;
+            const nextIndex = currentIndex >= maxIndex ? 0 : currentIndex + 1;
+            return {
+                ...prev,
+                [slideId]: nextIndex
+            };
+        });
+    };
+
+    const getCurrentImage = (slideId) => {
+        try {
+            const images = CERAMICS_DATA[slideId].images;
+            const currentIndex = imageIndices[slideId];
+            return images[currentIndex];
+        } catch (error) {
+            console.error(`Error getting image for ${slideId}:`, error);
+            return '';
+        }
+    };
 
     return (
         <div className="ceramics-container">
+            <h1 className="title">Reflection Series</h1>
             <div className="slider">
                 <button className="slider--btn slider--btn__prev">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -335,16 +328,15 @@ const CeramicsPage = () => {
                                         className="slide--image" 
                                         src={getCurrentImage('slide1')} 
                                         alt={CERAMICS_DATA.slide1.title}
-                                        onError={(e) => {
-                                            console.error('Error loading image:', e.target.src);
-                                            e.target.src = '';
-                                        }}
                                     />
                                 </div>
                             </div>
                         </div>
                         <div className="slide__bg" 
-                             style={{ '--bg': `url(${getCurrentImage('slide1')})`, '--dir': '0' }} 
+                             style={{ 
+                                 '--bg': `url("${getCurrentImage('slide1')}")`,
+                                 backgroundImage: `url("${getCurrentImage('slide1')}")`
+                             }} 
                              data-current></div>
 
                         {/* slide 2 */}
@@ -355,16 +347,15 @@ const CeramicsPage = () => {
                                         className="slide--image" 
                                         src={getCurrentImage('slide2')} 
                                         alt={CERAMICS_DATA.slide2.title}
-                                        onError={(e) => {
-                                            console.error('Error loading image:', e.target.src);
-                                            e.target.src = '';
-                                        }}
                                     />
                                 </div>
                             </div>
                         </div>
                         <div className="slide__bg" 
-                             style={{ '--bg': `url(${getCurrentImage('slide2')})`, '--dir': '1' }} 
+                             style={{ 
+                                 '--bg': `url("${getCurrentImage('slide2')}")`,
+                                 backgroundImage: `url("${getCurrentImage('slide2')}")`
+                             }} 
                              data-next></div>
 
                         {/* slide 3 */}
@@ -375,16 +366,15 @@ const CeramicsPage = () => {
                                         className="slide--image" 
                                         src={getCurrentImage('slide3')} 
                                         alt={CERAMICS_DATA.slide3.title}
-                                        onError={(e) => {
-                                            console.error('Error loading image:', e.target.src);
-                                            e.target.src = '';
-                                        }}
                                     />
                                 </div>
                             </div>
                         </div>
                         <div className="slide__bg" 
-                             style={{ '--bg': `url(${getCurrentImage('slide3')})`, '--dir': '-1' }} 
+                             style={{ 
+                                 '--bg': `url("${getCurrentImage('slide3')}")`,
+                                 backgroundImage: `url("${getCurrentImage('slide3')}")`
+                             }} 
                              data-previous></div>
                     </div>
 

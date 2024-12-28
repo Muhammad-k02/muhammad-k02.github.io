@@ -3,73 +3,86 @@ import './AboutMe.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function AboutMe() {
-  const [hideContent, setHideContent] = useState(false);
+// Using local images from public assets
+const IMAGES = {
+  ceramics: process.env.PUBLIC_URL + '/assets/ceramics/Hand1.png',
+  philosophy: process.env.PUBLIC_URL + '/assets/about/philosophy-preview.png',
+  profession: process.env.PUBLIC_URL + '/assets/about/profession-preview.png'
+};
+
+const PANELS = [
+  {
+    id: 'ceramics',
+    title: 'CERAMICS',
+    subtitle: 'EXPLORE MY WORK',
+    path: '/about/ceramics',
+    image: 'ceramics'
+  },
+  {
+    id: 'mission',
+    title: 'MISSION STATEMENT',
+    subtitle: 'MY PURPOSE',
+    path: '/about/mission',
+    image: 'philosophy'
+  },
+  {
+    id: 'profession',
+    title: 'PROFESSION',
+    subtitle: 'MY EXPERTISE',
+    path: '/about/profession',
+    image: 'profession'
+  }
+];
+
+const AboutMe = () => {
   const navigate = useNavigate();
+  const [imageLoadError, setImageLoadError] = useState({});
 
-  const panelContents = [
-    { title: '', description: '', route: '', image: '' },
-    { 
-      title: 'Ceramics', 
-      description: 'Exploring the art of clay and form, transforming raw material into expressive pieces.', 
-      route: '/about/ceramics',
-      image: '/assets/about/ceramics-preview.jpg'
-    },
-    { 
-      title: 'Philosophy', 
-      description: 'A deep exploration of existential questions and critical thinking.', 
-      route: '/about/philosophy',
-      image: '/assets/about/philosophy-preview.png'
-    },
-    { 
-      title: 'Mission Statement', 
-      description: 'Dedicated to continuous learning and creative expression.', 
-      route: '/about/mission',
-      image: '/assets/about/mission-preview.jpeg'
-    },
-    { 
-      title: 'Profession', 
-      description: 'Leveraging technical expertise and creative problem-solving.', 
-      route: '/about/profession',
-      image: '/assets/about/profession-preview.jpg'
-    },
-    { title: '', description: '', route: '', image: '' }
-  ];
+  const handleImageError = (imageKey) => {
+    console.error(`Failed to load image: ${IMAGES[imageKey]}`);
+    setImageLoadError(prev => ({ ...prev, [imageKey]: true }));
+  };
 
-  const handlePanelClick = (route) => {
-    if (route) {
-      navigate(route);
-    }
+  const handleNavigation = (path, e) => {
+    e.preventDefault();
+    navigate(path);
   };
 
   return (
-    <div className={`about-me-container ${hideContent ? 'hide-content' : ''}`}>
-      <button onClick={() => setHideContent(!hideContent)}>
-        {hideContent ? 'Show Content' : 'Hide Content'}
-      </button>
-      <main>
-        {panelContents.map((panel, i) => (
-          <section 
-            key={i} 
-            onClick={() => handlePanelClick(panel.route)}
-            style={{ 
-              cursor: panel.route ? 'pointer' : 'default',
-              backgroundImage: panel.image ? `url(${process.env.PUBLIC_URL}${panel.image})` : 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
-          >
-            {(i > 0 && i < 5) && (
-              <article>
-                <h2>{panel.title}</h2>
-                <p>{panel.description}</p>
-              </article>
-            )}
-          </section>
-        ))}
-      </main>
+    <div className="about-me">
+      <div className="panels">
+        <div className="panels__container">
+          {PANELS.map(panel => (
+            <a 
+              key={panel.id}
+              href="#" 
+              className="panel" 
+              onClick={(e) => handleNavigation(panel.path, e)}
+            >
+              <div 
+                className="panel__content" 
+                style={{ 
+                  backgroundImage: !imageLoadError[panel.image] ? `url("${IMAGES[panel.image]}")` : 'none',
+                  backgroundColor: imageLoadError[panel.image] ? '#2a2a2a' : 'transparent'
+                }}
+              >
+                <img 
+                  src={IMAGES[panel.image]} 
+                  alt="" 
+                  style={{ display: 'none' }} 
+                  onError={() => handleImageError(panel.image)}
+                />
+                <div className="panel__titles">
+                  <h3 className="panel__title">{panel.title}</h3>
+                  <h4 className="panel__subtitle">{panel.subtitle}</h4>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default AboutMe;

@@ -16,7 +16,6 @@ import PublicationsBg from './assets/backgrounds/Fletschhorn v2 TimeShifted-3 (d
 import AboutMe from './pages/AboutMe';
 import CeramicsPage from './pages/AboutPages/CeramicsPage';
 import MissionStatementPage from './pages/AboutPages/MissionStatementPage';
-import PhilosophyPage from './pages/AboutPages/PhilosophyPage';
 import ProfessionPage from './pages/AboutPages/ProfessionPage';
 import Education from './pages/Education';
 import Home from './pages/Home';
@@ -42,7 +41,6 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<AboutMe />} />
               <Route path="/about/ceramics" element={<CeramicsPage />} />
-              <Route path="/about/philosophy" element={<PhilosophyPage />} />
               <Route path="/about/mission" element={<MissionStatementPage />} />
               <Route path="/about/profession" element={<ProfessionPage />} />
               <Route

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
+import { useNavigate } from 'react-router-dom';
 import './MissionStatementPage.scss';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,6 +48,8 @@ const SCROLL_ITEMS = [
 }));
 
 function MissionStatementPage() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const container = document.querySelector('.mission-statement');
     const scrollIndicator = document.querySelector('.scroll-indicator');
@@ -195,6 +198,15 @@ function MissionStatementPage() {
 
   return (
     <div className="mission-statement">
+      <button 
+        className="back-button" 
+        onClick={() => navigate(-1)}
+        aria-label="Go back"
+      >
+        <svg viewBox="0 0 24 24">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+      </button>
       <header>
         <h1 className="fluid">My Mission</h1>
         <div className="scroll-indicator">

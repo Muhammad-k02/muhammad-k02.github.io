@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import './MissionStatementPage.scss';
+
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './MissionStatementPage.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 

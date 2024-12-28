@@ -1,11 +1,27 @@
 import React, { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
-import { Pane } from 'tweakpane';
 import './MissionStatementPage.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Function to generate a unique color based on word
+const generateColor = (word) => {
+  // Simple hash function to generate a number from string
+  const hash = word.split('').reduce((acc, char) => {
+    return char.charCodeAt(0) + ((acc << 5) - acc);
+  }, 0);
+
+  // Convert hash to HSL color with controlled saturation and lightness
+  const hue = Math.abs(hash % 360);
+  return {
+    main: `hsl(${hue}, 70%, 50%)`,
+    light: `hsl(${hue}, 70%, 70%)`,
+    dark: `hsl(${hue}, 70%, 30%)`
+  };
+};
+
+// Precompute colors for all items
 const SCROLL_ITEMS = [
   'empower',
   'innovate',
@@ -25,233 +41,195 @@ const SCROLL_ITEMS = [
   'imagine',
   'collaborate',
   'achieve'
-];
-
+].map(item => ({
+  text: item,
+  colors: generateColor(item)
+}));
 
 function MissionStatementPage() {
   useEffect(() => {
-    const config = {
-      theme: 'dark',
-      start: gsap.utils.random(0, 100, 1),
-      end: gsap.utils.random(900, 1000, 1),
-      scroll: true,
+    const container = document.querySelector('.mission-statement');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    
+    // Scroll section configuration - adjust these values to fine-tune the animations
+    const scrollConfig = {
+      section1: { start: 0, end: 500 },     // Header title
+      section2: { start: 500, end: 8000 },  // First section (oath)
+      section3: { start: 1200, end: 9600 },  // List items
+      section4: { start: 9600, end: 10000 }  // Last section
     };
 
-    const ctrl = new Pane({
-      title: 'Config',
-      expanded: true,
+    // Apply scroll configuration
+    Object.entries(scrollConfig).forEach(([section, { start, end }]) => {
+      container.style.setProperty(`--scroll-section-${section.slice(-1)}-start`, start);
+      container.style.setProperty(`--scroll-section-${section.slice(-1)}-end`, end);
     });
 
-    const update = () => {
-      document.documentElement.dataset.theme = config.theme;
-      document.documentElement.dataset.syncScrollbar = config.scroll;
-      document.documentElement.style.setProperty('--start', config.start);
-      document.documentElement.style.setProperty('--scroller', config.start);
-      document.documentElement.style.setProperty('--end', config.end);
+    // Function to update scroll progress
+    const updateScrollProgress = () => {
+      const scrollY = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollY / totalHeight) * 100;
+      
+      // Update scroll progress bar
+      container.style.setProperty('--scroll-percent', `${progress}%`);
+      container.style.setProperty('--scroll-amount', scrollY);
+      
+      // Hide scroll indicator after scrolling starts
+      if (scrollY > 10) {
+        scrollIndicator?.classList.add('hidden');
+      } else {
+        scrollIndicator?.classList.remove('hidden');
+      }
+
+      // Debug info - uncomment to see scroll values
+      // console.log(`Scroll: ${scrollY}px, Progress: ${progress}%`);
     };
 
-    const sync = (event) => {
-      if (
-        !document.startViewTransition ||
-        event.target.controller.view.labelElement.innerText !== 'Theme'
-      )
-        return update();
-      document.startViewTransition(() => update());
+    // Check initial scroll position
+    if (window.scrollY > 10) {
+      scrollIndicator?.classList.add('hidden');
+    }
+
+    // Add scroll event listener with throttling
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateScrollProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    ctrl.addBinding(config, 'start', {
-      label: 'Hue Start',
-      min: 0,
-      max: 1000,
-      step: 1,
-    });
-    ctrl.addBinding(config, 'end', {
-      label: 'Hue End',
-      min: 0,
-      max: 1000,
-      step: 1,
-    });
-    ctrl.addBinding(config, 'scroll', {
-      label: 'Scrollbar',
-    });
-    ctrl.addBinding(config, 'theme', {
-      label: 'Theme',
-      options: {
-        System: 'system',
-        Light: 'light',
-        Dark: 'dark',
-      },
-    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateScrollProgress(); // Initial call
 
-    ctrl.on('change', sync);
-    update();
+    // Function to apply color styles
+    const applyColorStyles = (colors) => {
+      const root = document.documentElement;
+      const container = document.querySelector('.mission-statement');
+      
+      // Apply colors to both document root and container
+      [root, container].forEach(element => {
+        if (element) {
+          element.style.setProperty('--dynamic-color', colors.main);
+          element.style.setProperty('--dynamic-color-light', colors.light);
+          element.style.setProperty('--dynamic-color-dark', colors.dark);
+          element.style.setProperty('--grid-line-color', colors.light);
+          element.style.setProperty('--scrollbar-thumb-color', colors.main);
+          element.style.setProperty('--scrollbar-track-color', colors.dark);
+        }
+      });
+    };
 
     // Fallback for browsers that don't support scroll timeline
     if (!CSS.supports('(animation-timeline: scroll()) and (animation-range: 0% 100%)')) {
       const items = gsap.utils.toArray('ul li');
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        gsap.set(item, { opacity: i !== 0 ? 0.2 : 1 });
-        gsap
-          .timeline({
-            scrollTrigger: {
-              scrub: 0.25,
-              trigger: item,
-              start: 'center center+=4lh',
-              end: 'center center-=4lh',
-            },
-          })
-          .to(item, {
-            opacity: 1,
-            ease: 'none',
-            duration: 0.1,
-          })
-          .to(item, {
-            opacity: i !== items.length - 1 ? 0.2 : 1,
-            ease: 'none',
-            duration: 0.1,
-          });
-      }
-
-      // Register scrollbar changer
-      gsap.fromTo(
-        document.documentElement,
-        {
-          '--scroller': config.start,
-        },
-        {
-          '--scroller': config.end,
-          ease: 'none',
+      
+      // Set up scroll triggers for each item
+      items.forEach((item, index) => {
+        gsap.set(item, { opacity: index !== 0 ? 0.2 : 1 });
+        
+        // Create timeline for opacity animation
+        const tl = gsap.timeline({
           scrollTrigger: {
-            scrub: 0.1,
-            trigger: 'ul',
-            start: 'top center-=1lh',
-            end: 'bottom center+=1lh',
-          },
-        }
-      );
+            trigger: item,
+            start: 'center center+=4lh',
+            end: 'center center-=4lh',
+            scrub: 0.25,
+            onEnter: () => applyColorStyles(SCROLL_ITEMS[index].colors),
+            onEnterBack: () => applyColorStyles(SCROLL_ITEMS[index].colors),
+            onUpdate: (self) => {
+              // Apply color based on progress
+              if (self.progress > 0.4 && self.progress < 0.6) {
+                applyColorStyles(SCROLL_ITEMS[index].colors);
+              }
+            }
+          }
+        });
 
-      gsap.fromTo(
-        document.documentElement,
-        {
-          '--chroma': 0,
-        },
-        {
-          '--chroma': 0.3,
-          duration: 0.1,
+        tl.to(item, {
+          opacity: 1,
           ease: 'none',
-          scrollTrigger: {
-            scrub: 0.2,
-            trigger: 'ul',
-            start: 'top center-=2lh',
-            end: 'top center',
-          },
-        }
-      );
+          duration: 0.1
+        }).to(item, {
+          opacity: index !== items.length - 1 ? 0.2 : 1,
+          ease: 'none',
+          duration: 0.1
+        });
+      });
+    } else {
+      // For modern browsers, set up intersection observer for color changes
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index'));
+            if (!isNaN(index)) {
+              applyColorStyles(SCROLL_ITEMS[index].colors);
+            }
+          }
+        });
+      }, {
+        root: null,
+        threshold: 0.5,
+        rootMargin: '-50% 0px -50% 0px'
+      });
 
-      gsap.fromTo(
-        document.documentElement,
-        {
-          '--chroma': 0.3,
-        },
-        {
-          '--chroma': 0,
-          duration: 0.1,
-          ease: 'none',
-          scrollTrigger: {
-            scrub: 0.2,
-            trigger: 'ul',
-            start: 'bottom center+=2lh',
-            end: 'bottom center+=1lh',
-          },
-        }
-      );
+      // Observe all list items
+      document.querySelectorAll('ul li').forEach(item => observer.observe(item));
     }
 
+    // Initial color
+    applyColorStyles(SCROLL_ITEMS[0].colors);
+
     return () => {
-      ctrl.dispose();
+      // Cleanup scroll triggers and observers
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      const observer = new IntersectionObserver(() => {});
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
   return (
     <div className="mission-statement">
       <header>
-        <h1 className="fluid">you can<br />scroll.</h1>
+        <h1 className="fluid">My Mission</h1>
+        <div className="scroll-indicator">
+          <span className="scroll-text">Scroll</span>
+          <div className="scroll-icon" />
+        </div>
       </header>
       <main>
         <section className="content fluid">
           <h2>
-            <span aria-hidden="true">you can&nbsp;</span>
-            <span className="sr-only">you can ship things.</span>
+            <span aria-hidden="true">My oath to&nbsp;</span>
+            <span className="sr-only">My commitment to excellence</span>
           </h2>
           <ul aria-hidden="true" style={{ '--count': SCROLL_ITEMS.length }}>
             {SCROLL_ITEMS.map((item, index) => (
-              <li key={index} style={{ '--i': index }}>{item}</li>
+              <li 
+                key={index}
+                data-index={index}
+                style={{ 
+                  '--i': index,
+                  '--item-color': item.colors.main,
+                  '--item-color-light': item.colors.light,
+                  '--item-color-dark': item.colors.dark
+                }}
+              >
+                {item.text}
+              </li>
             ))}
           </ul>
         </section>
         <section>
-          <h2 className="fluid">fin.</h2>
+          <h2 className="fluid">...in every endeavour.</h2>
         </section>
       </main>
-      <footer>ʕ⊙ᴥ⊙ʔ jh3yy &copy; 2024</footer>
-      <a
-        className="bear-link"
-        href="https://twitter.com/intent/follow?screen_name=jh3yy"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        <svg
-          className="w-9"
-          viewBox="0 0 969 955"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="161.191"
-            cy="320.191"
-            r="133.191"
-            stroke="currentColor"
-            strokeWidth="20"
-          />
-          <circle
-            cx="806.809"
-            cy="320.191"
-            r="133.191"
-            stroke="currentColor"
-            strokeWidth="20"
-          />
-          <circle
-            cx="695.019"
-            cy="587.733"
-            r="31.4016"
-            fill="currentColor"
-          />
-          <circle
-            cx="272.981"
-            cy="587.733"
-            r="31.4016"
-            fill="currentColor"
-          />
-          <path
-            d="M564.388 712.083C564.388 743.994 526.035 779.911 483.372 779.911C440.709 779.911 402.356 743.994 402.356 712.083C402.356 680.173 440.709 664.353 483.372 664.353C526.035 664.353 564.388 680.173 564.388 712.083Z"
-            fill="currentColor"
-          />
-          <rect
-            x="310.42"
-            y="448.31"
-            width="343.468"
-            height="51.4986"
-            fill="#FF1E1E"
-          />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M745.643 288.24C815.368 344.185 854.539 432.623 854.539 511.741H614.938V454.652C614.938 433.113 597.477 415.652 575.938 415.652H388.37C366.831 415.652 349.37 433.113 349.37 454.652V511.741L110.949 511.741C110.949 432.623 150.12 344.185 219.845 288.24C289.57 232.295 384.138 200.865 482.744 200.865C581.35 200.865 675.918 232.295 745.643 288.24Z"
-            fill="currentColor"
-          />
-        </svg>
-      </a>
+      <footer>Muhammad Khan &copy; 2024</footer>
     </div>
   );
 }

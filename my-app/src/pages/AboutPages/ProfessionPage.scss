@@ -6,7 +6,7 @@
   height: 100vh;
   background-color: rgba(25,25,25,1);
   overflow: hidden;
-  transition: filter 1s ease;
+  transition: filter 1s ease, background-color 1s ease;
 
   &.inverted {
     filter: invert(1) hue-rotate(180deg);
@@ -20,10 +20,22 @@
     display: flex;
     top: 0;
     left: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.8s ease;
+    will-change: opacity;
 
     &.fade {
       opacity: 0;
+    }
+
+    canvas {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transition: opacity 0.5s ease;
+      will-change: transform, opacity;
     }
   }
 
@@ -53,7 +65,7 @@
   }
 
   .container {
-    transition: opacity 0.5s ease;
+    transition: opacity 0.8s ease;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -62,6 +74,7 @@
     justify-content: center;
     align-items: center;
     z-index: 1;
+    will-change: opacity, transform;
     
     &.fade {
       opacity: 0;
@@ -183,11 +196,12 @@
     z-index: 3;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 500ms;
+    transition: opacity 0.8s ease, background-color 0.8s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    will-change: opacity, background-color;
 
     &.open {
       opacity: 1;
@@ -337,6 +351,11 @@
     transition: all 0.5s ease;
     cursor: pointer;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    will-change: opacity, transform;
+
+    &.transitioning {
+      pointer-events: none;
+    }
 
     &:hover {
       text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);

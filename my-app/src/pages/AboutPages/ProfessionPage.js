@@ -310,33 +310,63 @@ function ProfessionPage() {
 
     // Add exit handler
     $('.exit-text').on('click', function() {
-      // Hide cards, title and exit text
+      // Prevent multiple clicks
+      if ($(this).hasClass('transitioning')) return;
+      $(this).addClass('transitioning');
+
+      // First phase: Hide UI elements
       $('.cards-container').removeClass('visible');
       $('.professional-title').removeClass('visible');
       $('.exit-text').removeClass('visible');
 
+      // Cancel any existing animations
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+
       // Remove particle animation
       if (particleCanvasRef.current) {
         particleCanvasRef.current.remove();
+        particleCanvasRef.current = null;
       }
 
+      // Second phase: Reset state and restore original view
       setTimeout(() => {
         // Remove inversion
         $('.profession-page').removeClass('inverted');
         
-        // Show original elements
-        $('#blackhole').removeClass('fade');
-        $('.title').removeClass('fade');
-        $('.container').removeClass('fade');
-        $('.centerHover').removeClass('open');
-        $('.fullpage').removeClass('open');
-
-        // Reset blackhole state
+        // Reset state variables
         collapse = false;
         expanse = false;
 
-        // Reinitialize if needed
-        init();
+        // Clear canvas and prepare for new animation
+        const canvas = canvasRef.current;
+        if (canvas) {
+          const context = canvas.getContext('2d');
+          context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Show original elements with proper timing
+        setTimeout(() => {
+          $('#blackhole').removeClass('fade');
+          $('.title').removeClass('fade');
+          $('.container').removeClass('fade');
+          $('.centerHover').removeClass('open');
+          $('.fullpage').removeClass('open');
+          
+          // Start fresh animation cycle
+          stars.length = 0;
+          for(let i = 0; i < 2500; i++) {
+            new star();
+          }
+          if (!animationRef.current) {
+            loop();
+          }
+          
+          // Remove transitioning state
+          $('.exit-text').removeClass('transitioning');
+        }, 100);
       }, 500);
     });
 

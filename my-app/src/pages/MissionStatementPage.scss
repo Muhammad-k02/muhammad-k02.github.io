@@ -1,0 +1,523 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+@layer scrollbar {
+  @property --scroller {
+    initial-value: 0;
+    syntax: '<number>';
+    inherits: true;
+  }
+  @property --chroma {
+    initial-value: 0;
+    syntax: '<number>';
+    inherits: true;
+  }
+
+  .scroll-container {
+    --lightness: 0.6;
+    --base-chroma: 0.2;
+    --start: 0;
+    --end: 360;
+    --count: 18;  // Number of scroll items
+    scrollbar-color: oklch(var(--lightness) var(--chroma) var(--scroller)) #0000;
+
+    @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
+      timeline-scope: --scroll-timeline;
+      animation-name: change, chroma-on, chroma-off;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-range: entry 50% exit 50%, entry 40% entry 50%, exit 30% exit 40%;
+      animation-timeline: --scroll-timeline;
+
+      .scroll-items {
+        view-timeline: --scroll-timeline;
+      }
+    }
+  }
+
+  @keyframes change {
+    to {
+      --scroller: var(--end);
+    }
+  }
+  @keyframes chroma-on {
+    to {
+      --chroma: 0.3;
+    }
+  }
+  @keyframes chroma-off {
+    to {
+      --chroma: 0;
+    }
+  }
+}
+
+@layer effect {
+  .scroll-items {
+    --step: calc((var(--end) - var(--start)) / (var(--count) - 1));
+  }
+
+  .scroll-item {
+    @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
+      opacity: 0.2;
+      animation-name: brighten;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-range: cover calc(50% - 1lh) calc(50% + 1lh);
+      animation-timeline: view();
+
+      &:first-of-type {
+        opacity: 1;
+        animation-name: dim;
+      }
+      &:last-of-type {
+        opacity: 0.2;
+        animation-name: bright;
+      }
+
+      @for $i from 1 through 18 {
+        &:nth-child(#{$i}) {
+          color: oklch(
+            var(--lightness) 
+            var(--base-chroma)
+            calc(var(--start) + (var(--step) * #{$i - 1}))
+          );
+        }
+      }
+    }
+  }
+
+  @keyframes dim {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes bright {
+    0% {
+      opacity: 0.2;
+    }
+    50%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes brighten {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 1;
+      filter: brightness(1.2);
+    }
+  }
+}
+
+:root {
+  /* Positioning variables */
+  --oath-title-left: calc(20% - 200px);    /* Adjust the horizontal position of "My oath to:" */
+  --oath-title-y: 55%;                     /* Adjust the vertical position of "My oath to:" */
+  --scroll-items-left: 100px;                  /* Adjust the left offset of scroll items */
+  --scroll-item-y-offset: 0px;             /* Fine-tune vertical alignment of items */
+  --scroll-items-width: 400px;             /* Adjust the width of the scroll items container */
+  --scroll-gap: 20vh;                      /* Adjust space between items */
+  --scroll-item-height: 20vh;              /* Adjust height of each item */
+
+  /* Timing variables */
+  --item-fade-in-duration: 0.9s;           /* Duration of item fade in animation */
+  --item-fade-out-duration: 0.1s;          /* Duration of item fade out animation */
+  --item-visible-duration: 3s;             /* How long each item stays fully visible */
+  --item-transition-timing: ease;          /* Timing function for transitions */
+}
+
+* { 
+  box-sizing: border-box; 
+  -webkit-font-smoothing: antialiased; 
+  text-rendering: optimizeLegibility; 
+  scroll-behavior: smooth;
+}
+
+html, body { 
+  height: 100%; 
+  overflow: hidden;
+}
+
+.mission-statement-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  color: #c8c2bd;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  overflow: hidden;
+
+  svg.filters {
+    height: 0;
+    width: 0;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .scroll-container {
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    position: relative;
+    scroll-behavior: smooth;
+  }
+
+  .scroll-section {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .intro-section {
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+
+    header {
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 1s ease-out forwards;
+
+      h1 {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+        line-height: 1.6;
+        max-width: 900px;
+        margin: 0 auto;
+        font-weight: 300;
+        position: relative;
+        display: inline-block;
+        scale: 1;
+        animation: onloadscale 1s ease-out forwards;
+        color: #fffaf6;
+        background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: url(#glow-4);
+        -moz-filter: url(#glow-4);
+        -webkit-filter: url(#glow-4);
+      }
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.875rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out forwards 1s;
+      position: relative;
+      display: inline-block;
+      scale: 1;
+
+      &::before {
+        content: attr(data-text);
+        position: absolute;
+        pointer-events: none;
+        color: #fffaf6;
+        background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: url(#glow-4);
+        -moz-filter: url(#glow-4);
+        -webkit-filter: url(#glow-4);
+        opacity: 0;
+        animation: onloadopacity 1s ease-out forwards;
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        width: 1px;
+        height: 3rem;
+        background: currentColor;
+        margin: 1rem auto 0;
+        animation: scrollPulse 2s ease-in-out infinite;
+      }
+    }
+  }
+
+  .back-button {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    background: none;
+    border: none;
+    color: #c8c2bd;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    z-index: 100;
+    opacity: 0.7;
+    position: relative;
+    display: inline-block;
+    scale: 1;
+    animation: onloadscale 1s ease-out forwards;
+
+    &::before {
+      content: attr(data-text);
+      position: absolute;
+      pointer-events: none;
+      color: #fffaf6;
+      background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: url(#glow-4);
+      -moz-filter: url(#glow-4);
+      -webkit-filter: url(#glow-4);
+      opacity: 0;
+      animation: onloadopacity 1s ease-out forwards;
+    }
+  }
+
+  .oath-section {
+    .sticky-wrapper {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 4rem;
+      padding: 0 2rem;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 600;
+      margin: 0;
+      position: fixed;
+      left: var(--oath-title-left);
+      top: var(--oath-title-y);
+      transform: translateY(-50%);
+      text-align: left;
+      height: fit-content;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      will-change: opacity, transform;
+      z-index: 10;
+
+      &.visible {
+        opacity: 1;
+      }
+
+      &::before {
+        content: attr(data-text);
+        position: absolute;
+        pointer-events: none;
+        color: #fffaf6;
+        background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: url(#glow-4);
+        -moz-filter: url(#glow-4);
+        -webkit-filter: url(#glow-4);
+        opacity: 0;
+        animation: onloadopacity 1s ease-out forwards;
+      }
+    }
+
+    .scroll-items {
+      display: flex;
+      flex-direction: column;
+      gap: var(--scroll-gap);
+      padding: 10vh 0;
+      width: 100%;
+      margin-left: var(--scroll-items-left);
+      max-width: var(--scroll-items-width);
+      grid-column: 2;
+      position: relative;
+      padding-bottom: 50vh;
+    }
+
+    .scroll-item {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.2;
+      height: var(--scroll-item-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      scroll-snap-align: center;
+      position: relative;
+      will-change: opacity, transform, filter;
+    }
+  }
+
+  .ending-section {
+    text-align: left;
+    position: fixed;
+    left: calc(var(--scroll-items-left) + var(--scroll-items-width) + 3rem);
+    top: calc(var(--oath-title-y) + 150px);
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 10;
+
+    &.visible {
+      opacity: 1;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 300;
+      font-style: italic;
+      margin: 0;
+      position: relative;
+      display: inline-block;
+      scale: 1;
+      animation: onloadscale 1s ease-out forwards;
+      color: #fffaf6;
+      background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: url(#glow-4);
+      -moz-filter: url(#glow-4);
+      -webkit-filter: url(#glow-4);
+
+      &::before {
+        content: attr(data-text);
+        position: absolute;
+        pointer-events: none;
+        color: #fffaf6;
+        background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: url(#glow-4);
+        -moz-filter: url(#glow-4);
+        -webkit-filter: url(#glow-4);
+        opacity: 0;
+        animation: onloadopacity 1s ease-out forwards;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes scrollPulse {
+  0% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(1.5); opacity: 0.5; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes onloadscale {
+  24% { scale: 1; }
+  100% { scale: 1.02; }
+}
+
+@keyframes onloadopacity {
+  24% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mission-statement-page {
+    .oath-section {
+      .sticky-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+
+      h2 {
+        position: relative;
+        left: auto;
+        top: 0;
+        transform: none;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .scroll-items {
+        grid-column: 1;
+        gap: 25vh;
+        margin: 0 auto;
+      }
+
+      .scroll-item {
+        height: 25vh;
+        font-size: clamp(2rem, 6vw, 4rem);
+      }
+    }
+
+    .ending-section {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+      padding: 0 1rem;
+    }
+  }
+} 
+
+/* Add debug outlines for alignment (remove in production) */
+.debug-mode {
+  .oath-section h2::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    width: 100vw;
+    height: 1px;
+    background: rgba(255, 0, 0, 0.5);
+    pointer-events: none;
+  }
+
+  .scroll-item::before {
+    content: '';
+    position: absolute;
+    left: -100vw;
+    top: 50%;
+    width: 100vw;
+    height: 1px;
+    background: rgba(0, 255, 0, 0.5);
+    pointer-events: none;
+  }
+} 

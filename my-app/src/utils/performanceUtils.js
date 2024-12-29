@@ -98,4 +98,87 @@ export class PerformanceMonitor {
   static getMetrics() {
     return Object.fromEntries(this.metrics);
   }
+}
+
+// Resource preloading utility
+export const preloadResources = (resources) => {
+  resources.forEach(resource => {
+    if (resource.endsWith('.js')) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'script';
+      link.href = resource;
+      document.head.appendChild(link);
+    } else if (resource.endsWith('.css')) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'style';
+      link.href = resource;
+      document.head.appendChild(link);
+    } else if (/\.(jpg|jpeg|png|gif|webp)$/i.test(resource)) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = resource;
+      document.head.appendChild(link);
+    }
+  });
+};
+
+// Debounce utility for performance optimization
+export const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
+// Throttle utility for performance optimization
+export const throttle = (func, limit) => {
+  let inThrottle;
+  return function executedFunction(...args) {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+};
+
+// Cache management utility
+export class CacheManager {
+  static cache = new Map();
+  static maxSize = 100;
+
+  static set(key, value, ttl = 300000) { // 5 minutes default TTL
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+    this.cache.set(key, {
+      value,
+      timestamp: Date.now(),
+      ttl
+    });
+  }
+
+  static get(key) {
+    const item = this.cache.get(key);
+    if (!item) return null;
+    
+    if (Date.now() - item.timestamp > item.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+    return item.value;
+  }
+
+  static clear() {
+    this.cache.clear();
+  }
 } 

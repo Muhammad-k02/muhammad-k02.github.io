@@ -21,10 +21,10 @@ const DropdownMenu = () => {
 
   const menuItems = [
     { label: 'Home', link: '/' },
-    { label: 'Resume', link: '/resume' },
     { label: 'Publications', link: '/publications' },
     { label: 'Projects', link: '/projects' },
     { label: 'Education', link: '/education' },
+    { label: 'Resume', link: '/resume' }
   ];
 
   return (

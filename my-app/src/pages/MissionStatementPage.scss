@@ -295,37 +295,33 @@ html, body {
 
   .back-button {
     position: fixed;
-    top: 2rem;
-    left: 2rem;
-    background: none;
-    border: none;
-    color: #c8c2bd;
-    font-family: inherit;
-    font-size: 1rem;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    z-index: 5;
-    opacity: 0.7;
-    position: relative;
-    display: inline-block;
-    scale: 1;
-    animation: onloadscale 1s ease-out forwards;
+    transition: all 0.3s ease;
+    z-index: 1000;
 
-    &::before {
-      content: attr(data-text);
-      position: absolute;
-      pointer-events: none;
-      color: #fffaf6;
-      background: linear-gradient(0deg, #dfe5ee 0%, #fffaf6 50%);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: url(#glow-4);
-      -moz-filter: url(#glow-4);
-      -webkit-filter: url(#glow-4);
-      opacity: 0;
-      animation: onloadopacity 1s ease-out forwards;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    svg {
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateX(-4px);
     }
   }
 

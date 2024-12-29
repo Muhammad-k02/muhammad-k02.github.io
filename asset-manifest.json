@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2cfc9fb0.css",
-    "main.js": "/static/js/main.0c21c101.js",
+    "main.css": "/static/css/main.7a66b487.css",
+    "main.js": "/static/js/main.ccb8e129.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Fletschhorn v2 TimeShifted-3 (dragged).jpg": "/static/media/Fletschhorn v2 TimeShifted-3 (dragged).4bfbda79635bfcf1f640.jpg",
     "static/media/file.png": "/static/media/file.4a1bee68d1716181a09c.png",
@@ -12,12 +12,12 @@
     "static/media/primeicons.ttf": "/static/media/primeicons.a5c2a53d1ff7a9ff5933.ttf",
     "static/media/primeicons.woff2": "/static/media/primeicons.024b32cc7bf399b1a847.woff2",
     "index.html": "/index.html",
-    "main.2cfc9fb0.css.map": "/static/css/main.2cfc9fb0.css.map",
-    "main.0c21c101.js.map": "/static/js/main.0c21c101.js.map",
+    "main.7a66b487.css.map": "/static/css/main.7a66b487.css.map",
+    "main.ccb8e129.js.map": "/static/js/main.ccb8e129.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2cfc9fb0.css",
-    "static/js/main.0c21c101.js"
+    "static/css/main.7a66b487.css",
+    "static/js/main.ccb8e129.js"
   ]
 }

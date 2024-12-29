@@ -7,6 +7,79 @@ function ProfessionPage() {
   const containerRef = useRef(null);
   const animationRef = useRef(null);
   const canvasRef = useRef(null);
+  const particleCanvasRef = useRef(null);
+  const particlesRef = useRef([]);
+
+  class Particle {
+    constructor(canvas) {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 5 + 1;
+      this.speedX = Math.random() * 3 - 1.5;
+      this.speedY = Math.random() * 3 - 1.5;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.size > 0.2) this.size -= 0.1;
+    }
+
+    draw(ctx) {
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const initParticleAnimation = () => {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'particle-canvas';
+    particleCanvasRef.current = canvas;
+    const ctx = canvas.getContext('2d');
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initialize particles
+    particlesRef.current = [];
+    for (let i = 0; i < 100; i++) {
+      particlesRef.current.push(new Particle(canvas));
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        particlesRef.current[i].update();
+        particlesRef.current[i].draw(ctx);
+        if (particlesRef.current[i].size <= 0.2) {
+          particlesRef.current.splice(i, 1);
+          i--;
+          particlesRef.current.push(new Particle(canvas));
+        }
+      }
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    // Append canvas to fullpage
+    const fullpage = document.querySelector('.fullpage');
+    fullpage.appendChild(canvas);
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      canvas.remove();
+    };
+  };
 
   useEffect(() => {
     // Wait for the container to be mounted
@@ -23,6 +96,10 @@ function ProfessionPage() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      // Remove particle canvas if it exists
+      if (particleCanvasRef.current) {
+        particleCanvasRef.current.remove();
+      }
     };
   }, []);
 
@@ -32,7 +109,7 @@ function ProfessionPage() {
     const w = $element.width() || window.innerWidth;
     const cw = w;
     const ch = h;
-    const maxorbit = 255; // distance from center
+    const maxorbit = 400; // Increased from 255 to 400 for larger radius
     const centery = ch/2;
     const centerx = cw/2;
 
@@ -112,7 +189,7 @@ function ProfessionPage() {
       }
 
       stars.push(this);
-      this.color = 'rgba(255,255,255,'+ (1 - ((this.orbital) / 255)) +')';
+      this.color = 'rgba(255,255,255,'+ Math.min(1, (1 - ((this.orbital) / maxorbit)) + 0.5) +')';
       this.hoverPos = centery + (maxorbit/2) + this.collapseBonus;
       this.expansePos = centery + (this.id%100)*-10 + (Math.floor(Math.random() * 20) + 1);
       this.prevR = this.startRotation;
@@ -206,9 +283,60 @@ function ProfessionPage() {
       collapse = false;
       expanse = true;
       $(this).addClass('open');
+      
+      // Add fade classes to elements that should disappear
+      $('#blackhole').addClass('fade');
+      $('.title').addClass('fade');
+      $('.container').addClass('fade');
+      
+      // Invert colors
+      $('.profession-page').addClass('inverted');
+      
+      // Show fullpage and initialize particle animation
       $('.fullpage').addClass('open');
+      initParticleAnimation();
+      
+      // Show cards, title and exit text after a delay
+      setTimeout(() => {
+        $('.cards-container').addClass('visible');
+        $('.professional-title').addClass('visible');
+        $('.exit-text').addClass('visible');
+      }, 800);
+      
       setTimeout(function() {
         $('.header .welcome').removeClass('gone');
+      }, 500);
+    });
+
+    // Add exit handler
+    $('.exit-text').on('click', function() {
+      // Hide cards, title and exit text
+      $('.cards-container').removeClass('visible');
+      $('.professional-title').removeClass('visible');
+      $('.exit-text').removeClass('visible');
+
+      // Remove particle animation
+      if (particleCanvasRef.current) {
+        particleCanvasRef.current.remove();
+      }
+
+      setTimeout(() => {
+        // Remove inversion
+        $('.profession-page').removeClass('inverted');
+        
+        // Show original elements
+        $('#blackhole').removeClass('fade');
+        $('.title').removeClass('fade');
+        $('.container').removeClass('fade');
+        $('.centerHover').removeClass('open');
+        $('.fullpage').removeClass('open');
+
+        // Reset blackhole state
+        collapse = false;
+        expanse = false;
+
+        // Reinitialize if needed
+        init();
       }, 500);
     });
 
@@ -249,16 +377,58 @@ function ProfessionPage() {
 
   return (
     <div className="profession-page">
+      <h1 className="title">Singularity</h1>
+      <h2 className="professional-title">Professional Expertise</h2>
       <div id="blackhole" ref={containerRef}></div>
+      <div className="container">
+        <div className="blackhole">
+          <div className="megna">
+            <div className="black"></div>
+          </div>
+        </div>
+      </div>
       <div className="centerHover">
         <span>Enter</span>
       </div>
       <div className="fullpage">
+        <div className="cards-container">
+          <div className="card">
+            <h2>Technical Expertise</h2>
+            <div className="content">
+              <div className="item"><strong>Program:</strong> Proficient in Python and Java, with experience in developing scalable software and research-driven projects.</div>
+              <div className="item"><strong>Specialize:</strong> Focus on computer vision, natural language processing, and ethical AI development.</div>
+              <div className="item"><strong>Analyze:</strong> Extract insights and develop algorithms for complex datasets.</div>
+              <div className="item"><strong>Engineer:</strong> Apply software design principles, object-oriented programming, and develop interpreters.</div>
+              <div className="item"><strong>Implement:</strong> Integrate custom functions into existing codebases for compatibility and performance optimization.</div>
+            </div>
+          </div>
+          <div className="card">
+            <h2>Academic & Professional Contributions</h2>
+            <div className="content">
+              <div className="item"><strong>Publish:</strong> Author and contribute to peer-reviewed research, including work on misinformation and social media.</div>
+              <div className="item"><strong>Collaborate:</strong> Work on interdisciplinary projects such as violence detection and MiniJS language interpreters.</div>
+              <div className="item"><strong>Achieve:</strong> Earn honors like John F. Grant Scholarship and Dean's List recognition.</div>
+              <div className="item"><strong>Educate:</strong> Study Software Engineering with a Philosophy minor as a senior at Loyola University Chicago.</div>
+              <div className="item"><strong>Certify:</strong> Hold certifications in health privacy and research ethics, emphasizing professionalism in data management for research purposes.</div>
+            </div>
+          </div>
+          <div className="card">
+            <h2>Ethical and Philosophical Impact</h2>
+            <div className="content">
+              <div className="item"><strong>Ensure:</strong> Align AI and technology with societal well-being and human values.</div>
+              <div className="item"><strong>Detect:</strong> Focus on real-world applications like using AI to identify and mitigate violence.</div>
+              <div className="item"><strong>Advocate:</strong> Promote socially responsible AI, balancing innovation with ethical considerations.</div>
+              <div className="item"><strong>Mentor:</strong> Share knowledge and support peers to foster collaborative and informed environments.</div>
+              <div className="item"><strong>Merge:</strong> Combine philosophical inquiry with technical expertise to address abstract challenges in technology.</div>
+            </div>
+          </div>
+        </div>
         <div className="header">
           <div className="welcome gone">
             {/* Content will go here */}
           </div>
         </div>
+        <div className="exit-text">I want to leave the Singularity</div>
       </div>
     </div>
   );

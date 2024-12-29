@@ -1,7 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
-  "homepage": "https://muhammad-k02.github.io/mkhan.github.io/",
+  "homepage": "https://mkhan.github.io",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -36,7 +36,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "yarn run build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

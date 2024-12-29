@@ -1,9 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const _location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { label: 'Publications', path: '/publications' },
@@ -59,7 +60,7 @@ const Navbar = () => {
           }}
           onClick={(e) => {
             e.preventDefault();
-            window.location.href = item.path;
+            navigate(item.path);
           }}
         >
           {item.label}

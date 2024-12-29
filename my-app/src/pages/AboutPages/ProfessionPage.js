@@ -1,10 +1,31 @@
 import './ProfessionPage.scss';
+
 import $ from 'jquery';
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+function setDPI(canvas, dpi) {
+  if (!canvas.get(0).style.width) {
+    canvas.get(0).style.width = canvas.get(0).width + 'px';
+  }
+  if (!canvas.get(0).style.height) {
+    canvas.get(0).style.height = canvas.get(0).height + 'px';
+  }
+
+  const scaleFactor = dpi / 96;
+  canvas.get(0).width = Math.ceil(canvas.get(0).width * scaleFactor);
+  canvas.get(0).height = Math.ceil(canvas.get(0).height * scaleFactor);
+  const ctx = canvas.get(0).getContext('2d');
+  ctx.scale(scaleFactor, scaleFactor);
+}
 
 // Error Boundary Component
 class ProfessionPageErrorBoundary extends React.Component {
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -15,7 +36,11 @@ class ProfessionPageErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('ProfessionPage Error:', error, errorInfo);
+    // Use error boundary logging
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('ProfessionPage Error:', error, errorInfo);
+    }
+    // Here you would typically log to an error reporting service
   }
 
   render() {
@@ -23,7 +48,7 @@ class ProfessionPageErrorBoundary extends React.Component {
       return (
         <div className="error-fallback" role="alert">
           <h1>Something went wrong</h1>
-          <p>We're unable to display the animation. Please try refreshing the page.</p>
+          <p>We&apos;re unable to display the animation. Please try refreshing the page.</p>
           <button 
             onClick={() => window.location.reload()}
             className="retry-button"
@@ -389,7 +414,7 @@ function ProfessionPage() {
       <div className="profession-page" role="main">
         {!isAnimationSupported ? (
           <div className="fallback-content" role="alert">
-            <p>Your browser doesn't support the required features for animations.</p>
+            <p>Your browser doesn&apos;t support the required features for animations.</p>
             <p>Please use a modern browser to view this content.</p>
           </div>
         ) : (
@@ -475,7 +500,7 @@ function ProfessionPage() {
                       <strong>Collaborate:</strong> Work on interdisciplinary projects such as violence detection and MiniJS language interpreters.
                     </div>
                     <div className="item" role="article">
-                      <strong>Achieve:</strong> Earn honors like John F. Grant Scholarship and Dean's List recognition.
+                      <strong>Achieve:</strong> Earn honors like John F. Grant Scholarship and Dean&apos;s List recognition.
                     </div>
                     <div className="item" role="article">
                       <strong>Educate:</strong> Study Software Engineering with a Philosophy minor as a senior at Loyola University Chicago.

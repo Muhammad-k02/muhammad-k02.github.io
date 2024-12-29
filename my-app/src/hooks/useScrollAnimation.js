@@ -1,49 +1,10 @@
 import { useCallback } from 'react';
 
 export const useScrollAnimation = ({ introText, scrollState, setScrollState }) => {
-  const handleScroll = useCallback(
-    (event) => {
-      event.preventDefault();
-
-      // Hide scroll indicator on first scroll
-      if (scrollState.showScrollIndicator) {
-        setScrollState((prev) => ({ ...prev, showScrollIndicator: false }));
-      }
-
-      // Determine scroll direction
-      const isScrollingDown = event.deltaY > 0;
-      const currentWordCount = scrollState.revealedWords.length;
-
-      // Calculate new word count
-      const newWordCount = isScrollingDown
-        ? Math.min(introText.length, currentWordCount + 1)
-        : Math.max(0, currentWordCount - 1);
-
-      // Update revealed words
-      const newRevealedWords = introText.slice(0, newWordCount);
-
-      // Reset or animate text
-      if (newWordCount === 0) {
-        setScrollState({
-          revealedWords: [],
-          showWelcomeText: false,
-          welcomeTextOpacity: 0,
-          showAboutMeButton: false,
-          showScrollIndicator: true,
-          navbarOpacity: 0,
-        });
-      } else if (newWordCount >= introText.length) {
-        animateWelcomeText(setScrollState);
-      }
-
-      // Update state
-      setScrollState((prev) => ({
-        ...prev,
-        revealedWords: newRevealedWords,
-      }));
-    },
-    [introText, scrollState]
-  );
+  const handleScroll = useCallback(() => {
+    const scrolled = window.scrollY;
+    setScrollState(scrolled);
+  }, [setScrollState]);
 
   return { handleScroll };
 };

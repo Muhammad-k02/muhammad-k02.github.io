@@ -17,7 +17,7 @@ function Home() {
   const [showAboutMeButton, setShowAboutMeButton] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [navbarOpacity, setNavbarOpacity] = useState(0);
-  const [_overlayOpacity, setOverlayOpacity] = useState(0);
+  const [overlayOpacity] = useState(0);
   const [_filterOpacity, setFilterOpacity] = useState(0);
   const [showTypeWriter, setShowTypeWriter] = useState(true);
   const [showGlitchCanvas, setShowGlitchCanvas] = useState(false);

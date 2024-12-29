@@ -1,7 +1,8 @@
 import { Box, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
-const TypeWriter = ({ visible = true }) => {
+const TypeWriter = ({ visible }) => {
   const [text, setText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const fullText = 'Hello World!';
@@ -63,6 +64,10 @@ const TypeWriter = ({ visible = true }) => {
       </Typography>
     </Box>
   );
+};
+
+TypeWriter.propTypes = {
+  visible: PropTypes.bool.isRequired,
 };
 
 export default TypeWriter;

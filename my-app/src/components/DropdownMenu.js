@@ -25,7 +25,6 @@ const DropdownMenu = () => {
     { label: 'Publications', link: '/publications' },
     { label: 'Projects', link: '/projects' },
     { label: 'Education', link: '/education' },
-    { label: 'Glitch', link: '/glitch' },
   ];
 
   return (

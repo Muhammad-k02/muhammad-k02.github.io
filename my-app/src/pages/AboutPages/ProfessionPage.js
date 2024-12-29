@@ -2,8 +2,10 @@ import './ProfessionPage.scss';
 
 import $ from 'jquery';
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ProfessionPage() {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
   const animationRef = useRef(null);
   const canvasRef = useRef(null);
@@ -407,6 +409,7 @@ function ProfessionPage() {
 
   return (
     <div className="profession-page">
+      <div className="back-button" onClick={() => navigate('/about')}>Back</div>
       <h1 className="title">Singularity</h1>
       <h2 className="professional-title">Professional Expertise</h2>
       <div id="blackhole" ref={containerRef}></div>

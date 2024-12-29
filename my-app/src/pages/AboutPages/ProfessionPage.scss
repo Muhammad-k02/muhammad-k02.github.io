@@ -366,6 +366,34 @@
       opacity: 1;
     }
   }
+
+  .back-button {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    color: #ff3333;
+    font-family: 'Geist', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      opacity: 1;
+      transform: translateX(-3px);
+    }
+
+    &::before {
+      content: '←';
+      display: inline-block;
+      margin-right: 0.2rem;
+    }
+  }
 }
 
 // Global styles

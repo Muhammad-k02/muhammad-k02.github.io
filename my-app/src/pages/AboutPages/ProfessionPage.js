@@ -543,6 +543,38 @@ function ProfessionPage() {
                 tabIndex={0}
                 aria-label="Exit the singularity experience"
                 onKeyPress={handleKeyPress}
+                onClick={() => {
+                  // Add transitioning class to prevent multiple clicks
+                  $('.exit-text').addClass('transitioning');
+                  
+                  // Reverse the animations
+                  collapseRef.current = false;
+                  expanseRef.current = false;
+                  
+                  // Hide the cards and title
+                  $('.cards-container').removeClass('visible');
+                  $('.professional-title').removeClass('visible');
+                  $('.exit-text').removeClass('visible');
+                  
+                  // After cards fade out, reverse the main animations
+                  setTimeout(() => {
+                    $('#blackhole').removeClass('fade');
+                    $('.title').removeClass('fade');
+                    $('.container').removeClass('fade');
+                    $('.profession-page').removeClass('inverted');
+                    $('.fullpage').removeClass('open');
+                    $('.centerHover').removeClass('open');
+                    
+                    // Remove the particle canvas if it exists
+                    if (particleCanvasRef.current) {
+                      particleCanvasRef.current.remove();
+                      particleCanvasRef.current = null;
+                    }
+                    
+                    // Remove transitioning class
+                    $('.exit-text').removeClass('transitioning');
+                  }, 800);
+                }}
               >
                 I want to leave the Singularity
               </div>

@@ -138,7 +138,7 @@ function Home() {
     if (navbarOpacity > 0) {
       timeoutId = setTimeout(() => {
         setShowTypeWriter(false);
-      }, 2000);
+      }, 3000);
     }
 
     return () => {
@@ -169,7 +169,7 @@ function Home() {
         backgroundColor: 'black',
       }}
     >
-      {showTypeWriter && <TypeWriter visibility={showTypeWriter} />}
+      {showTypeWriter && <TypeWriter visible={showTypeWriter} />}
       {showGlitchCanvas && <GlitchCanvas />}
       {/* Dark filter that appears on scroll down */}
       <Box

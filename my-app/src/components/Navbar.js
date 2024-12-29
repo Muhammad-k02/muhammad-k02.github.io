@@ -6,7 +6,6 @@ const Navbar = () => {
   const _location = useLocation();
 
   const navItems = [
-    { label: 'Home', path: '/' },
     { label: 'Publications', path: '/publications' },
     { label: 'Projects', path: '/projects' },
     { label: 'Education', path: '/education' },

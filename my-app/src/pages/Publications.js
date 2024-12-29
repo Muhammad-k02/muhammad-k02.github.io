@@ -254,20 +254,17 @@ const Publications = () => {
                 background: 'rgba(0, 0, 0, 0.75)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
-                zIndex: 1299,
+                zIndex: 1200,
               }}
             />
-            <MotionDialog
+            <Dialog
               open={dialogOpen}
               onClose={handleDialogClose}
               maxWidth="md"
               fullWidth
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ type: 'spring', duration: 0.5 }}
-              PaperProps={{
-                sx: {
+              sx={{ 
+                zIndex: 1300,
+                '& .MuiDialog-paper': {
                   background: 'rgba(23, 23, 23, 0.95)',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
@@ -278,8 +275,7 @@ const Publications = () => {
                     inset 0 0 1px 0 rgba(255, 255, 255, 0.2)
                   `,
                   color: '#E6E6E1',
-                  zIndex: 1300,
-                },
+                }
               }}
             >
               {selectedPublication && (
@@ -347,7 +343,7 @@ const Publications = () => {
                   </DialogContent>
                 </motion.div>
               )}
-            </MotionDialog>
+            </Dialog>
           </>
         )}
       </AnimatePresence>

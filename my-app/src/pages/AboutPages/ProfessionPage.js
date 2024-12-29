@@ -366,6 +366,7 @@ function ProfessionPage() {
       setTimeout(() => {
         $('.cards-container').addClass('visible');
         $('.professional-title').addClass('visible');
+        $('.statement-box').addClass('visible');
         $('.exit-text').addClass('visible');
       }, 800);
     });
@@ -485,6 +486,9 @@ function ProfessionPage() {
                       <strong>Analyze:</strong> Extract insights and develop algorithms for complex datasets.
                     </div>
                     <div className="item" role="article">
+                      <strong>Develop:</strong> Create responsive web applications using React, Node.js, and modern frontend technologies.
+                    </div>
+                    <div className="item" role="article">
                       <strong>Engineer:</strong> Apply software design principles, object-oriented programming, and develop interpreters.
                     </div>
                     <div className="item" role="article">
@@ -535,10 +539,8 @@ function ProfessionPage() {
                   </div>
                 </div>
               </div>
-              <div className="header">
-                <div className="welcome gone" aria-hidden="true">
-                  {/* Content will go here */}
-                </div>
+              <div className="statement-box" aria-label="Additional statement">
+                Soft Skills: Creativity • Critical thinking • Collaboration • Adaptability • Problem-solving • Communication • Curiosity • Patience • Resilience • Multidisciplinary thinking
               </div>
               <div 
                 className="exit-text"
@@ -557,6 +559,7 @@ function ProfessionPage() {
                   // Hide the cards and title
                   $('.cards-container').removeClass('visible');
                   $('.professional-title').removeClass('visible');
+                  $('.statement-box').removeClass('visible');
                   $('.exit-text').removeClass('visible');
                   
                   // After cards fade out, reverse the main animations

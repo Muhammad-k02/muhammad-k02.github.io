@@ -1,8 +1,41 @@
 import './ProfessionPage.scss';
-
 import $ from 'jquery';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// Error Boundary Component
+class ProfessionPageErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ProfessionPage Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-fallback" role="alert">
+          <h1>Something went wrong</h1>
+          <p>We're unable to display the animation. Please try refreshing the page.</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="retry-button"
+          >
+            Retry
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function ProfessionPage() {
   const navigate = useNavigate();
@@ -11,8 +44,45 @@ function ProfessionPage() {
   const canvasRef = useRef(null);
   const particleCanvasRef = useRef(null);
   const particlesRef = useRef([]);
+  const starsRef = useRef([]);
+  const collapseRef = useRef(false);
+  const expanseRef = useRef(false);
+  const [isAnimationSupported, setIsAnimationSupported] = useState(true);
 
-  class Particle {
+  // Check for animation support
+  useEffect(() => {
+    const canvas = document.createElement('canvas');
+    const isSupported = !!(
+      canvas.getContext &&
+      canvas.getContext('2d') &&
+      window.requestAnimationFrame
+    );
+    setIsAnimationSupported(isSupported);
+  }, []);
+
+  // Accessibility keyboard handlers
+  const handleKeyPress = useCallback((event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      const centerHover = document.querySelector('.centerHover');
+      if (centerHover && !centerHover.classList.contains('open')) {
+        centerHover.click();
+      }
+    } else if (event.key === 'Escape') {
+      const exitText = document.querySelector('.exit-text');
+      if (exitText && exitText.classList.contains('visible')) {
+        exitText.click();
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
+
+  // Memoize particle class to prevent recreation
+  const Particle = useCallback(class {
     constructor(canvas) {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
@@ -33,13 +103,16 @@ function ProfessionPage() {
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fill();
     }
-  }
+  }, []);
 
-  const initParticleAnimation = () => {
+  // Optimize particle animation with requestAnimationFrame
+  const initParticleAnimation = useCallback(() => {
+    if (particleCanvasRef.current) return;
+
     const canvas = document.createElement('canvas');
     canvas.className = 'particle-canvas';
     particleCanvasRef.current = canvas;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -49,61 +122,65 @@ function ProfessionPage() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Initialize particles
-    particlesRef.current = [];
-    for (let i = 0; i < 100; i++) {
-      particlesRef.current.push(new Particle(canvas));
-    }
+    // Initialize particles with object pooling
+    particlesRef.current = Array.from({ length: 100 }, () => new Particle(canvas));
 
+    let animationId;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        particlesRef.current[i].update();
-        particlesRef.current[i].draw(ctx);
-        if (particlesRef.current[i].size <= 0.2) {
-          particlesRef.current.splice(i, 1);
-          i--;
-          particlesRef.current.push(new Particle(canvas));
+      particlesRef.current.forEach((particle, index) => {
+        particle.update();
+        particle.draw(ctx);
+        if (particle.size <= 0.2) {
+          particlesRef.current[index] = new Particle(canvas);
         }
-      }
-      animationRef.current = requestAnimationFrame(animate);
+      });
+      animationId = requestAnimationFrame(animate);
     };
 
-    // Append canvas to fullpage
     const fullpage = document.querySelector('.fullpage');
     fullpage.appendChild(canvas);
     animate();
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      cancelAnimationFrame(animationId);
       canvas.remove();
     };
-  };
+  }, [Particle]);
+
+  // Clean up function to handle all animations
+  const cleanupAnimations = useCallback(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    if (particleCanvasRef.current) {
+      particleCanvasRef.current.remove();
+      particleCanvasRef.current = null;
+    }
+    particlesRef.current = [];
+    starsRef.current = [];
+  }, []);
 
   useEffect(() => {
-    // Wait for the container to be mounted
-    setTimeout(() => {
-      if (containerRef.current) {
+    let mounted = true;
+
+    // Initialize with delay to ensure DOM is ready
+    const initTimer = setTimeout(() => {
+      if (mounted && containerRef.current) {
         blackhole('#blackhole');
       }
     }, 0);
 
     return () => {
-      // Cleanup event listeners
+      mounted = false;
+      clearTimeout(initTimer);
+      cleanupAnimations();
+      // Clean up event listeners
       $('.centerHover').off('click mouseover mouseout');
-      // Cancel animation frame if it exists
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      // Remove particle canvas if it exists
-      if (particleCanvasRef.current) {
-        particleCanvasRef.current.remove();
-      }
     };
-  }, []);
+  }, [cleanupAnimations]);
 
   function blackhole(element) {
     const $element = $(element);
@@ -111,18 +188,17 @@ function ProfessionPage() {
     const w = $element.width() || window.innerWidth;
     const cw = w;
     const ch = h;
-    const maxorbit = 400; // Increased from 255 to 400 for larger radius
+    const maxorbit = 400;
     const centery = ch/2;
     const centerx = cw/2;
 
     const startTime = new Date().getTime();
     let currentTime = 0;
 
-    const stars = [];
-    let collapse = false; // if hovered
-    let expanse = false; // if clicked
+    // Use refs for state management
+    starsRef.current = [];
 
-    // Create and append canvas
+    // Create and append canvas with performance optimizations
     if (canvasRef.current) {
       $(canvasRef.current).remove();
     }
@@ -131,339 +207,325 @@ function ProfessionPage() {
       height: ch
     });
     canvasRef.current = canvas.get(0);
+    const context = canvas.get(0).getContext('2d', {
+      alpha: true,
+      desynchronized: true // Enable desynchronized mode for better performance
+    });
+    context.globalCompositeOperation = 'multiply';
     $element.append(canvas);
 
-    const context = canvas.get(0).getContext('2d');
-    context.globalCompositeOperation = 'multiply';
-
-    // Define requestFrame
-    const requestFrame = (
-      window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      function(callback) {
-        return window.setTimeout(callback, 1000 / 60);
-      }
-    ).bind(window);
-
-    function setDPI(canvas, dpi) {
-      if (!canvas.get(0).style.width)
-        canvas.get(0).style.width = canvas.get(0).width + 'px';
-      if (!canvas.get(0).style.height)
-        canvas.get(0).style.height = canvas.get(0).height + 'px';
-
-      var scaleFactor = dpi / 96;
-      canvas.get(0).width = Math.ceil(canvas.get(0).width * scaleFactor);
-      canvas.get(0).height = Math.ceil(canvas.get(0).height * scaleFactor);
-      var ctx = canvas.get(0).getContext('2d');
-      ctx.scale(scaleFactor, scaleFactor);
-    }
-
-    function rotate(cx, cy, x, y, angle) {
-      var radians = angle,
-        cos = Math.cos(radians),
-        sin = Math.sin(radians),
-        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-      return [nx, ny];
-    }
-
-    var star = function() {
-      var rands = [];
-      rands.push(Math.random() * (maxorbit/2) + 1);
-      rands.push(Math.random() * (maxorbit/2) + maxorbit);
-
-      this.orbital = (rands.reduce(function(p, c) {
-        return p + c;
-      }, 0) / rands.length);
-
-      this.x = centerx;
-      this.y = centery + this.orbital;
-      this.yOrigin = centery + this.orbital;
-      this.speed = (Math.floor(Math.random() * 2.5) + 1.5)*Math.PI/180;
-      this.rotation = 0;
-      this.startRotation = (Math.floor(Math.random() * 360) + 1)*Math.PI/180;
-      this.id = stars.length;
-      this.collapseBonus = this.orbital - (maxorbit * 0.7);
-      
-      if(this.collapseBonus < 0) {
-        this.collapseBonus = 0;
-      }
-
-      stars.push(this);
-      this.color = 'rgba(255,255,255,'+ Math.min(1, (1 - ((this.orbital) / maxorbit)) + 0.5) +')';
-      this.hoverPos = centery + (maxorbit/2) + this.collapseBonus;
-      this.expansePos = centery + (this.id%100)*-10 + (Math.floor(Math.random() * 20) + 1);
-      this.prevR = this.startRotation;
-      this.prevX = this.x;
-      this.prevY = this.y;
+    // Optimize rotation calculations
+    const rotatePoint = (cx, cy, x, y, angle) => {
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      return [
+        (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        (cos * (y - cy)) - (sin * (x - cx)) + cy
+      ];
     };
 
-    star.prototype.draw = function() {
-      if(!expanse) {
-        this.rotation = this.startRotation + (currentTime * this.speed);
-        if(!collapse) {
-          if(this.y > this.yOrigin) {
-            this.y-= 2.5;
-          }
-          if(this.y < this.yOrigin-4) {
-            this.y+= (this.yOrigin - this.y) / 10;
+    // Optimized star class
+    class Star {
+      constructor() {
+        const rands = [
+          Math.random() * (maxorbit/2) + 1,
+          Math.random() * (maxorbit/2) + maxorbit
+        ];
+        this.orbital = rands.reduce((p, c) => p + c, 0) / 2;
+        this.x = centerx;
+        this.y = centery + this.orbital;
+        this.yOrigin = this.y;
+        this.speed = (Math.random() * 2.5 + 1.5) * Math.PI/180;
+        this.rotation = 0;
+        this.startRotation = Math.random() * 360 * Math.PI/180;
+        this.id = starsRef.current.length;
+        this.collapseBonus = Math.max(0, this.orbital - (maxorbit * 0.7));
+        this.color = `rgba(255,255,255,${Math.min(1, (1 - (this.orbital / maxorbit)) + 0.5)})`;
+        this.hoverPos = centery + (maxorbit/2) + this.collapseBonus;
+        this.expansePos = centery + (this.id%100)*-10 + (Math.random() * 20 + 1);
+        this.prevR = this.startRotation;
+        this.prevX = this.x;
+        this.prevY = this.y;
+      }
+
+      draw() {
+        if(!expanseRef.current) {
+          this.rotation = this.startRotation + (currentTime * this.speed);
+          if(!collapseRef.current) {
+            if(this.y > this.yOrigin) {
+              this.y -= 2.5;
+            }
+            if(this.y < this.yOrigin-4) {
+              this.y += (this.yOrigin - this.y) / 10;
+            }
+          } else {
+            if(this.y > this.hoverPos) {
+              this.y -= (this.hoverPos - this.y) / -5;
+            }
+            if(this.y < this.hoverPos-4) {
+              this.y += 2.5;
+            }
           }
         } else {
-          this.trail = 1;
-          if(this.y > this.hoverPos) {
-            this.y-= (this.hoverPos - this.y) / -5;
-          }
-          if(this.y < this.hoverPos-4) {
-            this.y+= 2.5;
+          this.rotation = this.startRotation + (currentTime * (this.speed / 2));
+          if(this.y > this.expansePos) {
+            this.y -= Math.floor(this.expansePos - this.y) / -140;
           }
         }
-      } else {
-        this.rotation = this.startRotation + (currentTime * (this.speed / 2));
-        if(this.y > this.expansePos) {
-          this.y-= Math.floor(this.expansePos - this.y) / -140;
-        }
+
+        context.save();
+        context.fillStyle = this.color;
+        context.strokeStyle = this.color;
+        context.beginPath();
+        const oldPos = rotatePoint(centerx, centery, this.prevX, this.prevY, -this.prevR);
+        context.moveTo(oldPos[0], oldPos[1]);
+        context.translate(centerx, centery);
+        context.rotate(this.rotation);
+        context.translate(-centerx, -centery);
+        context.lineTo(this.x, this.y);
+        context.stroke();
+        context.restore();
+
+        this.prevR = this.rotation;
+        this.prevX = this.x;
+        this.prevY = this.y;
       }
+    }
 
-      context.save();
-      context.fillStyle = this.color;
-      context.strokeStyle = this.color;
-      context.beginPath();
-      var oldPos = rotate(centerx,centery,this.prevX,this.prevY,-this.prevR);
-      context.moveTo(oldPos[0],oldPos[1]);
-      context.translate(centerx, centery);
-      context.rotate(this.rotation);
-      context.translate(-centerx, -centery);
-      context.lineTo(this.x,this.y);
-      context.stroke();
-      context.restore();
-
-      this.prevR = this.rotation;
-      this.prevX = this.x;
-      this.prevY = this.y;
-    };
-
+    // Optimized animation loop
     function loop() {
       const now = new Date().getTime();
       currentTime = (now - startTime) / 50;
 
+      // Use a single path for better performance
       context.fillStyle = 'rgba(25,25,25,0.2)';
       context.fillRect(0, 0, cw, ch);
 
-      for(let i = 0; i < stars.length; i++) {
-        if(stars[i] !== stars) {
-          stars[i].draw();
-        }
+      // Batch draw calls
+      for(let i = 0; i < starsRef.current.length; i++) {
+        starsRef.current[i].draw();
       }
 
-      animationRef.current = requestFrame(loop);
+      animationRef.current = requestAnimationFrame(loop);
     }
 
+    // Initialize with optimized DPI settings
     function init() {
       context.fillStyle = 'rgba(25,25,25,1)';
       context.fillRect(0, 0, cw, ch);
       
-      // Clear existing stars
-      stars.length = 0;
+      starsRef.current = Array.from({ length: 2500 }, () => new Star());
       
-      // Create new stars
-      for(let i = 0; i < 2500; i++) {
-        new star();
-      }
-      
-      // Start the animation loop
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
       loop();
     }
 
-    // Set up event handlers
+    // Event handlers with debounced resize
     const $centerHover = $('.centerHover');
     
     $centerHover.on('click', function() {
-      collapse = false;
-      expanse = true;
+      collapseRef.current = false;
+      expanseRef.current = true;
       $(this).addClass('open');
       
-      // Add fade classes to elements that should disappear
       $('#blackhole').addClass('fade');
       $('.title').addClass('fade');
       $('.container').addClass('fade');
-      
-      // Invert colors
       $('.profession-page').addClass('inverted');
-      
-      // Show fullpage and initialize particle animation
       $('.fullpage').addClass('open');
+      
       initParticleAnimation();
       
-      // Show cards, title and exit text after a delay
       setTimeout(() => {
         $('.cards-container').addClass('visible');
         $('.professional-title').addClass('visible');
         $('.exit-text').addClass('visible');
       }, 800);
-      
-      setTimeout(function() {
-        $('.header .welcome').removeClass('gone');
-      }, 500);
     });
 
-    // Add exit handler
-    $('.exit-text').on('click', function() {
-      // Prevent multiple clicks
-      if ($(this).hasClass('transitioning')) return;
-      $(this).addClass('transitioning');
-
-      // First phase: Hide UI elements
-      $('.cards-container').removeClass('visible');
-      $('.professional-title').removeClass('visible');
-      $('.exit-text').removeClass('visible');
-
-      // Cancel any existing animations
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-
-      // Remove particle animation
-      if (particleCanvasRef.current) {
-        particleCanvasRef.current.remove();
-        particleCanvasRef.current = null;
-      }
-
-      // Second phase: Reset state and restore original view
-      setTimeout(() => {
-        // Remove inversion
-        $('.profession-page').removeClass('inverted');
-        
-        // Reset state variables
-        collapse = false;
-        expanse = false;
-
-        // Clear canvas and prepare for new animation
-        const canvas = canvasRef.current;
-        if (canvas) {
-          const context = canvas.getContext('2d');
-          context.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        // Show original elements with proper timing
-        setTimeout(() => {
-          $('#blackhole').removeClass('fade');
-          $('.title').removeClass('fade');
-          $('.container').removeClass('fade');
-          $('.centerHover').removeClass('open');
-          $('.fullpage').removeClass('open');
-          
-          // Start fresh animation cycle
-          stars.length = 0;
-          for(let i = 0; i < 2500; i++) {
-            new star();
-          }
-          if (!animationRef.current) {
-            loop();
-          }
-          
-          // Remove transitioning state
-          $('.exit-text').removeClass('transitioning');
-        }, 100);
-      }, 500);
-    });
-
-    $centerHover.on('mouseover', function() {
-      if(expanse === false) {
-        collapse = true;
+    $centerHover.on('mouseover', () => {
+      if(!expanseRef.current) {
+        collapseRef.current = true;
       }
     });
 
-    $centerHover.on('mouseout', function() {
-      if(expanse === false) {
-        collapse = false;
+    $centerHover.on('mouseout', () => {
+      if(!expanseRef.current) {
+        collapseRef.current = false;
       }
     });
 
-    // Initialize
+    // Initialize with proper DPI
     setDPI(canvas, 192);
     init();
 
-    // Handle window resize
+    // Optimized resize handler with debounce
+    let resizeTimeout;
     const handleResize = () => {
-      const newWidth = $element.width() || window.innerWidth;
-      const newHeight = $element.height() || window.innerHeight;
-      canvas.attr({
-        width: newWidth,
-        height: newHeight
-      });
-      init();
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const newWidth = $element.width() || window.innerWidth;
+        const newHeight = $element.height() || window.innerHeight;
+        canvas.attr({
+          width: newWidth,
+          height: newHeight
+        });
+        init();
+      }, 150);
     };
 
     window.addEventListener('resize', handleResize);
 
-    // Return cleanup function
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
     };
   }
 
   return (
-    <div className="profession-page">
-      <div className="back-button" onClick={() => navigate('/about')}>Back</div>
-      <h1 className="title">Singularity</h1>
-      <h2 className="professional-title">Professional Expertise</h2>
-      <div id="blackhole" ref={containerRef}></div>
-      <div className="container">
-        <div className="blackhole">
-          <div className="megna">
-            <div className="black"></div>
+    <ProfessionPageErrorBoundary>
+      <div className="profession-page" role="main">
+        {!isAnimationSupported ? (
+          <div className="fallback-content" role="alert">
+            <p>Your browser doesn't support the required features for animations.</p>
+            <p>Please use a modern browser to view this content.</p>
           </div>
-        </div>
-      </div>
-      <div className="centerHover">
-        <span>Enter</span>
-      </div>
-      <div className="fullpage">
-        <div className="cards-container">
-          <div className="card">
-            <h2>Technical Expertise</h2>
-            <div className="content">
-              <div className="item"><strong>Program:</strong> Proficient in Python and Java, with experience in developing scalable software and research-driven projects.</div>
-              <div className="item"><strong>Specialize:</strong> Focus on computer vision, natural language processing, and ethical AI development.</div>
-              <div className="item"><strong>Analyze:</strong> Extract insights and develop algorithms for complex datasets.</div>
-              <div className="item"><strong>Engineer:</strong> Apply software design principles, object-oriented programming, and develop interpreters.</div>
-              <div className="item"><strong>Implement:</strong> Integrate custom functions into existing codebases for compatibility and performance optimization.</div>
+        ) : (
+          <>
+            <div 
+              className="back-button" 
+              onClick={() => navigate('/about')}
+              onKeyPress={(e) => e.key === 'Enter' && navigate('/about')}
+              role="button"
+              tabIndex={0}
+              aria-label="Go back to about page"
+            >
+              Back
             </div>
-          </div>
-          <div className="card">
-            <h2>Academic & Professional Contributions</h2>
-            <div className="content">
-              <div className="item"><strong>Publish:</strong> Author and contribute to peer-reviewed research, including work on misinformation and social media.</div>
-              <div className="item"><strong>Collaborate:</strong> Work on interdisciplinary projects such as violence detection and MiniJS language interpreters.</div>
-              <div className="item"><strong>Achieve:</strong> Earn honors like John F. Grant Scholarship and Dean's List recognition.</div>
-              <div className="item"><strong>Educate:</strong> Study Software Engineering with a Philosophy minor as a senior at Loyola University Chicago.</div>
-              <div className="item"><strong>Certify:</strong> Hold certifications in health privacy and research ethics, emphasizing professionalism in data management for research purposes.</div>
+            <h1 className="title" aria-label="Singularity">Singularity</h1>
+            <h2 
+              className="professional-title" 
+              aria-hidden={!expanseRef.current}
+            >
+              Professional Expertise
+            </h2>
+            <div 
+              id="blackhole" 
+              ref={containerRef}
+              role="img" 
+              aria-label="Interactive black hole animation"
+            ></div>
+            <div className="container" aria-hidden="true">
+              <div className="blackhole">
+                <div className="megna">
+                  <div className="black"></div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <h2>Ethical and Philosophical Impact</h2>
-            <div className="content">
-              <div className="item"><strong>Ensure:</strong> Align AI and technology with societal well-being and human values.</div>
-              <div className="item"><strong>Detect:</strong> Focus on real-world applications like using AI to identify and mitigate violence.</div>
-              <div className="item"><strong>Advocate:</strong> Promote socially responsible AI, balancing innovation with ethical considerations.</div>
-              <div className="item"><strong>Mentor:</strong> Share knowledge and support peers to foster collaborative and informed environments.</div>
-              <div className="item"><strong>Merge:</strong> Combine philosophical inquiry with technical expertise to address abstract challenges in technology.</div>
+            <div 
+              className="centerHover"
+              role="button"
+              tabIndex={0}
+              aria-label="Enter the singularity experience"
+              onKeyPress={handleKeyPress}
+            >
+              <span>Enter</span>
             </div>
-          </div>
-        </div>
-        <div className="header">
-          <div className="welcome gone">
-            {/* Content will go here */}
-          </div>
-        </div>
-        <div className="exit-text">I want to leave the Singularity</div>
+            <div 
+              className="fullpage"
+              role="region"
+              aria-label="Professional expertise content"
+            >
+              <div 
+                className="cards-container"
+                role="list"
+                aria-label="Professional expertise categories"
+              >
+                {/* Technical Expertise Card */}
+                <div className="card" role="listitem">
+                  <h2 id="technical-expertise">Technical Expertise</h2>
+                  <div className="content">
+                    <div className="item" role="article">
+                      <strong>Program:</strong> Proficient in Python and Java, with experience in developing scalable software and research-driven projects.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Specialize:</strong> Focus on computer vision, natural language processing, and ethical AI development.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Analyze:</strong> Extract insights and develop algorithms for complex datasets.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Engineer:</strong> Apply software design principles, object-oriented programming, and develop interpreters.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Implement:</strong> Integrate custom functions into existing codebases for compatibility and performance optimization.
+                    </div>
+                  </div>
+                </div>
+                {/* Academic & Professional Contributions Card */}
+                <div className="card" role="listitem">
+                  <h2>Academic & Professional Contributions</h2>
+                  <div className="content">
+                    <div className="item" role="article">
+                      <strong>Publish:</strong> Author and contribute to peer-reviewed research, including work on misinformation and social media.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Collaborate:</strong> Work on interdisciplinary projects such as violence detection and MiniJS language interpreters.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Achieve:</strong> Earn honors like John F. Grant Scholarship and Dean's List recognition.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Educate:</strong> Study Software Engineering with a Philosophy minor as a senior at Loyola University Chicago.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Certify:</strong> Hold certifications in health privacy and research ethics, emphasizing professionalism in data management for research purposes.
+                    </div>
+                  </div>
+                </div>
+                {/* Ethical and Philosophical Impact Card */}
+                <div className="card" role="listitem">
+                  <h2>Ethical and Philosophical Impact</h2>
+                  <div className="content">
+                    <div className="item" role="article">
+                      <strong>Ensure:</strong> Align AI and technology with societal well-being and human values.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Detect:</strong> Focus on real-world applications like using AI to identify and mitigate violence.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Advocate:</strong> Promote socially responsible AI, balancing innovation with ethical considerations.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Mentor:</strong> Share knowledge and support peers to foster collaborative and informed environments.
+                    </div>
+                    <div className="item" role="article">
+                      <strong>Merge:</strong> Combine philosophical inquiry with technical expertise to address abstract challenges in technology.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="header">
+                <div className="welcome gone" aria-hidden="true">
+                  {/* Content will go here */}
+                </div>
+              </div>
+              <div 
+                className="exit-text"
+                role="button"
+                tabIndex={0}
+                aria-label="Exit the singularity experience"
+                onKeyPress={handleKeyPress}
+              >
+                I want to leave the Singularity
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </ProfessionPageErrorBoundary>
   );
 }
 

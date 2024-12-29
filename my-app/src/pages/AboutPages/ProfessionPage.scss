@@ -394,6 +394,123 @@
       margin-right: 0.2rem;
     }
   }
+
+  // Error and fallback states
+  .error-fallback, .fallback-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(25,25,25,1);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    z-index: 100;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-family: 'Geist', sans-serif;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .retry-button {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      background: #ff3333;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: lighten(#ff3333, 10%);
+        transform: translateY(-2px);
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.4);
+      }
+    }
+  }
+
+  // Accessibility improvements
+  [role="button"] {
+    cursor: pointer;
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+    }
+
+    &:focus:not(:focus-visible) {
+      box-shadow: none;
+    }
+  }
+
+  .back-button, .exit-text, .centerHover {
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.4);
+      border-radius: 4px;
+    }
+  }
+
+  // Improve focus visibility for cards
+  .card {
+    &:focus-within {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 0 25px rgba(255, 255, 255, 0.25),
+        0 0 35px rgba(255, 255, 255, 0.2),
+        0 0 45px rgba(255, 255, 255, 0.15),
+        inset 0 0 20px rgba(255, 255, 255, 0.1),
+        0 0 3px rgba(255, 255, 255, 0.4),
+        0 0 0 3px rgba(255, 51, 51, 0.4);
+    }
+  }
+
+  // Skip navigation for keyboard users
+  .skip-nav {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff3333;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0 0 4px 4px;
+    transition: top 0.3s ease;
+    z-index: 1000;
+
+    &:focus {
+      top: 0;
+    }
+  }
+
+  // High contrast mode support
+  @media (forced-colors: active) {
+    .card {
+      border: 2px solid CanvasText;
+    }
+
+    .back-button, .exit-text {
+      color: LinkText;
+    }
+  }
 }
 
 // Global styles

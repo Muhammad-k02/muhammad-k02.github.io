@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.5329face.css",
+    "main.css": "/static/css/main.d7a98620.css",
     "main.js": "/static/js/main.ef309383.js",
     "static/js/453.68693753.chunk.js": "/static/js/453.68693753.chunk.js",
     "static/media/Fletschhorn v2 TimeShifted-3 (dragged).jpg": "/static/media/Fletschhorn v2 TimeShifted-3 (dragged).4bfbda79635bfcf1f640.jpg",
@@ -12,12 +12,12 @@
     "static/media/primeicons.ttf": "/static/media/primeicons.a5c2a53d1ff7a9ff5933.ttf",
     "static/media/primeicons.woff2": "/static/media/primeicons.024b32cc7bf399b1a847.woff2",
     "index.html": "/index.html",
-    "main.5329face.css.map": "/static/css/main.5329face.css.map",
+    "main.d7a98620.css.map": "/static/css/main.d7a98620.css.map",
     "main.ef309383.js.map": "/static/js/main.ef309383.js.map",
     "453.68693753.chunk.js.map": "/static/js/453.68693753.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5329face.css",
+    "static/css/main.d7a98620.css",
     "static/js/main.ef309383.js"
   ]
 }

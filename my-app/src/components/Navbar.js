@@ -1,10 +1,12 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery,useTheme } from '@mui/material';
 import React from 'react';
-import { Link, useLocation,useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const _location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const navItems = [
     { label: 'Publications', path: '/publications' },
@@ -13,13 +15,17 @@ const Navbar = () => {
     { label: 'Resume', path: '/resume' },
   ];
 
+  if (isMobile) return null;
+
   return (
     <Box
       sx={{
         display: 'flex',
         justifyContent: 'center',
         width: '100%',
-        gap: 3,
+        gap: { xs: 1, sm: 2, md: 3 },
+        flexWrap: 'wrap',
+        padding: { xs: '8px', sm: '12px', md: '16px' },
       }}
     >
       {navItems.map((item) => (
@@ -31,13 +37,14 @@ const Navbar = () => {
             fontFamily: 'Montserrat',
             color: 'white',
             textDecoration: 'none',
-            fontSize: '1rem',
+            fontSize: { xs: '0.875rem', sm: '1rem' },
             cursor: 'pointer',
             transition: 'all 1s ease',
-            padding: '8px 16px',
+            padding: { xs: '6px 12px', sm: '8px 16px' },
             borderRadius: '30px',
             position: 'relative',
             overflow: 'hidden',
+            whiteSpace: 'nowrap',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -55,6 +62,11 @@ const Navbar = () => {
               transform: 'scale(1.05)',
               '&::before': {
                 transform: 'translateX(100%)',
+              },
+            },
+            '@media (hover: none)': {
+              '&:hover': {
+                transform: 'none',
               },
             },
           }}

@@ -1,10 +1,14 @@
 .App {
   text-align: center;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  max-width: 100%;
+  height: auto;
 }
 
 .App-header {
@@ -15,6 +19,8 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .welcome-text {
@@ -23,10 +29,57 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   color: #ffffff;
+  width: 90%;
+  max-width: 600px;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+/* Mobile-first responsive styles */
+@media screen and (max-width: 768px) {
+  .App-header {
+    padding: 0.5rem;
+  }
+  
+  .welcome-text {
+    width: 95%;
+  }
+}
+
+/* Ensure all images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Touch-friendly buttons and links */
+button,
+.App-link,
+a {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prevent horizontal scrolling */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Improved text readability on mobile */
+p, div {
+  font-size: clamp(1rem, 4vw, 1.2rem);
+  line-height: 1.5;
+  max-width: 100%;
+  word-wrap: break-word;
 }

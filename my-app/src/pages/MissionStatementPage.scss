@@ -158,8 +158,8 @@
 :root {
   /* Positioning variables */
   --oath-title-left: calc(20% - 200px);    /* Adjust the horizontal position of "My oath to:" */
-  --oath-title-y: 55%;                     /* Adjust the vertical position of "My oath to:" */
-  --scroll-items-left: 100px;                  /* Adjust the left offset of scroll items */
+  --oath-title-y: 50%;                     /* Adjust the vertical position of "My oath to:" */
+  --scroll-items-left: 25px;                  /* Adjust the left offset of scroll items */
   --scroll-item-y-offset: 0px;             /* Fine-tune vertical alignment of items */
   --scroll-items-width: 400px;             /* Adjust the width of the scroll items container */
   --scroll-gap: 20vh;                      /* Adjust space between items */

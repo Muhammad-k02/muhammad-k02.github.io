@@ -32,10 +32,14 @@ const MissionStatementPage = () => {
         const scrollProgress = Math.abs(introRect.top) / introRect.height;
         setShowOathTitle(scrollProgress > 0.2);
 
-        // Check if we're near the bottom of the scroll
-        const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-        const scrolledToBottom = scrollHeight - (scrollTop + clientHeight) < 100;
-        setShowEndingSection(scrolledToBottom);
+        // Check if second-to-last scroll item is in view
+        const scrollItems = document.querySelectorAll('.scroll-item');
+        if (scrollItems.length >= 2) {
+          const secondToLastItem = scrollItems[scrollItems.length - 2];
+          const itemRect = secondToLastItem.getBoundingClientRect();
+          const isInView = itemRect.top <= window.innerHeight / 2;
+          setShowEndingSection(isInView);
+        }
       }
     };
 

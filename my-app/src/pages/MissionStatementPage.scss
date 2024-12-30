@@ -1,20 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 @layer scrollbar {
-  @property --scroller {
-    initial-value: 0;
-    syntax: '<number>';
-    inherits: true;
+  /* Fallback for browsers that don't support @property */
+  :root {
+    --scroller: 0;
+    --chroma: 0;
+    --bg-hue: 0;
   }
-  @property --chroma {
-    initial-value: 0;
-    syntax: '<number>';
-    inherits: true;
-  }
-  @property --bg-hue {
-    initial-value: 0;
-    syntax: '<number>';
-    inherits: true;
+
+  @supports (animation-timeline: scroll()) {
+    @property --scroller {
+      initial-value: 0;
+      syntax: '<number>';
+      inherits: true;
+    }
+    @property --chroma {
+      initial-value: 0;
+      syntax: '<number>';
+      inherits: true;
+    }
+    @property --bg-hue {
+      initial-value: 0;
+      syntax: '<number>';
+      inherits: true;
+    }
   }
 
   .scroll-container {
@@ -42,13 +51,24 @@
         transparent 70%,
         rgba(0, 0, 0, 1) 100%
       );
+      /* Fallback for browsers that don't support oklch */
+      @supports not (background: oklch(0.5 0.3 0)) {
+        background: radial-gradient(
+          circle at center,
+          rgba(100, 100, 100, 0.3) 0%,
+          rgba(50, 50, 50, 0.2) 30%,
+          transparent 70%,
+          rgba(0, 0, 0, 1) 100%
+        );
+      }
       pointer-events: none;
       z-index: 1;
       mix-blend-mode: plus-lighter;
       transition: opacity 0.3s ease;
+      will-change: background;
     }
 
-    @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
+    @supports (animation-timeline: scroll()) {
       timeline-scope: --scroll-timeline;
       animation: change, chroma-on, chroma-off, bg-hue;
       animation-fill-mode: both;
@@ -60,6 +80,19 @@
         view-timeline: --scroll-timeline;
         position: relative;
         z-index: 3;
+      }
+    }
+
+    /* Fallback for browsers that don't support scroll timeline */
+    @supports not (animation-timeline: scroll()) {
+      .scroll-items {
+        .scroll-item {
+          opacity: 0.6;
+          transition: opacity 0.3s ease;
+          &:hover, &:focus-within {
+            opacity: 1;
+          }
+        }
       }
     }
   }

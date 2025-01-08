@@ -34,10 +34,14 @@ const backgroundImages = {
   education: ProjectsBg,
 };
 
-// Preload critical resources
+// Only preload images that are needed immediately
 const criticalResources = [
   ProjectsBg,
-  PublicationsBg,
+  PublicationsBg
+];
+
+// Secondary resources to load after critical ones
+const secondaryResources = [
   '/assets/about/ceramics-preview.png',
   '/assets/about/profession-preview.png',
   '/assets/about/mission-preview.jpeg'
@@ -45,7 +49,19 @@ const criticalResources = [
 
 function App() {
   useEffect(() => {
-    preloadResources(criticalResources);
+    // Preload critical resources immediately
+    const preloadedCritical = preloadResources(criticalResources);
+
+    // Preload secondary resources after a delay
+    const timer = setTimeout(() => {
+      preloadResources(secondaryResources);
+    }, 3000); // Delay secondary resource loading
+
+    return () => {
+      clearTimeout(timer);
+      // Clean up preloaded images
+      preloadedCritical.clear();
+    };
   }, []);
 
   return (

@@ -102,27 +102,30 @@ export class PerformanceMonitor {
 
 // Resource preloading utility
 export const preloadResources = (resources) => {
+  const preloadedImages = new Map();
+
   resources.forEach(resource => {
-    if (resource.endsWith('.js')) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'script';
-      link.href = resource;
-      document.head.appendChild(link);
+    if (/\.(jpg|jpeg|png|gif|webp)$/i.test(resource)) {
+      // For images, use Image object instead of link preload
+      const img = new Image();
+      img.src = resource;
+      preloadedImages.set(resource, img);
+    } else if (resource.endsWith('.js')) {
+      const script = document.createElement('script');
+      script.rel = 'preload';
+      script.as = 'script';
+      script.href = resource;
+      document.head.appendChild(script);
     } else if (resource.endsWith('.css')) {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'style';
       link.href = resource;
       document.head.appendChild(link);
-    } else if (/\.(jpg|jpeg|png|gif|webp)$/i.test(resource)) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = resource;
-      document.head.appendChild(link);
     }
   });
+
+  return preloadedImages;
 };
 
 // Debounce utility for performance optimization
